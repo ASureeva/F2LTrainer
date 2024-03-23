@@ -178,8 +178,9 @@ function loadUserData() {
             GROUP.caseSelection.push(1);
           } else if (indexCase == 2) {
             GROUP.caseSelection.push(1);
+          } else {
+            GROUP.caseSelection.push(0);
           }
-          // GROUP.caseSelection.push(1);
         } else {
           GROUP.caseSelection.push(0);
         }
