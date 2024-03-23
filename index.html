@@ -49,11 +49,17 @@
 
     <!-- Welcome Container -->
     <dialog id="welcome-container" class="popup-container">
-      <h1>Welcome to my F2L Trainer</h1>
+      <!-- <h1>Welcome to my F2L Trainer</h1> -->
+      <!-- <h1>How to use the F2L Trainer</h1> -->
+      <h2>How to use the Trainer</h2>
       <p>
-        Learn and practice all F2L cases you need to know. Improve your knowledge by finding better and faster
-        algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times.
+        <!-- Learn and practice all F2L cases you need to know. Improve your knowledge by finding better and faster
+        algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
       </p>
+      <div class="div-centering">
+        <img src="./images/instructions_select_page.png" alt="Select Page Instructions" class="img-instructions" />
+        <!-- <img src="./images/edit.svg" alt="Edit" class="img-inline" /> -->
+      </div>
       <div class="update-cancel-buttons">
         <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
       </div>
@@ -241,6 +247,11 @@
         </label>
       </div>
 
+      <div class="checkbox-container">
+        <h2>Additional</h2>
+        <button type="button" id="btn-delete" class="btn-overlay" onclick="clearUserData()">Delete saved data</button>
+      </div>
+
       <!-- Buttons: Update, Cancel Settings -->
       <!-- <div class="update-cancel-buttons"> -->
       <!-- <button type="button" class="btn-overlay" onclick="updateTrainCases()">Confirm</button>
@@ -255,6 +266,23 @@
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="updateTrainCases()">Confirm</button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">Cancel</button>
+      </div>
+    </dialog>
+
+    <!-- Welcome Train Container -->
+    <dialog id="welcome-container-train" class="popup-container">
+      <!-- <h1>Welcome to my F2L Trainer</h1> -->
+      <!-- <h1>How to use the F2L Trainer</h1> -->
+      <h2>How to use the trainer</h2>
+      <p>
+        <!-- Learn and practice all F2L cases you need to know. Improve your knowledge by finding better and faster
+        algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
+      </p>
+      <div class="div-centering">
+        <img src="./images/instructions_train_page.png" alt="Train Page Instructions" class="img-instructions" />
+      </div>
+      <div class="update-cancel-buttons">
+        <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
       </div>
     </dialog>
 
