@@ -47,6 +47,7 @@ let hintSelection = true;
 let timerEnabled = false;
 
 let firstVisit = true;
+let firstVisitTrain = true;
 
 // Save
 function saveUserData() {
@@ -95,7 +96,7 @@ function saveUserData() {
         let indexCase = categoryItems[indexCategoryItem] - 1;
 
         // Save Trash
-        localStorage.setItem(GROUP.saveName + "trash" + indexCase, GROUP.trash[indexCase]);
+        //localStorage.setItem(GROUP.saveName + "trash" + indexCase, GROUP.trash[indexCase]);
         // Save Case Selection
         localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
         // Save Custom Algorithms
@@ -119,6 +120,9 @@ function loadUserData() {
 
   // Check if user visits site for the first time
   if (localStorage.getItem("firstVisit") != null) firstVisit = false;
+
+  // Check if user visits train view for the first time
+  if (localStorage.getItem("firstVisitTrain") != null) firstVisitTrain = false;
 
   // Load trainStateSelection
   for (let i = 0; i < trainStateSelection.length; i++) {
@@ -150,21 +154,32 @@ function loadUserData() {
 
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
       // Load Trash
+      /*
       temp = localStorage.getItem(GROUP.saveName + "trash" + indexCase);
       if (temp !== null) {
         GROUP.trash.push(temp);
       } else {
         GROUP.trash.push(false);
       }
-
+*/
       // Load Case Selection
       temp = localStorage.getItem(GROUP.saveName + "caseSelection" + indexCase);
       if (temp !== null) {
         GROUP.caseSelection.push(temp);
       } else {
         // If site visited first time - set basic cases -> category 1 to "Learning"
-        if (indexGroup == 0 && GROUP.categoryCases[0].includes(indexCase + 1)) {
-          GROUP.caseSelection.push(1);
+        // if (indexGroup == 0 && GROUP.categoryCases[0].includes(indexCase + 1)) {
+        if (indexGroup == 0) {
+          if (indexCase == 4) {
+            GROUP.caseSelection.push(0);
+          } else if (indexCase == 3) {
+            GROUP.caseSelection.push(2);
+          } else if (indexCase == 1) {
+            GROUP.caseSelection.push(1);
+          } else if (indexCase == 2) {
+            GROUP.caseSelection.push(1);
+          }
+          // GROUP.caseSelection.push(1);
         } else {
           GROUP.caseSelection.push(0);
         }
@@ -212,4 +227,9 @@ function clearUserData() {
     console.log("localStorage: " + localStorage);
     location.reload();
   }
+}
+
+function setFirstVisitTrain() {
+  // Saving that the user visited the Train View the first time
+  localStorage.setItem("firstVisitTrain", false);
 }
