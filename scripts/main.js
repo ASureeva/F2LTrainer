@@ -38,6 +38,7 @@ const ELEM_SIDE_CONTAINER = document.getElementById("side-container");
 const ELEM_BTN_CHANGE_MODE = document.getElementById("change-mode");
 const ELEM_OVERLAY = document.getElementById("overlay");
 const ELEM_WELCOME_CONATINER = document.getElementById("welcome-container");
+const ELEM_WELCOME_CONATINER_TRAIN = document.getElementById("welcome-container-train");
 const ELEM_INFO_CONTAINER = document.getElementById("info-container");
 const ELEM_LOADING_SCREEN = document.getElementById("loading-screen");
 const ELEM_CHANGE_STATE_POPUP = document.getElementById("popup-change-state");
@@ -580,7 +581,7 @@ function keydown(e) {
   links: 37
   Leertaste: 32
   */
-
+  // console.log(e);
   if (e.keyCode === 67) {
     // C
     if (flagdoublepress) {
@@ -960,8 +961,10 @@ function changeMode() {
     ELEM_WINDOW_TRAIN.classList.remove("display-none");
     ELEM_BUTTON_SETTINGS.classList.remove("display-none");
     ELEM_CONTAINER_SELECT_GROUP.classList.add("display-none");
+    showWelcomeTrainPopup();
   } else {
     mode = 0;
+    // showWelcomeTrainPopup();
     ELEM_BTN_CHANGE_MODE.innerHTML = "Train";
     // ELEM_WINDOW_SELECT.style.display = "block";
     ELEM_WINDOW_SELECT.classList.remove("display-none");
@@ -1160,12 +1163,6 @@ function mirrorCase(indexGroup, indexCase) {
 
 // ----------    POP-UPS    ----------
 
-function openDialog(ELEM) {
-  // ELEM.style.display = "block";
-  ELEM.showModal();
-  ELEM_BODY.style.overflow = "hidden";
-}
-
 function closeOverlays() {
   // ELEM_WELCOME_CONATINER.style.display = "none";
   // ELEM_INFO_CONTAINER.style.display = "none";
@@ -1175,6 +1172,7 @@ function closeOverlays() {
   ELEM_BODY.style.overflow = "auto";
   // ELEM_OVERLAY.style.display = "none";
   ELEM_WELCOME_CONATINER.close();
+  ELEM_WELCOME_CONATINER_TRAIN.close();
   ELEM_INFO_CONTAINER.close();
   ELEM_EDITALG_CONTAINER.close();
   ELEM_SETTINGS_CONTAINER.close();
@@ -1183,13 +1181,17 @@ function closeOverlays() {
 
 function showWelcomePopup() {
   if (firstVisit) {
-    // ELEM_WELCOME_CONATINER.style.display = "block";
-    // ELEM_OVERLAY.style.display = "block";
-    // ELEM_BODY.style.overflow = "hidden";
-
-    // ELEM_LOADING_SCREEN.style.display = "none";
-
     openDialog(ELEM_WELCOME_CONATINER);
+  }
+}
+
+function showWelcomeTrainPopup() {
+  console.log("1");
+  if (firstVisitTrain) {
+    console.log("2");
+    firstVisitTrain = false;
+    setFirstVisitTrain();
+    openDialog(ELEM_WELCOME_CONATINER_TRAIN);
   }
 }
 
@@ -1227,4 +1229,10 @@ function showSetStateMenu() {
   // ELEM_OVERLAY.style.display = "block";
   // ELEM_BODY.style.overflow = "hidden";
   openDialog(ELEM_CHANGE_STATE_POPUP);
+}
+
+function openDialog(ELEM) {
+  // ELEM.style.display = "block";
+  ELEM.showModal();
+  ELEM_BODY.style.overflow = "hidden";
 }

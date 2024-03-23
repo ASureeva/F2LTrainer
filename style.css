@@ -733,6 +733,19 @@ a {
   font-size: 1rem;
 }
 
+.img-instructions {
+  margin-left: auto;
+  margin-right: auto;
+  /* display: flex;
+  justify-content: center; */
+  border: solid white 6px;
+  border-radius: 35px;
+  padding: 13px;
+  /* width: 200px; */
+  /* width: 80dvw; */
+  width: min(380px, 90dvw);
+}
+
 #btn-show-hide-debug-info {
   font-size: 1rem;
   padding: 0.5rem;
@@ -757,6 +770,12 @@ a {
   border-style: solid;
   border-radius: 0.6rem;
   border-color: var(--color-img);
+}
+
+#btn-delete {
+  flex: 0 0 auto;
+  background-color: darkred;
+  /* width: auto; */
 }
 
 .editalg-listentry:hover,
@@ -998,6 +1017,9 @@ a {
   .heading-category-name {
     margin-right: 5px;
   }
+  /* .img-instructions {
+    width: 400px;
+  } */
 }
 
 @media (pointer: coarse) {
