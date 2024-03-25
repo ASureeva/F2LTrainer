@@ -171,13 +171,13 @@ function loadUserData() {
         // If site visited first time - set basic cases -> category 1 to "Learning"
         // if (indexGroup == 0 && GROUP.categoryCases[0].includes(indexCase + 1)) {
         if (indexGroup == 0) {
-          if (indexCase == 4) {
+          if (indexCase == 3) {
             GROUP.caseSelection.push(0);
-          } else if (indexCase == 3) {
-            GROUP.caseSelection.push(2);
-          } else if (indexCase == 1) {
-            GROUP.caseSelection.push(1);
           } else if (indexCase == 2) {
+            GROUP.caseSelection.push(2);
+          } else if (indexCase == 0) {
+            GROUP.caseSelection.push(1);
+          } else if (indexCase == 1) {
             GROUP.caseSelection.push(1);
           } else {
             GROUP.caseSelection.push(0);
