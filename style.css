@@ -560,7 +560,9 @@ a {
   margin-inline: max(20px, 50svw - 400px/2); */
 }
 
-#train-cases-container > h2 {
+#train-cases-container > h2,
+#welcome-container > h2,
+#welcome-container-train > h2 {
   margin: 0px;
 }
 
