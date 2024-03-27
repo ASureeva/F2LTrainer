@@ -45,6 +45,6 @@ const advancedAlgorithms = {
   32: ["U (R U' R') U (f' L f)", "y U (F U' F') (R' U2 R)"],
   33: ["(R U' R') (L U2 L')", "y (L' U' L) (f R' f')"],
   34: ["(R U R') (f' L f)", "y (L' U L) (R' U2 R)"],
-  35: ["(R U' R') U (L U L')", "y (L F' L' F) (R' U2 R)"],
+  35: ["(R U R') U (L U L')", "y (L F' L' F) (R' U2 R)"],
   36: ["(R' F R F') (L U2 L')", "y (L' U' L) U' (R' U' R)"],
 };
