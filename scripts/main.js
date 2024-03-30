@@ -134,6 +134,9 @@ let second = 0;
 let count = 0;
 
 let spacePressFlag = false;
+const ELEM_PRESS_ME_TRAIN = document.getElementById("div-press-me-tain-id");
+
+let divPressMe;
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
@@ -147,6 +150,10 @@ window.addEventListener("load", () => {
   addElementsToDOM();
   // addTrashElementsToBOM();
   // addSelectGroupTrain();
+
+  showPressMeText();
+  hidePressMeTrainText();
+
   highlightAllBulkChangeTrainingStateButtons();
 
   // Generate placeholder for algs to select in Edit Algorithm Pop Up
@@ -254,13 +261,13 @@ window.addEventListener("load", () => {
 });
 
 function addElementsToDOM() {
-  // Iterate "Basic", "Basic Back", "Advanced", "Expert"
+  // Iterate over all groups (basic, basic back, advanced, expert)
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
     ELEM_GROUP_CONTAINER[indexGroup] = document.createElement("div");
     ELEM_GROUP_CONTAINER[indexGroup].classList.add("group-container");
 
-    // Iterate over all cases
+    // Iterate over all categories (basic inserts, pieces on top/white facing..., ...)
     for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
       let categoryItems = GROUP.categoryCases[indexCategory];
       GROUP.categoryContainer[indexCategory] = document.createElement("div");
@@ -329,6 +336,7 @@ function addElementsToDOM() {
       GROUP.collapseContainer[indexCategory].appendChild(GROUP.btnChangeLearningState[2][indexCategory]);
       ELEM_GROUP_CONTAINER[indexGroup].appendChild(GROUP.collapseContainer[indexCategory]);
 
+      // Iterate over every case in category
       for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
         let indexCase = categoryItems[indexCategoryItem] - 1;
         // Check if selected algorithm is valid
@@ -384,7 +392,7 @@ function addElementsToDOM() {
         GROUP.imgMirror[indexCase] = document.createElement("img");
         GROUP.imgMirror[indexCase].classList.add("img-edit-trash");
         GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
-        GROUP.imgMirror[indexCase].alt = "edit case " + (indexCase + 1);
+        GROUP.imgMirror[indexCase].alt = "mirror case " + (indexCase + 1);
         GROUP.imgMirror[indexCase].onclick = function () {
           mirrorCase(indexGroup, indexCase);
         };
@@ -879,6 +887,9 @@ function changeState(indexGroup, indexCategory, indexCase) {
   GROUP.btnMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
   highlightBulkChangeTrainingStateButton(indexGroup, indexCategory, indexCase);
   saveUserData();
+
+  // Hide Press me text
+  if ((indexGroup == 0) & (indexCase == 3) & (divPressMe != undefined)) divPressMe.classList.add("display-none");
 }
 
 function collapseCategory(indexGroup, indexCategory) {
@@ -1068,6 +1079,9 @@ function spaceDown() {
   } else {
     nextScramble(1);
   }
+
+  // Hide Press me text
+  ELEM_PRESS_ME_TRAIN.classList.add("display-none");
 }
 
 function spaceUp() {
@@ -1101,6 +1115,7 @@ function changeLearningStateBulk(indexGroup, indexCategory, state) {
     GROUP.divContainer[indexCase].style.borderStyle = CATEGORY_BORDERS[GROUP.caseSelection[indexCase]];
     GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
     GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
+    // console.log(COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]]);
   }
   saveUserData();
 }
@@ -1162,6 +1177,21 @@ function mirrorCase(indexGroup, indexCase) {
   }
 }
 
+function showPressMeText() {
+  if (firstVisit) {
+    divPressMe = document.createElement("div");
+    divPressMe.classList.add("div-press-me");
+    divPressMe.innerHTML = "Press<br>me";
+    GROUPS[0].imgContainer[3].appendChild(divPressMe);
+  }
+}
+
+function hidePressMeTrainText() {
+  if (!firstVisitTrain) {
+    ELEM_PRESS_ME_TRAIN.classList.add("display-none");
+  }
+}
+
 // ----------    POP-UPS    ----------
 
 function closeOverlays() {
@@ -1187,9 +1217,7 @@ function showWelcomePopup() {
 }
 
 function showWelcomeTrainPopup() {
-  console.log("1");
   if (firstVisitTrain) {
-    console.log("2");
     firstVisitTrain = false;
     setFirstVisitTrain();
     openDialog(ELEM_WELCOME_CONATINER_TRAIN);
@@ -1214,16 +1242,12 @@ function showSettingsTrain() {
 
 function showSetStateMenu() {
   const STATE = GROUPS[currentTrainGroup].caseSelection[currentTrainCase];
-  // console.log("indexGroup: " + currentTrainGroup + ", indexCase: " + currentTrainCase + "caseSelection: " + STATE);
   if (STATE == 0 || STATE == "0") {
     ELEM_RADIO_UNLEARNED.checked = true;
-    // console.log("0 here");
   } else if (STATE == 1 || STATE == "1") {
     ELEM_RADIO_LEARNING.checked = true;
-    // console.log("1 here");
   } else if (STATE == 2 || STATE == "2") {
     ELEM_RADIO_FINISHED.checked = true;
-    // console.log("2 here");
   }
 
   // ELEM_CHANGE_STATE_POPUP.style.display = "block";
