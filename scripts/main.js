@@ -887,7 +887,7 @@ function changeState(indexGroup, indexCategory, indexCase) {
   saveUserData();
 
   // Hide Press me text
-  divPressMe.classList.add("display-none");
+  if ((indexGroup == 0) & (indexCase == 3) & (divPressMe != undefined)) divPressMe.classList.add("display-none");
 }
 
 function collapseCategory(indexGroup, indexCategory) {
