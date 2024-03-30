@@ -854,6 +854,15 @@ a {
   filter: var(--filter-finished);
 }
 
+.div-press-me {
+  display: block;
+  position: absolute;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color-text);
+  /* z-index: 3; */
+}
+
 .loader {
   display: flex;
   width: 32px;
@@ -971,6 +980,9 @@ a {
   .img-edit-trash {
     /* height: 18px; */
     height: 20px;
+  }
+  .div-press-me {
+    font-size: 1.3rem;
   }
 }
 @media (min-width: 40em) {
