@@ -134,6 +134,7 @@ let second = 0;
 let count = 0;
 
 let spacePressFlag = false;
+const ELEM_PRESS_ME_TRAIN = document.getElementById("div-press-me-tain-id");
 
 let divPressMe;
 
@@ -151,6 +152,7 @@ window.addEventListener("load", () => {
   // addSelectGroupTrain();
 
   showPressMeText();
+  hidePressMeTrainText();
 
   highlightAllBulkChangeTrainingStateButtons();
 
@@ -1077,6 +1079,9 @@ function spaceDown() {
   } else {
     nextScramble(1);
   }
+
+  // Hide Press me text
+  ELEM_PRESS_ME_TRAIN.classList.add("display-none");
 }
 
 function spaceUp() {
@@ -1178,6 +1183,12 @@ function showPressMeText() {
     divPressMe.classList.add("div-press-me");
     divPressMe.innerHTML = "Press<br>me";
     GROUPS[0].imgContainer[3].appendChild(divPressMe);
+  }
+}
+
+function hidePressMeTrainText() {
+  if (!firstVisitTrain) {
+    ELEM_PRESS_ME_TRAIN.classList.add("display-none");
   }
 }
 

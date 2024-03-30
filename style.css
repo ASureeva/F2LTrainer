@@ -860,7 +860,29 @@ a {
   font-size: 2rem;
   font-weight: bold;
   color: var(--color-text);
-  /* z-index: 3; */
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  /* // Centering does not work
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); */
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.div-press-me-train {
+  display: block;
+  position: absolute;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--color-text);
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px;
+  border-radius: 20px;
 }
 
 .loader {
@@ -1034,6 +1056,9 @@ a {
   /* .img-instructions {
     width: 400px;
   } */
+  .div-press-me-train {
+    font-size: 3rem;
+  }
 }
 
 @media (pointer: coarse) {
