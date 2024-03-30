@@ -384,7 +384,7 @@ function addElementsToDOM() {
         GROUP.imgMirror[indexCase] = document.createElement("img");
         GROUP.imgMirror[indexCase].classList.add("img-edit-trash");
         GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
-        GROUP.imgMirror[indexCase].alt = "edit case " + (indexCase + 1);
+        GROUP.imgMirror[indexCase].alt = "mirror case " + (indexCase + 1);
         GROUP.imgMirror[indexCase].onclick = function () {
           mirrorCase(indexGroup, indexCase);
         };
@@ -1101,6 +1101,7 @@ function changeLearningStateBulk(indexGroup, indexCategory, state) {
     GROUP.divContainer[indexCase].style.borderStyle = CATEGORY_BORDERS[GROUP.caseSelection[indexCase]];
     GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
     GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
+    // console.log(COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]]);
   }
   saveUserData();
 }
