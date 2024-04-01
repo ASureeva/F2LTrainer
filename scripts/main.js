@@ -1075,6 +1075,8 @@ function spaceDown() {
       toggleTimer();
       spacePressFlag = true;
       // console.log("1");
+    } else {
+      ELEM_TIMER.style.color = "#00ee00"; // gelb
     }
   } else {
     nextScramble(1);
@@ -1088,6 +1090,7 @@ function spaceUp() {
   // console.log("spaceUp");
   if (timerEnabled) {
     if (spacePressFlag == false) {
+      ELEM_TIMER.style.color = COLOR_TEXT;
       toggleTimer();
       // console.log("2");
     }
