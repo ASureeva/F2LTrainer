@@ -697,9 +697,10 @@ a {
   border-color: var(--color-img);
 }
 
-#btn-next-scramble {
+/* #btn-next-scramble {
   width: 50px;
-}
+} */
+
 #btn-next-scramble:hover {
   cursor: pointer;
 }
@@ -1017,6 +1018,9 @@ a {
   }
   #scramble {
     font-size: 3rem;
+  }
+  #scramble-container > img {
+    width: 45px;
   }
   #hint-img {
     width: 200px;
