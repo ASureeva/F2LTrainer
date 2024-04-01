@@ -1079,6 +1079,7 @@ function spaceDown() {
       ELEM_TIMER.style.color = "#00ee00"; // gelb
     }
   } else {
+    flagTimerRunning = false;
     nextScramble(1);
   }
 
