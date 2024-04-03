@@ -165,11 +165,9 @@ function loadUserData() {
       // Load Case Selection
       temp = localStorage.getItem(GROUP.saveName + "caseSelection" + indexCase);
       if (temp !== null && temp >= 0 && temp <= 2) {
-        // console.log(temp);
         GROUP.caseSelection.push(temp);
       } else {
         // If site visited first time - set basic cases -> category 1 to "Learning"
-        // if (indexGroup == 0 && GROUP.categoryCases[0].includes(indexCase + 1)) {
         if (indexGroup == 0) {
           if (indexCase == 3) {
             GROUP.caseSelection.push(0);
