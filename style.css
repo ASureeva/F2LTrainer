@@ -288,7 +288,8 @@ a {
   width: 20px;
 }
 
-.btn-settings-train {
+.btn-settings-train,
+.btn-settings-select {
   display: inline-block;
   width: 40px;
   margin: auto;
@@ -500,6 +501,7 @@ a {
   cursor: pointer;
 }
 
+#input-export,
 #editalg-customalg {
   color: var(--color-text);
   width: 100%;
@@ -546,7 +548,8 @@ a {
 .checkbox-container {
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .checkbox-container > h3 {
@@ -560,7 +563,7 @@ a {
   margin-inline: max(20px, 50svw - 400px/2); */
 }
 
-#train-cases-container > h2,
+#select-settings-container > h2 #train-settings-container > h2,
 #welcome-container > h2,
 #welcome-container-train > h2 {
   margin: 0px;
@@ -775,10 +778,10 @@ a {
   border-color: var(--color-img);
 }
 
-#btn-delete {
-  flex: 0 0 auto;
+.btn-delete {
   background-color: darkred;
-  /* width: auto; */
+  display: inline-flexbox;
+  margin: auto;
 }
 
 .editalg-listentry:hover,
@@ -1034,6 +1037,7 @@ a {
   .editalg-listentry {
     font-size: 1.5rem;
   }
+  #input-export,
   #editalg-customalg {
     font-size: 1.5rem;
   }

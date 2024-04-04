@@ -156,7 +156,7 @@
     </div>
 
     <!-- Train Settings -->
-    <dialog id="train-cases-container" class="popup-container">
+    <dialog id="train-settings-container" class="popup-container">
       <h2>Algorithms to learn</h2>
       <div id="div-algs-to-learn" class="div-checkbox-container-container">
         <!-- Checkbox: Unlearned, Learning, Finished -->
@@ -260,7 +260,7 @@
 
       <div class="checkbox-container">
         <h2>Additional</h2>
-        <button type="button" id="btn-delete" class="btn-overlay" onclick="clearUserData()">Delete saved data</button>
+        <button type="button" class="btn-delete btn-overlay" onclick="clearUserData()">Delete saved data</button>
       </div>
 
       <!-- Buttons: Update, Cancel Settings -->
@@ -319,6 +319,27 @@
         <button type="button" class="btn-overlay" onclick="closeOverlays()">Cancel</button>
       </div>
     </dialog>
+
+    <!-- Settings Selection Window Popup -->
+    <dialog id="select-settings-container" class="popup-container">
+      <h2>Export Settings</h2>
+      <p>Use this URL to transfer your selected cases to other devices.</p>
+
+      <input type="text" id="input-export" value="https://f2l-trainer.top" readonly />
+
+      <div class="update-cancel-buttons">
+        <input type="button" class="btn-overlay" onclick="copyUTLtoClipboard()" value="Copy to clipboard" />
+      </div>
+
+      <div class="checkbox-container">
+        <h2>Additional</h2>
+        <button type="button" class="btn-delete btn-overlay" onclick="clearUserData()">Delete saved data</button>
+      </div>
+
+      <div class="update-cancel-buttons">
+        <input type="button" class="btn-overlay" onclick="closeOverlays()" value="Close" />
+      </div>
+    </dialog>
     <!-- POPUP-CONTAINER END -->
 
     <!-- Top bar -->
@@ -339,9 +360,17 @@
           title="Trash"
         />
       </div> -->
-      <button type="button" class="side-button" id="btn-info" onclick="showInfo()">
-        <img src="./images/info.svg" alt="Info" class="side-img" title="Info" />
-      </button>
+
+      <div>
+        <button type="button" class="side-button" id="btn-info" onclick="showInfo()">
+          <img src="./images/info.svg" alt="Info" class="side-img" title="Info" />
+        </button>
+
+        <!-- Button Settings Select -->
+        <div class="side-button btn-settings-select" , onclick="showSettingsSelect()">
+          <img src="./images/settings.svg" alt="Settings" class="side-img" title="Settings" />
+        </div>
+      </div>
 
       <div class="container-select-group">
         <!-- <label for="select-group-id" class="acessibility-label">Choose a Group:</label> -->
