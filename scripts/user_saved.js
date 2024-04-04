@@ -88,9 +88,9 @@ function saveUserData() {
       localStorage.setItem(GROUP.saveName + "collapse" + indexCategory, GROUP.collapse[indexCategory]);
 
       let categoryItems = GROUP.categoryCases[indexCategory];
-      for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
-        let indexCase = categoryItems[indexCategoryItem] - 1;
-      }
+      // for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
+      //   let indexCase = categoryItems[indexCategoryItem] - 1;
+      // }
 
       for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
         let indexCase = categoryItems[indexCategoryItem] - 1;
@@ -232,4 +232,86 @@ function clearUserData() {
 function setFirstVisitTrain() {
   // Saving that the user visited the Train View the first time
   localStorage.setItem("firstVisitTrain", false);
+}
+
+function exportUserData() {
+  let exportNumberStrs = [];
+
+  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+    let exportNumber = BigInt(0);
+    let exportNumberInt = BigInt(0);
+
+    const GROUP = GROUPS[indexGroup];
+    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
+      exportNumber += BigInt(GROUP.caseSelection[indexCase] * Math.pow(3, indexCase));
+    }
+    const exportNumberStr = exportNumber.toString(36);
+    exportNumberStrs[indexGroup] = exportNumberStr;
+
+    for (let indexChar = 0; indexChar < exportNumberStr.length; indexChar++) {
+      char = exportNumberStr[indexChar];
+      exportNumberInt += BigInt(parseInt(char, 36) * Math.pow(36, exportNumberStr.length - indexChar - 1));
+    }
+
+    // const difference = exportNumber - exportNumberInt;
+    // console.log(
+    //   "indexGroup: " +
+    //     indexGroup +
+    //     ", number: " +
+    //     exportNumber +
+    //     ", str: " +
+    //     exportNumberStr +
+    //     ", Int: " +
+    //     exportNumberInt +
+    //     ", diff: " +
+    //     difference
+    // );
+  }
+
+  const URL_EXPORT =
+    "https://f2l-trainer.top/?bc=" +
+    exportNumberStrs[0] +
+    "&bcb=" +
+    exportNumberStrs[1] +
+    "&ac=" +
+    exportNumberStrs[2] +
+    "&ec=" +
+    exportNumberStrs[3];
+
+  // navigator.clipboard.writeText(URL_EXPORT);
+  // alert(URL_EXPORT + "\n\ncopied to clipboard.");
+  // console.log(URL_EXPORT);
+  ELEM_INPUT_EXPORT.value = URL_EXPORT;
+}
+
+function importUserData(IMPORT_DATA_STRINGS) {
+  // Reset URL
+  if (window.location.hostname == "127.0.0.1") {
+    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
+  } else {
+    window.history.pushState({}, document.title, "/");
+  }
+  if (IMPORT_DATA_STRINGS === undefined) return;
+  if (IMPORT_DATA_STRINGS.length == 0) return;
+  if (!confirm("Import data from URL?")) return;
+
+  console.log("IMPORT_DATA_STRINGS: " + IMPORT_DATA_STRINGS);
+  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+    const GROUP = GROUPS[indexGroup];
+    const IMPORT_DATA_STRING = IMPORT_DATA_STRINGS[indexGroup];
+    if (IMPORT_DATA_STRING === undefined) continue;
+
+    let importDataInt = BigInt(0);
+
+    for (let indexChar = 0; indexChar < IMPORT_DATA_STRING.length; indexChar++) {
+      char = IMPORT_DATA_STRING[indexChar];
+      importDataInt += BigInt(parseInt(char, 36) * Math.pow(36, IMPORT_DATA_STRING.length - indexChar - 1));
+    }
+
+    // Save imported data
+    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
+      GROUP.caseSelection[indexCase] = Math.floor(Number(importDataInt) / Math.pow(3, indexCase)) % 3;
+      localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
+    }
+  }
 }

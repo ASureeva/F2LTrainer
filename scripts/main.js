@@ -85,7 +85,9 @@ const ELEM_CHECKBOX_HINT = document.getElementById("checkboxShowHintId");
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
-const ELEM_SETTINGS_CONTAINER = document.getElementById("train-cases-container");
+const ELEM_BUTTON_SETTING_SELECT = document.querySelector(".btn-settings-select");
+const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-container");
+const ELEM_CONTAINER_SELECT_SETTINGS = document.getElementById("select-settings-container");
 
 const ELEM_SCRAMBLE = document.getElementById("scramble");
 const ELEM_HINT = document.getElementById("hint");
@@ -138,8 +140,12 @@ const ELEM_PRESS_ME_TRAIN = document.getElementById("div-press-me-tain-id");
 
 let divPressMe;
 
+const ELEM_INPUT_EXPORT = document.getElementById("input-export");
+
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
+  readParams();
+
   //checkForDuplicates();
   // Load User saved Data (user_saved.js)
   loadUserData();
@@ -605,6 +611,10 @@ function keydown(e) {
     // G
     // Log Local Storage
     console.log(localStorage);
+  } else if (e.keyCode === 69) {
+    // E
+    // alert("Export");
+    exportUserData();
   } else {
     // console.log("Key pressed: " + e.keyCode);
   }
@@ -970,6 +980,7 @@ function changeMode() {
     ELEM_WINDOW_SELECT.classList.add("display-none");
     // ELEM_WINDOW_TRAIN.style.display = "flex";
     ELEM_WINDOW_TRAIN.classList.remove("display-none");
+    ELEM_BUTTON_SETTING_SELECT.classList.add("display-none");
     ELEM_BUTTON_SETTINGS.classList.remove("display-none");
     ELEM_CONTAINER_SELECT_GROUP.classList.add("display-none");
     showWelcomeTrainPopup();
@@ -981,6 +992,7 @@ function changeMode() {
     ELEM_WINDOW_SELECT.classList.remove("display-none");
     // ELEM_WINDOW_TRAIN.style.display = "none";
     ELEM_WINDOW_TRAIN.classList.add("display-none");
+    ELEM_BUTTON_SETTING_SELECT.classList.remove("display-none");
     ELEM_BUTTON_SETTINGS.classList.add("display-none");
     ELEM_CONTAINER_SELECT_GROUP.classList.remove("display-none");
   }
@@ -1196,13 +1208,39 @@ function hidePressMeTrainText() {
   }
 }
 
+function readParams() {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  let URL_PARAM_SELECTION = [];
+
+  if (urlParams.has("bc")) {
+    URL_PARAM_SELECTION[0] = urlParams.get("bc");
+  }
+  if (urlParams.has("bcb")) {
+    URL_PARAM_SELECTION[1] = urlParams.get("bcb");
+  }
+  if (urlParams.has("ac")) {
+    URL_PARAM_SELECTION[2] = urlParams.get("ac");
+  }
+  if (urlParams.has("ec")) {
+    URL_PARAM_SELECTION[3] = urlParams.get("ec");
+  }
+  importUserData(URL_PARAM_SELECTION);
+}
+
+function copyUTLtoClipboard() {
+  alert("URL copied to clipboard");
+  navigator.clipboard.writeText(ELEM_INPUT_EXPORT.value);
+}
+
 // ----------    POP-UPS    ----------
 
 function closeOverlays() {
   // ELEM_WELCOME_CONATINER.style.display = "none";
   // ELEM_INFO_CONTAINER.style.display = "none";
   // ELEM_EDITALG_CONTAINER.style.display = "none";
-  // ELEM_SETTINGS_CONTAINER.style.display = "none";
+  // ELEM_CONTAINER_TRAIN_SETTINGS.style.display = "none";
   // ELEM_CHANGE_STATE_POPUP.style.display = "none";
   ELEM_BODY.style.overflow = "auto";
   // ELEM_OVERLAY.style.display = "none";
@@ -1210,7 +1248,8 @@ function closeOverlays() {
   ELEM_WELCOME_CONATINER_TRAIN.close();
   ELEM_INFO_CONTAINER.close();
   ELEM_EDITALG_CONTAINER.close();
-  ELEM_SETTINGS_CONTAINER.close();
+  ELEM_CONTAINER_TRAIN_SETTINGS.close();
+  ELEM_CONTAINER_SELECT_SETTINGS.close();
   ELEM_CHANGE_STATE_POPUP.close();
 }
 
@@ -1236,12 +1275,14 @@ function showInfo() {
   openDialog(ELEM_INFO_CONTAINER);
 }
 
+function showSettingsSelect() {
+  exportUserData();
+  openDialog(ELEM_CONTAINER_SELECT_SETTINGS);
+}
+
 function showSettingsTrain() {
   updateCheckboxStatus();
-  // ELEM_SETTINGS_CONTAINER.style.display = "block";
-  // ELEM_OVERLAY.style.display = "block";
-  // ELEM_BODY.style.overflow = "hidden";
-  openDialog(ELEM_SETTINGS_CONTAINER);
+  openDialog(ELEM_CONTAINER_TRAIN_SETTINGS);
 }
 
 function showSetStateMenu() {
