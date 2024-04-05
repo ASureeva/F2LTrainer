@@ -57,8 +57,12 @@
         algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
       </p>
       <div class="div-centering">
-        <img src="./images/instructions_select_page.png" alt="Select Page Instructions" class="img-instructions" />
-        <!-- <img src="./images/edit.svg" alt="Edit" class="img-inline" /> -->
+        <img
+          src="./images/instructions_select_page.png"
+          alt="Select Page Instructions"
+          class="img-instructions"
+          loading="lazy"
+        />
       </div>
       <div class="update-cancel-buttons">
         <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
@@ -77,11 +81,11 @@
       </ul>
       <p>
         2. Press
-        <img src="./images/edit.svg" alt="Edit" class="img-inline" />
+        <img src="./images/edit.svg" alt="Edit" class="img-inline" loading="lazy" />
         to select your preferred algorithm.<br />
         3. Press <span class="border-inline">Train</span> to switch to train mode.<br />
         4. Press
-        <img src="./images/settings.svg" alt="Setings" class="img-inline" />
+        <img src="./images/settings.svg" alt="Setings" class="img-inline" loading="lazy" />
         to set your preferences.<br />
         5. <b>Scramble</b> your cube according to the displayed scramble.<br />
         6. <b>Solve</b> the first two layers fully.
@@ -279,7 +283,12 @@
         algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
       </p>
       <div class="div-centering">
-        <img src="./images/instructions_train_page.png" alt="Train Page Instructions" class="img-instructions" />
+        <img
+          src="./images/instructions_train_page.png"
+          alt="Train Page Instructions"
+          class="img-instructions"
+          loading="lazy"
+        />
       </div>
       <div class="update-cancel-buttons">
         <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
@@ -333,23 +342,6 @@
 
     <!-- Top bar -->
     <div id="side-container">
-      <!-- <div class="side-button" id="btn-settings">
-        <img
-          src="./images/settings.svg"
-          alt="Settings"
-          class="side-img"
-          title="Settings"
-        />
-      </div> -->
-      <!-- <div class="side-button" id="btn-trash">
-        <img
-          src="./images/trash.svg"
-          alt="Trash"
-          class="side-img"
-          title="Trash"
-        />
-      </div> -->
-
       <div>
         <button type="button" class="side-button" id="btn-info" onclick="showInfo()">
           <img src="./images/info.svg" alt="Info" class="side-img" title="Info" />
@@ -381,30 +373,12 @@
     </div>
 
     <!-- All the Cases will be listed here -->
-    <div id="window-select">
-      <!--renamed!!!!! from select-layout -->
-      <!-- <div class="div-container">
-        <div class="case-number">1</div>
-        <div class="image-container" id="image-container">
-          <img class="img-case" src="./images/basic_cases/F2L1.svg" />
-        </div>
-        <div class="algorithm">
-          <div class="btn-edit">
-            <img src="./images/edit.svg" class="img-edit-trash" />
-          </div>
-          <div class="div-algorithm">U R U' R'</div>
-          <div class="btn-trash">
-            <img src="./images/trash.svg" class="img-edit-trash" />
-          </div>
-        </div>
-      </div> -->
-    </div>
+    <div id="window-select"></div>
 
     <div id="overlay" onclick="closeOverlays()"></div>
 
     <!-- Train Mode -->
     <div class="window-train display-none">
-      <!-- renamed!!!!! from train-container -->
       <div class="div-centering">
         <div id="scramble-container">
           <img
@@ -416,7 +390,6 @@
             title="Previous Scramble"
           />
           <div id="scramble">no case selected</div>
-          <!--renamed from scramble-div-->
           <img
             src="./images/arrow_right.svg"
             onclick="nextScramble(1)"
@@ -434,15 +407,12 @@
         <div id="div-press-me-tain-id" class="div-press-me-train">Press<br />me</div>
       </div>
       <div id="timer">00:00</div>
-      <!-- <button id="btn-start-timer" onclick="toggleTimer()">Start Timer</button> -->
       <div id="hint" onclick="showHint()">Press to show hint</div>
-      <!-- <button type="button" id="hint" onclick="showHint()">Press to show hint</button> -->
 
       <button id="btn-change-state" onclick="showSetStateMenu()">Change state</button>
 
       <button id="btn-show-hide-debug-info" onclick="showHideDebugInfo()">> Show info</button>
       <div id="debug-info"></div>
-      <!--renamed from div-debug-info-->
     </div>
 
     <!-- Scripts -->
