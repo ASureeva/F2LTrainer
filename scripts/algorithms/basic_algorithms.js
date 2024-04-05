@@ -1,10 +1,10 @@
 const basicAlgorithms = {
   1: ["U (R U' R')", "R' F R F'", "U2 (R U2 R')", "y' U f R' f'"],
   2: [
-    "y' U' (R' U R)",
-    "U' (F' U F)",
-    "F R' F' R",
     "y U' (L' U L)",
+    "y' U' (R' U R)",
+    "F R' F' R",
+    "U' (F' U F)",
     "d' L' U L	",
     "r U R' U' M",
     "F l' U' l",
@@ -151,12 +151,12 @@ const basicAlgorithms = {
     "d2 y' R' U' R U' R' U R",
   ],
   23: [
+    "R U' R' U' (R U R') U2 (R U R')",
     "U2 R2 U2 (R' U' R U') R2",
     "U (F R' F' R) U (R U R')",
     "U (R U' R') U' (R U' R' U R U' R')",
     "(R U R' U') U' (R U R' U') (R U R')",
     "(R U2 R') (F' U F) U' (R U R')",
-    "R U' R' U' (R U R') U2 (R U R')",
     "R2 U R' U R U2 R' U' R'",
   ],
   24: [
