@@ -595,7 +595,6 @@ function keydown(e) {
   links: 37
   Leertaste: 32
   */
-  // console.log(e);
   if (e.keyCode === 67) {
     // C
     if (flagdoublepress) {
@@ -611,10 +610,6 @@ function keydown(e) {
     // G
     // Log Local Storage
     console.log(localStorage);
-  } else if (e.keyCode === 69) {
-    // E
-    // alert("Export");
-    exportUserData();
   } else {
     // console.log("Key pressed: " + e.keyCode);
   }
@@ -689,7 +684,6 @@ function showHint() {
 }
 
 function showSelectedGroup() {
-  // renamed from groupSelected
   // Make only selected Group visible
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     if (ELEM_SELECT_GROUP.selectedIndex === indexGroup) {
@@ -1080,13 +1074,11 @@ let timeToString = function (time) {
 };
 
 function spaceDown() {
-  // console.log("spaceDown");
   if (timerEnabled) {
     if (flagTimerRunning) {
       nextScramble(1);
       toggleTimer();
       spacePressFlag = true;
-      // console.log("1");
     } else {
       ELEM_TIMER.style.color = "#00ee00"; // gelb
     }
@@ -1100,19 +1092,17 @@ function spaceDown() {
 }
 
 function spaceUp() {
-  // console.log("spaceUp");
   if (timerEnabled) {
     if (spacePressFlag == false) {
       ELEM_TIMER.style.color = COLOR_TEXT;
       toggleTimer();
-      // console.log("2");
     }
     spacePressFlag = false;
   }
 }
 
 function changeLearningStateBulk(indexGroup, indexCategory, state) {
-  console.log("indexGroup: " + indexGroup + ", indexCategory: " + indexCategory + ", state: " + state);
+  // console.log("indexGroup: " + indexGroup + ", indexCategory: " + indexCategory + ", state: " + state);
   const GROUP = GROUPS[indexGroup];
   let categoryItems = GROUP.categoryCases[indexCategory];
 
