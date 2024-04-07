@@ -520,6 +520,8 @@ function updateAlg() {
     tempAlg = GROUP.customAlgorithms[selectedCase];
   }
 
+  if (tempAlg == "") return;
+
   if (GROUP.flagMirrored[selectedCase] == true) tempAlg = mirrorAlg(tempAlg);
 
   GROUP.divAlgorithm[selectedCase].innerHTML = tempAlg;
@@ -1273,6 +1275,7 @@ function showSettingsSelect() {
 function showSettingsTrain() {
   updateCheckboxStatus();
   openDialog(ELEM_CONTAINER_TRAIN_SETTINGS);
+  
 }
 
 function showSetStateMenu() {
