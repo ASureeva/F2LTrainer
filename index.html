@@ -244,26 +244,20 @@
         </div>
       </div>
 
+      <h2>Additional</h2>
       <div class="checkbox-container">
-        <h2>Hint Settings</h2>
         <label class="checkbox" for="checkboxShowHintId">
           <input type="checkbox" class="checkbox__input" name="checkboxShowHint" id="checkboxShowHintId" />
           <div class="checkbox__box"></div>
-          Show Image
+          Show Hint Image
         </label>
-      </div>
 
-      <div class="checkbox-container">
-        <h2>Timer Settings</h2>
         <label class="checkbox" for="checkboxEnableTimerId">
           <input type="checkbox" class="checkbox__input" name="checkboxEnableTimer" id="checkboxEnableTimerId" />
           <div class="checkbox__box"></div>
           Enable Timer (experimental)
         </label>
-      </div>
 
-      <div class="checkbox-container">
-        <h2>Additional</h2>
         <button type="button" class="btn-delete btn-overlay" onclick="clearUserData()">Delete saved data</button>
       </div>
 
@@ -337,7 +331,7 @@
       <input type="text" id="input-export" value="https://f2l-trainer.top" readonly />
 
       <div class="update-cancel-buttons">
-        <input type="button" class="btn-overlay" onclick="copyUTLtoClipboard()" value="Copy to clipboard" />
+        <button type="button" class="btn-overlay" onclick="copyUTLtoClipboard()">Copy to clipboard</button>
       </div>
 
       <div class="checkbox-container">
