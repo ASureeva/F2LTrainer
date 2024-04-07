@@ -285,7 +285,7 @@ function exportUserData() {
   // ELEM_INPUT_EXPORT.blur();
   setTimeout(() => {
     ELEM_INPUT_EXPORT.blur();
-  }, 10);
+  }, 1);
 }
 
 function importUserData(IMPORT_DATA_STRINGS) {
