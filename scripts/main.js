@@ -1204,20 +1204,15 @@ function readParams() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
+  if (!urlParams.length) return;
+
   let URL_PARAM_SELECTION = [];
 
-  if (urlParams.has("bc")) {
-    URL_PARAM_SELECTION[0] = urlParams.get("bc");
-  }
-  if (urlParams.has("bcb")) {
-    URL_PARAM_SELECTION[1] = urlParams.get("bcb");
-  }
-  if (urlParams.has("ac")) {
-    URL_PARAM_SELECTION[2] = urlParams.get("ac");
-  }
-  if (urlParams.has("ec")) {
-    URL_PARAM_SELECTION[3] = urlParams.get("ec");
-  }
+  if (urlParams.has("bc")) URL_PARAM_SELECTION[0] = urlParams.get("bc");
+  if (urlParams.has("bcb")) URL_PARAM_SELECTION[1] = urlParams.get("bcb");
+  if (urlParams.has("ac")) URL_PARAM_SELECTION[2] = urlParams.get("ac");
+  if (urlParams.has("ec")) URL_PARAM_SELECTION[3] = urlParams.get("ec");
+
   importUserData(URL_PARAM_SELECTION);
 }
 
@@ -1275,7 +1270,6 @@ function showSettingsSelect() {
 function showSettingsTrain() {
   updateCheckboxStatus();
   openDialog(ELEM_CONTAINER_TRAIN_SETTINGS);
-  
 }
 
 function showSetStateMenu() {
