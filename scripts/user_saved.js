@@ -283,9 +283,9 @@ function exportUserData() {
   // console.log(URL_EXPORT);
   ELEM_INPUT_EXPORT.value = URL_EXPORT;
   // ELEM_INPUT_EXPORT.blur();
-  setTimeout(() => {
-    ELEM_INPUT_EXPORT.blur();
-  }, 1);
+  // setTimeout(() => {
+  //   ELEM_INPUT_EXPORT.blur();
+  // }, 1);
 }
 
 function importUserData(IMPORT_DATA_STRINGS) {
