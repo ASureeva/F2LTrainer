@@ -1203,17 +1203,36 @@ function hidePressMeTrainText() {
 function readParams() {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
+  if (!queryString.length) return;
 
-  if (!urlParams.length) return;
+  // Reset URL
+  if (window.location.hostname == "127.0.0.1") {
+    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
+  } else {
+    window.history.pushState({}, document.title, "/");
+  }
 
-  let URL_PARAM_SELECTION = [];
+  let URL_PARAM_CASE_SELECTION = [];
+  let URL_PARAM_ALG_SELECTION = [];
 
-  if (urlParams.has("bc")) URL_PARAM_SELECTION[0] = urlParams.get("bc");
-  if (urlParams.has("bcb")) URL_PARAM_SELECTION[1] = urlParams.get("bcb");
-  if (urlParams.has("ac")) URL_PARAM_SELECTION[2] = urlParams.get("ac");
-  if (urlParams.has("ec")) URL_PARAM_SELECTION[3] = urlParams.get("ec");
+  if (urlParams.has("bc")) URL_PARAM_CASE_SELECTION[0] = urlParams.get("bc");
+  if (urlParams.has("bcb")) URL_PARAM_CASE_SELECTION[1] = urlParams.get("bcb");
+  if (urlParams.has("ac")) URL_PARAM_CASE_SELECTION[2] = urlParams.get("ac");
+  if (urlParams.has("ec")) URL_PARAM_CASE_SELECTION[3] = urlParams.get("ec");
 
-  importUserData(URL_PARAM_SELECTION);
+  if (urlParams.has("a")) URL_PARAM_ALG_SELECTION[0] = urlParams.get("a");
+  if (urlParams.has("b")) URL_PARAM_ALG_SELECTION[1] = urlParams.get("b");
+  if (urlParams.has("c")) URL_PARAM_ALG_SELECTION[2] = urlParams.get("c");
+  if (urlParams.has("d")) URL_PARAM_ALG_SELECTION[3] = urlParams.get("d");
+
+  if (URL_PARAM_CASE_SELECTION.length == 0 && URL_PARAM_ALG_SELECTION.length == 0) {
+    alert("Incorrect URL Parameters");
+    return;
+  }
+  if (!confirm("Import data from URL?")) return;
+
+  if (URL_PARAM_CASE_SELECTION.length != 0) importUserDataCases(URL_PARAM_CASE_SELECTION);
+  if (URL_PARAM_ALG_SELECTION.length != 0) importUserDataAlgs(URL_PARAM_ALG_SELECTION);
 }
 
 function copyUTLtoClipboard() {
