@@ -488,6 +488,7 @@ a {
 
 #editalg-img {
   width: 100%;
+  margin-top: 15px;
 }
 
 .editalg-listentry {
@@ -1040,7 +1041,7 @@ a {
   }
   #input-export,
   #editalg-customalg {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
   }
   #change-mode {
     font-size: 1.5rem;

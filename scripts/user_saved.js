@@ -236,38 +236,32 @@ function setFirstVisitTrain() {
 
 function exportUserData() {
   let exportNumberStrs = [];
+  let exportAlgSels = [];
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+    const GROUP = GROUPS[indexGroup];
+
+    // Gernerate Case selection export
     let exportNumber = BigInt(0);
     let exportNumberInt = BigInt(0);
-
-    const GROUP = GROUPS[indexGroup];
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
       exportNumber += BigInt(GROUP.caseSelection[indexCase] * Math.pow(3, indexCase));
     }
     const exportNumberStr = exportNumber.toString(36);
     exportNumberStrs[indexGroup] = exportNumberStr;
 
-    for (let indexChar = 0; indexChar < exportNumberStr.length; indexChar++) {
-      char = exportNumberStr[indexChar];
-      exportNumberInt += BigInt(parseInt(char, 36) * Math.pow(36, exportNumberStr.length - indexChar - 1));
+    // Gernerate Alg selection export
+    let exportAlgSel = "";
+    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
+      if (GROUP.algorithmSelection[indexCase] != 0) {
+        let temp = indexCase.toString(36);
+        if (temp.length == 1) temp = "0" + temp;
+        temp += GROUP.algorithmSelection[indexCase];
+        exportAlgSel += temp;
+      }
     }
-
-    // const difference = exportNumber - exportNumberInt;
-    // console.log(
-    //   "indexGroup: " +
-    //     indexGroup +
-    //     ", number: " +
-    //     exportNumber +
-    //     ", str: " +
-    //     exportNumberStr +
-    //     ", Int: " +
-    //     exportNumberInt +
-    //     ", diff: " +
-    //     difference
-    // );
+    exportAlgSels[indexGroup] = exportAlgSel;
   }
-
   const URL_EXPORT =
     "https://f2l-trainer.top/?bc=" +
     exportNumberStrs[0] +
@@ -276,33 +270,29 @@ function exportUserData() {
     "&ac=" +
     exportNumberStrs[2] +
     "&ec=" +
-    exportNumberStrs[3];
+    exportNumberStrs[3] +
+    "&a=" +
+    exportAlgSels[0] +
+    "&b=" +
+    exportAlgSels[1] +
+    "&c=" +
+    exportAlgSels[2] +
+    "&d=" +
+    exportAlgSels[3];
 
-  // navigator.clipboard.writeText(URL_EXPORT);
-  // alert(URL_EXPORT + "\n\ncopied to clipboard.");
-  // console.log(URL_EXPORT);
+  // console.log("URL_EXPORT: " + URL_EXPORT);
   ELEM_INPUT_EXPORT.value = URL_EXPORT;
   // ELEM_INPUT_EXPORT.blur();
-  setTimeout(() => {
-    ELEM_INPUT_EXPORT.blur();
-  }, 1);
+  // setTimeout(() => {
+  //   ELEM_INPUT_EXPORT.blur();
+  // }, 1);
 }
 
-function importUserData(IMPORT_DATA_STRINGS) {
-  // Reset URL
-  if (window.location.hostname == "127.0.0.1") {
-    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
-  } else {
-    window.history.pushState({}, document.title, "/");
-  }
-  if (IMPORT_DATA_STRINGS === undefined) return;
-  if (IMPORT_DATA_STRINGS.length == 0) return;
-  if (!confirm("Import data from URL?")) return;
-
-  console.log("IMPORT_DATA_STRINGS: " + IMPORT_DATA_STRINGS);
+function importUserDataCases(URL_PARAM_CASE_SELECTION) {
+  console.log("Importing case selection");
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
-    const IMPORT_DATA_STRING = IMPORT_DATA_STRINGS[indexGroup];
+    const IMPORT_DATA_STRING = URL_PARAM_CASE_SELECTION[indexGroup];
     if (IMPORT_DATA_STRING === undefined) continue;
 
     let importDataInt = BigInt(0);
@@ -316,6 +306,24 @@ function importUserData(IMPORT_DATA_STRINGS) {
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
       GROUP.caseSelection[indexCase] = Math.floor(Number(importDataInt) / Math.pow(3, indexCase)) % 3;
       localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
+    }
+  }
+}
+
+function importUserDataAlgs(URL_PARAM_ALG_SELECTION) {
+  console.log("Importing alg selection");
+  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+    const GROUP = GROUPS[indexGroup];
+    const IMPORT_DATA_STRING = URL_PARAM_ALG_SELECTION[indexGroup];
+    if (IMPORT_DATA_STRING === undefined) continue;
+
+    for (var i = 0; i < IMPORT_DATA_STRING.length; i += 3) {
+      const INDEX_CASE = parseInt(IMPORT_DATA_STRING.slice(i, i + 2), 36);
+      const ALG_SEL = parseInt(IMPORT_DATA_STRING.slice(i + 2, i + 3), 36);
+
+      if (INDEX_CASE >= GROUP.numberCases) continue;
+
+      localStorage.setItem(GROUP.saveName + "algorithmSelection" + INDEX_CASE, ALG_SEL);
     }
   }
 }
