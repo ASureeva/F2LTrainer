@@ -828,13 +828,13 @@ function nextScramble(nextPrevious) {
 
   ELEM_DEBUG_INFO.innerHTML =
     GROUPS[INDEX_GROUP].name +
-    ", Case: " +
+    ", Case " +
     (INDEX_CASE + 1) +
-    ", Scramble: " +
+    ", Scramble " +
     +INDEX_SCRAMBLE +
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
-    ", Algorithm: " +
+    ", Algorithm " +
     GROUPS[INDEX_GROUP].algorithmSelection[INDEX_CASE] +
     ", " +
     STRING_MIRRORED[MIRRORING] +
