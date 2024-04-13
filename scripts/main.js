@@ -45,12 +45,10 @@ const ELEM_CHANGE_STATE_POPUP = document.getElementById("popup-change-state");
 const ELEM_DIALOGS = document.querySelectorAll("dialog");
 
 // side buttons
-// const btnTrash = document.getElementById("btn-trash");
 
 const CATEGORY_NAMES = ["Unlearned", "Learning", "Finished", "All"];
 
 const CATEGORY_COLORS = [COLOR_UNLEARNED, COLOR_LEARNING, COLOR_FINISHED];
-// const CATEGORY_BORDERS = ["dashed", "dashed solid", "solid"];
 const CATEGORY_BORDERS = ["solid", "solid", "solid"];
 const CATEGORY_TEXT_COLOR = [COLOR_TEXT, COLOR_TEXT_INVERTED, COLOR_TEXT_INVERTED];
 const COLORS_BTN_EDIT = [FILTER_IMG, FILTER_BLACK, FILTER_BLACK];
@@ -145,8 +143,6 @@ const ELEM_INPUT_EXPORT = document.getElementById("input-export");
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
   readParams();
-
-  //checkForDuplicates();
   // Load User saved Data (user_saved.js)
   loadUserData();
   ELEM_SELECT_GROUP.selectedIndex = viewSelection; // Set view
@@ -154,8 +150,6 @@ window.addEventListener("load", () => {
   showWelcomePopup();
   // Create all Entries
   addElementsToDOM();
-  // addTrashElementsToBOM();
-  // addSelectGroupTrain();
 
   showPressMeText();
   hidePressMeTrainText();
@@ -179,54 +173,6 @@ window.addEventListener("load", () => {
 
     ELEM_EDITALG_LIST.appendChild(ELEM_EDITALG_LISTENTRY[i]);
   }
-  // Click Event - Delete Button clicked
-  // for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-  //   const GROUP = GROUPS[indexGroup];
-  //   GROUP.imgTrash.forEach(function (button, indexCase) {
-  //     button.addEventListener("click", function () {
-  //       GROUP.trash[indexCase] = true;
-  //       GROUP.divContainer[indexCase].style.display = "none";
-  //       GROUP.trashElementContainer[indexCase].style.display = "flex";
-  //       // Save
-  //       saveUserData();
-  //     });
-  //   });
-  // }
-
-  // Click Event - Recover
-  // for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-  //   // TEST
-  //   const GROUP = GROUPS[indexGroup];
-  //   GROUP.btnRecover.forEach(function (button, indexCase) {
-  //     button.addEventListener("click", function () {
-  //       GROUP.trash[indexCase] = false;
-  //       GROUP.divContainer[indexCase].style.display = "flex";
-  //       GROUP.trashElementContainer[indexCase].style.display = "none";
-
-  //       // Save
-  //       saveUserData();
-  //     });
-  //   });
-  // }
-
-  // Change Mode
-  // ELEM_BTN_CHANGE_MODE.onclick = function () {
-  //   changeMode();
-  // };
-
-  // Close Overlays
-  // ELEM_OVERLAY.onclick = function () {
-  //   closeOverlays();
-  // };
-
-  // Click Event - Open Trash
-  /*
-  btnTrash.onclick = function () {
-    ELEM_TRASH_CONTAINER.style.display = "block";
-    ELEM_OVERLAY.style.display = "block";
-    ELEM_BODY.style.overflow = "hiden";
-  };
-*/
 
   // Close dialogs (popup-container) if clicked outside the dialog
   ELEM_DIALOGS.forEach((elem_dialog) => {
@@ -282,11 +228,6 @@ function addElementsToDOM() {
       GROUP.collapseContainer.push(document.createElement("button"));
       GROUP.collapseContainer[indexCategory].type = "button";
       GROUP.collapseContainer[indexCategory].classList.add("collapse-container");
-      // GROUP.collapseContainer[indexCategory].onclick = function () {
-      //   collapseCategory(indexGroup, indexCategory);
-      //   // const COLLAPSECLASS = "#expand-contract-group" + indexGroup + "-category" + indexCategory;
-      //   // $(COLLAPSECLASS).slideToggle(200);
-      // };
 
       GROUP.categoryCollapseImg.push(document.createElement("img"));
       GROUP.categoryCollapseImg[indexCategory].classList.add("img-collapse-category");
@@ -297,7 +238,6 @@ function addElementsToDOM() {
 
       GROUP.categoryCollapseImg[indexCategory].src = IMG_PATH_RIGHT_ARROW;
       if (GROUP.collapse[indexCategory]) {
-        // GROUP.categoryContainer[indexCategory].style.display = "none";
         GROUP.categoryContainer[indexCategory].classList.add("display-none");
       } else {
         GROUP.categoryCollapseImg[indexCategory].classList.add("rotate-arrow");
@@ -406,13 +346,6 @@ function addElementsToDOM() {
         GROUP.divAlgorithm[indexCase] = document.createElement("div");
         GROUP.divAlgorithm[indexCase].classList.add("div-algorithm");
 
-        // GROUP.btnDelete[indexCase] = document.createElement("div");
-        // GROUP.btnDelete[indexCase].classList.add("btn-trash");
-        // GROUP.btnDelete[indexCase].title = "Delete";
-
-        // GROUP.imgTrash[indexCase] = document.createElement("img");
-        // GROUP.imgTrash[indexCase].classList.add("img-edit-trash");
-
         GROUP.caseNumber[indexCase].innerHTML = indexCase + 1;
         GROUP.imgCase[indexCase].src = IMG_CASE_PATH;
         GROUP.imgCase[indexCase].alt = GROUP.name + ", Case " + (indexCase + 1);
@@ -428,12 +361,7 @@ function addElementsToDOM() {
 
         GROUP.imgMirror[indexCase].src = "./images/mirror1.svg";
         GROUP.imgEdit[indexCase].src = "./images/edit.svg";
-        // GROUP.imgTrash[indexCase].src = "./images/trash.svg";
-
-        // if (GROUP.trash[indexCase] == true) {
-        //   GROUP.divContainer[indexCase].style.display = "none";
-        // }
-
+    
         GROUP.divContainer[indexCase].style.background = CATEGORY_COLORS[GROUP.caseSelection[indexCase]];
 
         GROUP.divContainer[indexCase].appendChild(GROUP.caseNumber[indexCase]); // Don't show case number
@@ -441,10 +369,7 @@ function addElementsToDOM() {
         GROUP.divContainer[indexCase].appendChild(GROUP.imgContainer[indexCase]);
         GROUP.imgContainer[indexCase].appendChild(GROUP.imgCase[indexCase]);
         GROUP.divContainer[indexCase].appendChild(GROUP.algorithm[indexCase]);
-        // GROUP.algorithm[indexCase].appendChild(GROUP.btnMirror[indexCase]);
-        // GROUP.btnMirror[indexCase].appendChild(GROUP.imgMirror[indexCase]);
         GROUP.algorithm[indexCase].appendChild(GROUP.divAlgorithm[indexCase]);
-        // GROUP.algorithm[indexCase].appendChild(GROUP.btnEdit[indexCase]);
         GROUP.algorithm[indexCase].appendChild(GROUP.btnContainer[indexCase]);
         GROUP.btnContainer[indexCase].appendChild(GROUP.btnEdit[indexCase]);
         GROUP.btnContainer[indexCase].appendChild(GROUP.btnMirror[indexCase]);
@@ -458,51 +383,6 @@ function addElementsToDOM() {
     ELEM_WINDOW_SELECT.appendChild(ELEM_GROUP_CONTAINER[indexGroup]);
   }
 }
-
-/*
-function addTrashElementsToBOM() {
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    // TEST
-    const GROUP = GROUPS[indexGroup];
-
-    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      // Case Selection Page
-      const caseImgPath = GROUP.imgPath + "right/F2L" + (indexCase + 1) + ".svg";
-
-      GROUP.trashElementContainer.push(document.createElement("div"));
-      GROUP.trashElementContainer[indexCase].classList.add("trash-element-container");
-
-      GROUP.caseNumberTrash.push(document.createElement("div"));
-      GROUP.caseNumberTrash[indexCase].classList.add("case-number-trash");
-
-      GROUP.imgContainerTrash.push(document.createElement("div"));
-      GROUP.imgContainerTrash[indexCase].classList.add("img-container-trash");
-
-      GROUP.imgCaseTrash.push(document.createElement("img"));
-      GROUP.imgCaseTrash[indexCase].classList.add("img-case-trash");
-
-      GROUP.btnRecover.push(document.createElement("div"));
-      GROUP.btnRecover[indexCase].classList.add("btn-recover");
-
-      if (indexCase != 36) {
-        GROUP.caseNumberTrash[indexCase].innerHTML = indexCase + 1;
-        GROUP.imgCaseTrash[indexCase].src = caseImgPath;
-        GROUP.btnRecover[indexCase].innerHTML = "Recover";
-        if (basicTrash[indexCase] == false) {
-          GROUP.trashElementContainer[indexCase].style.display = "none";
-        }
-
-        GROUP.trashElementContainer[indexCase].appendChild(GROUP.caseNumberTrash[indexCase]);
-        GROUP.trashElementContainer[indexCase].appendChild(GROUP.imgContainerTrash[indexCase]);
-        GROUP.imgContainerTrash[indexCase].appendChild(GROUP.imgCaseTrash[indexCase]);
-        GROUP.trashElementContainer[indexCase].appendChild(GROUP.btnRecover[indexCase]);
-
-        ELEM_TRASH_CONTAINER.appendChild(GROUP.trashElementContainer[indexCase]);
-      }
-    }
-  }
-}
-*/
 
 function updateAlg() {
   // Update Alg button clicked
@@ -535,7 +415,6 @@ function updateAlg() {
 }
 
 function editAlgs(indexGroup, indexCase) {
-  // ELEM_EDITALG_CUSTOMALG.disabled = false;
   selectedCase = indexCase;
   const GROUP = GROUPS[indexGroup];
   selectedAlgNumber = GROUP.algorithmSelection[selectedCase];
@@ -570,12 +449,6 @@ function editAlgs(indexGroup, indexCase) {
 
   // Set text in Textbox to saved value
   ELEM_EDITALG_CUSTOMALG.value = GROUP.customAlgorithms[selectedCase];
-  // Make container visible
-  // ELEM_EDITALG_CONTAINER.style.display = "block";
-  // Make overlay visible
-  // ELEM_OVERLAY.style.display = "block";
-  // Disable scolling on main page
-  // ELEM_BODY.style.overflow = "hidden";
   openDialog(ELEM_EDITALG_CONTAINER);
   ELEM_EDITALG_IMG.focus();
 }
@@ -702,7 +575,6 @@ function showSelectedGroup() {
 
 function generateTrainCaseList() {
   trainCaseList = [];
-  // currentTrainCaseNumber = 0;
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
@@ -795,6 +667,11 @@ function nextScramble(nextPrevious) {
     flagSave = false;
   }*/
   if (nextPrevious) {
+    if (currentTrainCaseNumber >= 0)
+      // Increase Solve Counter
+      GROUPS[generatedScrambles[currentTrainCaseNumber].indexGroup].solveCounter[
+        generatedScrambles[currentTrainCaseNumber].indexCase
+      ] += 1;
     currentTrainCaseNumber++;
     if (currentTrainCaseNumber >= generatedScrambles.length) {
       generateTrainCaseList();
@@ -838,10 +715,13 @@ function nextScramble(nextPrevious) {
     GROUPS[INDEX_GROUP].algorithmSelection[INDEX_CASE] +
     ", " +
     STRING_MIRRORED[MIRRORING] +
-    " Slot";
+    " Slot, Solve Counter: " +
+    GROUP.solveCounter[INDEX_CASE];
 
   currentTrainGroup = INDEX_GROUP;
   currentTrainCase = INDEX_CASE;
+
+  saveUserData();
 }
 
 function updateCheckboxStatus() {
@@ -970,11 +850,8 @@ function changeMode() {
   if (mode == 0) {
     mode = 1;
     updateTrainCases();
-    // nextScramble(1);
     ELEM_BTN_CHANGE_MODE.innerHTML = "Select cases";
-    // ELEM_WINDOW_SELECT.style.display = "none";
     ELEM_WINDOW_SELECT.classList.add("display-none");
-    // ELEM_WINDOW_TRAIN.style.display = "flex";
     ELEM_WINDOW_TRAIN.classList.remove("display-none");
     ELEM_BUTTON_SETTING_SELECT.classList.add("display-none");
     ELEM_BUTTON_SETTINGS.classList.remove("display-none");
@@ -982,11 +859,8 @@ function changeMode() {
     showWelcomeTrainPopup();
   } else {
     mode = 0;
-    // showWelcomeTrainPopup();
     ELEM_BTN_CHANGE_MODE.innerHTML = "Train";
-    // ELEM_WINDOW_SELECT.style.display = "block";
     ELEM_WINDOW_SELECT.classList.remove("display-none");
-    // ELEM_WINDOW_TRAIN.style.display = "none";
     ELEM_WINDOW_TRAIN.classList.add("display-none");
     ELEM_BUTTON_SETTING_SELECT.classList.remove("display-none");
     ELEM_BUTTON_SETTINGS.classList.add("display-none");
@@ -1082,7 +956,7 @@ function spaceDown() {
       toggleTimer();
       spacePressFlag = true;
     } else {
-      ELEM_TIMER.style.color = "#00ee00"; // gelb
+      ELEM_TIMER.style.color = "#00ee00"; // yellow
     }
   } else {
     flagTimerRunning = false;
@@ -1243,13 +1117,7 @@ function copyUTLtoClipboard() {
 // ----------    POP-UPS    ----------
 
 function closeOverlays() {
-  // ELEM_WELCOME_CONATINER.style.display = "none";
-  // ELEM_INFO_CONTAINER.style.display = "none";
-  // ELEM_EDITALG_CONTAINER.style.display = "none";
-  // ELEM_CONTAINER_TRAIN_SETTINGS.style.display = "none";
-  // ELEM_CHANGE_STATE_POPUP.style.display = "none";
   ELEM_BODY.style.overflow = "auto";
-  // ELEM_OVERLAY.style.display = "none";
   ELEM_WELCOME_CONATINER.close();
   ELEM_WELCOME_CONATINER_TRAIN.close();
   ELEM_INFO_CONTAINER.close();
@@ -1274,10 +1142,6 @@ function showWelcomeTrainPopup() {
 }
 
 function showInfo() {
-  // ELEM_INFO_CONTAINER.style.display = "block";
-  // ELEM_OVERLAY.style.display = "block";
-  // ELEM_BODY.style.overflow = "hidden";
-  // ELEM_INFO_CONTAINER.showModal();
   openDialog(ELEM_INFO_CONTAINER);
 }
 
@@ -1301,14 +1165,10 @@ function showSetStateMenu() {
     ELEM_RADIO_FINISHED.checked = true;
   }
 
-  // ELEM_CHANGE_STATE_POPUP.style.display = "block";
-  // ELEM_OVERLAY.style.display = "block";
-  // ELEM_BODY.style.overflow = "hidden";
   openDialog(ELEM_CHANGE_STATE_POPUP);
 }
 
 function openDialog(ELEM) {
-  // ELEM.style.display = "block";
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
 }
