@@ -737,7 +737,7 @@ a {
 }
 
 #debug-info {
-  display: none;
+  display: block;
   font-size: 1rem;
 }
 

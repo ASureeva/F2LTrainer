@@ -110,7 +110,7 @@ let currentTrainCaseNumber = -1;
 // Basic, Basic Back, Advanced, Exert
 const ELEM_SELECT_GROUP = document.querySelector(".select-group");
 
-let boolShowDebugInfo = false;
+let boolShowDebugInfo = true;
 const ELEM_BTN_SHOW_HIDE_DEBUG_INFO = document.getElementById("btn-show-hide-debug-info");
 const ELEM_DEBUG_INFO = document.getElementById("debug-info");
 
@@ -361,7 +361,7 @@ function addElementsToDOM() {
 
         GROUP.imgMirror[indexCase].src = "./images/mirror1.svg";
         GROUP.imgEdit[indexCase].src = "./images/edit.svg";
-    
+
         GROUP.divContainer[indexCase].style.background = CATEGORY_COLORS[GROUP.caseSelection[indexCase]];
 
         GROUP.divContainer[indexCase].appendChild(GROUP.caseNumber[indexCase]); // Don't show case number
