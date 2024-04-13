@@ -4,6 +4,7 @@ let basicCaseSelection = [];
 let basicAlgorithmSelection = [];
 let basicCustomAlgorithms = [];
 let basicCollapse = [];
+let basicSolveCounter = [];
 
 // Basic Back
 let basicBackTrash = [];
@@ -11,6 +12,7 @@ let basicBackCaseSelection = [];
 let basicBackAlgorithmSelection = [];
 let basicBackCustomAlgorithms = [];
 let basicBackCollapse = [];
+let basicBackSolveCounter = [];
 
 // Advanced
 let advancedTrash = [];
@@ -18,6 +20,7 @@ let advancedCaseSelection = [];
 let advancedAlgorithmSelection = [];
 let advandedCustomAlgorithms = [];
 let advancedCollapse = [];
+let advancedSolveCounter = [];
 
 // Expert
 let expertTrash = [];
@@ -25,6 +28,7 @@ let expertCaseSelection = [];
 let expertAlgorithmSelection = [];
 let expertCustomAlgorithms = [];
 let expertCollapse = [];
+let expertSolveCounter = [];
 
 // View selection
 let viewSelection = 0;
@@ -95,8 +99,6 @@ function saveUserData() {
       for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
         let indexCase = categoryItems[indexCategoryItem] - 1;
 
-        // Save Trash
-        //localStorage.setItem(GROUP.saveName + "trash" + indexCase, GROUP.trash[indexCase]);
         // Save Case Selection
         localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
         // Save Custom Algorithms
@@ -105,6 +107,8 @@ function saveUserData() {
         localStorage.setItem(GROUP.saveName + "algorithmSelection" + indexCase, GROUP.algorithmSelection[indexCase]);
       }
     }
+    // console.log(JSON.stringify(GROUP.solveCounter));
+    localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
   }
   updateHintVisibility();
 }
@@ -153,15 +157,6 @@ function loadUserData() {
     }
 
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      // Load Trash
-      /*
-      temp = localStorage.getItem(GROUP.saveName + "trash" + indexCase);
-      if (temp !== null) {
-        GROUP.trash.push(temp);
-      } else {
-        GROUP.trash.push(false);
-      }
-*/
       // Load Case Selection
       temp = localStorage.getItem(GROUP.saveName + "caseSelection" + indexCase);
       if (temp !== null && temp >= 0 && temp <= 2) {
@@ -200,6 +195,15 @@ function loadUserData() {
       } else {
         GROUP.algorithmSelection.push(0);
       }
+    }
+
+    // Load Solve Counter
+    temp = localStorage.getItem(GROUP.saveName + "solveCounter");
+    if (temp !== null) {
+      GROUP.solveCounter = JSON.parse(temp);
+    } else {
+      // Populate array with zeroes
+      GROUP.solveCounter = Array(GROUP.numberCases).fill(0);
     }
   }
 
