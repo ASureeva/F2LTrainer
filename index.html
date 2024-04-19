@@ -230,17 +230,26 @@
 
       <h2>Additional</h2>
       <div class="checkbox-container">
-        <label class="checkbox" for="checkboxShowHintId">
+        <!-- <label class="checkbox" for="checkboxShowHintId">
           <input type="checkbox" class="checkbox__input" name="checkboxShowHint" id="checkboxShowHintId" />
           <div class="checkbox__box"></div>
           Show Hint Image
-        </label>
+        </label> -->
 
         <label class="checkbox" for="checkboxEnableTimerId">
           <input type="checkbox" class="checkbox__input" name="checkboxEnableTimer" id="checkboxEnableTimerId" />
           <div class="checkbox__box"></div>
           Enable Timer (experimental)
         </label>
+
+        <div class="div-select-hint">
+          <p>Hint image:</p>
+          <select id="select-hint-id" class="select-hint">
+            <option value="none">None</option>
+            <option value="2d">2D Image</option>
+            <option value="3d" selected>3D Cube</option>
+          </select>
+        </div>
 
         <button type="button" class="btn-delete btn-overlay" onclick="clearUserData()">Delete saved data</button>
       </div>
@@ -390,11 +399,35 @@
         </div>
       </div>
 
-      <div id="div-hint-img" onmousedown="spaceDown()" onmouseup="spaceUp()">
+      <div class="div-hint-img" onmousedown="spaceDown()" onmouseup="spaceUp()">
         <img id="hint-img" src="./images/basic_cases/right/F2L1.svg" alt="Image of F2L Case" loading="lazy" />
         <div id="loading-case" class="loader display-none"></div>
         <div id="div-press-me-tain-id" class="div-press-me-train">Press<br />me</div>
       </div>
+
+      <div class="div-twisty-player">
+        <twisty-player
+          onpointerdown="showResetButton()"
+          puzzle="3x3x3"
+          experimental-setup-anchor="start"
+          hint-facelets="none"
+          back-view="none"
+          background="none"
+          experimental-stickering="full"
+          camera-latitude="25"
+          camera-longitude="25"
+          viewer-link="none"
+          camera-distance="5"
+        ></twisty-player>
+
+        <img
+          src="./images/refresh.svg"
+          onmousedown="resetTwistyPlayerView()"
+          alt="Reset View"
+          class="btn-reset-player-view display-none"
+        />
+      </div>
+
       <div id="timer">00:00</div>
       <div id="hint" onclick="showHint()">Press to show hint</div>
 
@@ -426,6 +459,9 @@
     <script src="./scripts/groups.js"></script>
     <script src="./scripts/string_manipulation.js"></script>
     <script src="./scripts/main.js"></script>
+
+    <!-- cubing.js -->
+    <script src="https://cdn.cubing.net/js/cubing/twisty" type="module" defer></script>
 
     <!-- Google Tag Manager (noscript) -->
     <noscript

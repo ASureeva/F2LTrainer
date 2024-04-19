@@ -170,7 +170,7 @@ const ADVANCED_COLLECTION = {
     [9, 10, 13, 14],
     [7, 8, 11, 12],
     [19, 20, 21, 22, 23, 24],
-    [25, 26, 27, 28, 29],
+    [25, 26, 27, 28, 29, 30],
     [5, 6, 17, 18, 15, 16],
     [31, 32, 33, 34, 35, 36],
   ],
@@ -199,6 +199,9 @@ const ADVANCED_COLLECTION = {
   imgContainerTrash: [],
   imgCaseTrash: [],
   btnRecover: [],
+  piecesToHide: [
+    4, 4, 2, 2, 1, 1, 4, 4, 2, 2, 2, 2, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+  ],
 };
 
 const EXPERT_COLLECTION = {
@@ -256,6 +259,7 @@ const EXPERT_COLLECTION = {
   imgContainerTrash: [],
   imgCaseTrash: [],
   btnRecover: [],
+  piecesToHide: [4, 4, 2, 2, 2, 2, 2, 4, 1, 2, 4, 2, 4, 2, 4, 2, 4],
 };
 
 const GROUPS = [BASIC_COLLECTION, BASIC_BACK_COLLECTION, ADVANCED_COLLECTION, EXPERT_COLLECTION];

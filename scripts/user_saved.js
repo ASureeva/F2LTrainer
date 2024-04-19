@@ -47,7 +47,7 @@ let trainGroupSelection = [true, true, true, true];
 let leftSelection = true;
 let rightSelection = true;
 let aufSelection = true;
-let hintSelection = true;
+let hintSelection = 2;
 let timerEnabled = false;
 
 let firstVisit = true;
@@ -110,7 +110,7 @@ function saveUserData() {
     // console.log(JSON.stringify(GROUP.solveCounter));
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
   }
-  updateHintVisibility();
+  // updateHintVisibility();
 }
 
 // Load
@@ -138,10 +138,17 @@ function loadUserData() {
     trainGroupSelection[i] = loadBoolean("trainGroupSelection" + i, trainGroupSelection[i]);
   }
 
+  temp = localStorage.getItem("hintSelection");
+  if (temp != null) {
+    if (temp == "true") { // Select 2 (3D Cube) as default if localStorage is "true" from previous save without 3D Cube option
+      hintSelection = 2;
+    } else hintSelection = parseInt(temp);
+  }
+
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
-  hintSelection = loadBoolean("hintSelection", hintSelection);
+  // hintSelection = loadBoolean("hintSelection", hintSelection);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {

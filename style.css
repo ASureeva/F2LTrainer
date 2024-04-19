@@ -128,7 +128,7 @@ a {
 
 .collapse-container {
   display: flex;
-  margin-top: 10px;
+  margin-top: 5px;
   padding-top: 10px;
   border-top: dotted;
   /* cursor: pointer; */
@@ -312,7 +312,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 5px;
   border-top: dotted;
 }
 
@@ -663,11 +663,33 @@ a {
   border-radius: 50%;
 }
 
-#div-hint-img {
-  display: flex;
+.div-hint-img {
+  /* display: flex; */
+  /* display: none; */
   justify-content: center;
   position: relative;
   cursor: pointer;
+}
+
+.div-twisty-player {
+  display: block;
+  position: relative;
+}
+
+twisty-player {
+  width: 200px;
+  height: calc(200px / 0.813);
+  /* height: 320px; */
+  /* aspect-ratio: 0.813; */
+}
+
+.btn-reset-player-view {
+  filter: var(--filter-img);
+  width: 30px;
+  position: absolute;
+  cursor: pointer;
+  right: 0;
+  top: 0;
 }
 
 #hint-img {
@@ -719,11 +741,34 @@ a {
   padding: 5px;
   color: var(--color-text);
 }
+.select-hint option,
 .select-group option {
   background-color: var(--color-background);
 }
+.select-hint:hover,
 .select-group:hover {
   background-color: var(--color-btn-hover);
+}
+
+.select-hint {
+  display: flex;
+  font-size: 1rem;
+  background-color: var(--color-background);
+  border: solid;
+  border-radius: 10px;
+  border-color: var(--color-img);
+  padding: 5px;
+  /* margin: auto; */
+  margin-top: 5px;
+  margin-bottom: 20px;
+  margin-left: 5px;
+  color: var(--color-text);
+}
+
+.div-select-hint {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
 }
 
 .animation-blink {
@@ -772,8 +817,8 @@ a {
 #btn-change-state {
   cursor: pointer;
   font-size: 1rem;
-  margin-top: 3rem;
-  margin-bottom: 2rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   padding: 0.5rem;
   border-style: solid;
   border-radius: 0.6rem;
@@ -1029,6 +1074,13 @@ a {
   }
   #hint-img {
     width: 200px;
+  }
+  twisty-player {
+    width: 255px;
+    height: calc(255px / 0.813);
+    /* aspect-ratio: 0.813; */
+    /* height: 380px; */
+    /* aspect-ratio: 0.813; */
   }
   .select-group {
     font-size: 1.5rem;

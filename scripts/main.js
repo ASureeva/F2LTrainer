@@ -78,7 +78,8 @@ const ELEM_CHECKBOX_RIGHT = document.getElementById("checkboxRightId");
 
 const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
 
-const ELEM_CHECKBOX_HINT = document.getElementById("checkboxShowHintId");
+// const ELEM_CHECKBOX_HINT = document.getElementById("checkboxShowHintId");
+const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
 
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
 
@@ -90,7 +91,13 @@ const ELEM_CONTAINER_SELECT_SETTINGS = document.getElementById("select-settings-
 const ELEM_SCRAMBLE = document.getElementById("scramble");
 const ELEM_HINT = document.getElementById("hint");
 const ELEM_HINT_IMG = document.getElementById("hint-img");
+const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
+
 let algHint = "";
+
+const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
+const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
+const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
 
 const ELEM_RADIO_UNLEARNED = document.getElementById("radio-state-unlearned");
 const ELEM_RADIO_LEARNING = document.getElementById("radio-state-learning");
@@ -530,7 +537,8 @@ function updateTrainCases() {
   leftSelection = ELEM_CHECKBOX_LEFT.checked;
   rightSelection = ELEM_CHECKBOX_RIGHT.checked;
   aufSelection = ELEM_CHECKBOX_AUF.checked;
-  hintSelection = ELEM_CHECKBOX_HINT.checked;
+  // hintSelection = ELEM_CHECKBOX_HINT.checked;
+  hintSelection = ELEM_SELECT_HINT.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
 
   if (timerEnabled) {
@@ -542,8 +550,9 @@ function updateTrainCases() {
   currentTrainCaseNumber = -1;
   generatedScrambles = [];
   closeOverlays();
+  updateHintVisibility();
   generateTrainCaseList();
-  saveUserData();
+  // saveUserData();
   nextScramble(1);
 }
 
@@ -622,7 +631,10 @@ function generateTrainCaseList() {
             }
 
             // Add U move if wanted
-            if (aufSelection) selectedScramble = addRandomUMove(selectedScramble);
+            let selectedScrambleAUF;
+            if (aufSelection) {
+              selectedScrambleAUF = addRandomUMove(selectedScramble);
+            } else selectedScrambleAUF = selectedScramble;
 
             const CASE_TO_ADD = {
               indexGroup: indexGroup,
@@ -630,6 +642,7 @@ function generateTrainCaseList() {
               indexScramble: iNDEX_SCRAMBLE,
               mirroring: mirroring,
               selectedScramble: selectedScramble,
+              selectedScrambleAUF: selectedScrambleAUF,
               algHint: algHint,
             };
 
@@ -655,11 +668,11 @@ function generateTrainCaseList() {
 }
 
 function nextScramble(nextPrevious) {
-  if (hintSelection) {
+  if (hintSelection == 1) {
     ELEM_HINT_IMG.style.opacity = "0.3";
     ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
   }
-  updateHintVisibility();
+  // updateHintVisibility();
   hintCounter = 0;
   ELEM_HINT.innerText = "Press to show hint";
   /*if (flagSave) {
@@ -690,6 +703,7 @@ function nextScramble(nextPrevious) {
   const INDEX_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].indexScramble;
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
   const SELECTED_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].selectedScramble;
+  const SELECTED_SCRAMBLE_AUF = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
   const ALG_HINT = generatedScrambles[currentTrainCaseNumber].algHint;
 
   const GROUP = GROUPS[INDEX_GROUP];
@@ -700,8 +714,15 @@ function nextScramble(nextPrevious) {
     ELEM_HINT_IMG.src = GROUP.imgPath + "left/F2L" + (INDEX_CASE + 1) + ".svg";
   }
 
+  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + SELECTED_SCRAMBLE;
+  ELEM_TWISTY_PLAYER.alg = ALG_HINT;
+  resetTwistyPlayerView();
+  ELEM_TWISTY_PLAYER.timestamp = 0;
+
+  hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
+
   // Show scramble
-  ELEM_SCRAMBLE.innerText = SELECTED_SCRAMBLE;
+  ELEM_SCRAMBLE.innerText = SELECTED_SCRAMBLE_AUF;
 
   ELEM_DEBUG_INFO.innerHTML =
     GROUPS[INDEX_GROUP].name +
@@ -735,15 +756,34 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_LEFT.checked = leftSelection;
   ELEM_CHECKBOX_RIGHT.checked = rightSelection;
   ELEM_CHECKBOX_AUF.checked = aufSelection;
-  ELEM_CHECKBOX_HINT.checked = hintSelection;
+  // ELEM_CHECKBOX_HINT.checked = hintSelection;
+  ELEM_SELECT_HINT.selectedIndex = hintSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
 }
 
 function updateHintVisibility() {
-  if (hintSelection) {
-    ELEM_HINT_IMG.style.visibility = "visible";
-  } else {
-    ELEM_HINT_IMG.style.visibility = "hidden";
+  switch (ELEM_SELECT_HINT.selectedIndex) {
+    case 0:
+      // console.log("none");
+      ELEM_DIV_HINT_IMG.classList.remove("display-none");
+      ELEM_HINT_IMG.style.visibility = "hidden";
+      ELEM_DIV_TWISTY_PLAYER.classList.add("display-none");
+      break;
+    case 1:
+      // console.log("2D");
+      ELEM_DIV_HINT_IMG.classList.remove("display-none");
+      ELEM_HINT_IMG.style.visibility = "visible";
+      ELEM_DIV_TWISTY_PLAYER.classList.add("display-none");
+      break;
+    case 2:
+      // console.log("3D");
+      ELEM_DIV_HINT_IMG.classList.add("display-none");
+      ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
+      break;
+    default:
+      // console.log("3D");
+      ELEM_DIV_HINT_IMG.classList.add("display-none");
+      ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
   }
 }
 
@@ -1112,6 +1152,74 @@ function readParams() {
 function copyUTLtoClipboard() {
   alert("URL copied to clipboard");
   navigator.clipboard.writeText(ELEM_INPUT_EXPORT.value);
+}
+
+function showResetButton() {
+  ELEM_BTN_RESET_PLAYER_VIEW.classList.remove("display-none");
+}
+
+function resetTwistyPlayerView() {
+  const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
+
+  if (!MIRRORING) {
+    ELEM_TWISTY_PLAYER.cameraLongitude = 25;
+  } else {
+    ELEM_TWISTY_PLAYER.cameraLongitude = -25;
+  }
+  ELEM_TWISTY_PLAYER.cameraLatitude = 25;
+
+  ELEM_BTN_RESET_PLAYER_VIEW.classList.add("display-none");
+}
+
+function hidePieces(piecesToHideArray, indexCase, mirroring) {
+  if (piecesToHideArray !== undefined) {
+    const piecesToHide = piecesToHideArray[indexCase];
+    // console.log("piecesToHide: " + piecesToHide);
+
+    if (!mirroring) {
+      switch (piecesToHide) {
+        case 1:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIIII---,CORNERS:I---IIII,CENTERS:------"; // hide red-green
+          break;
+        case 2:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII--I-,CORNERS:-I--IIII,CENTERS:------"; // hide red-blue
+          break;
+        case 3:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII---I,CORNERS:--I-IIII,CENTERS:------"; // hide blue-orange
+          break;
+        case 4:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII-I--,CORNERS:---IIIII,CENTERS:------"; // hide green-orange
+          break;
+        default:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII----,CORNERS:----IIII,CENTERS:------"; // show all F2L
+      }
+    } else {
+      switch (piecesToHide) {
+        case 1:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII--I-,CORNERS:-I--IIII,CENTERS:------"; // hide red-blue
+          break;
+        case 2:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIIII---,CORNERS:I---IIII,CENTERS:------"; // hide red-green
+          break;
+        case 3:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII-I--,CORNERS:---IIIII,CENTERS:------"; // hide green-orange
+          break;
+        case 4:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII---I,CORNERS:--I-IIII,CENTERS:------"; // hide blue-orange
+          break;
+        default:
+          ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII----,CORNERS:----IIII,CENTERS:------"; // show all F2L
+      }
+    }
+  } else {
+    ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII----,CORNERS:----IIII,CENTERS:------"; // show all F2L
+  }
+
+  // Stickering code fom issue: https://github.com/cubing/cubing.js/issues/324#issuecomment-2002467085
+  // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIIII---,CORNERS:I---IIII,CENTERS:------"; // red-green
+  // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII-I--,CORNERS:---IIIII,CENTERS:------"; // green-orange
+  // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII--I-,CORNERS:-I--IIII,CENTERS:------"; // red-blue
+  // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII---I,CORNERS:--I-IIII,CENTERS:------"; // blue-orange
 }
 
 // ----------    POP-UPS    ----------
