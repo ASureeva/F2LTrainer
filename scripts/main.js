@@ -147,6 +147,8 @@ let divPressMe;
 
 const ELEM_INPUT_EXPORT = document.getElementById("input-export");
 
+let mousepositionLast = [0, 0];
+
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
   readParams();
@@ -1220,6 +1222,22 @@ function hidePieces(piecesToHideArray, indexCase, mirroring) {
   // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII-I--,CORNERS:---IIIII,CENTERS:------"; // green-orange
   // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII--I-,CORNERS:-I--IIII,CENTERS:------"; // red-blue
   // ELEM_TWISTY_PLAYER.experimentalStickeringMaskOrbits = "EDGES:----IIII---I,CORNERS:--I-IIII,CENTERS:------"; // blue-orange
+}
+
+function mousedown(e) {
+  mousepositionLast = [e.clientX, e.clientY];
+  // console.log("mousedown, position: " + mousepositionLast);
+}
+
+function mouseup(e) {
+  const mouseposition = [e.clientX, e.clientY];
+
+  if (mouseposition.toString() === mousepositionLast.toString()) {
+    // console.log("same position");
+    nextScramble(1);
+  }
+
+  // console.log("mouseup, position: " + mouseposition);
 }
 
 // ----------    POP-UPS    ----------
