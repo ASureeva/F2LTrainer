@@ -11,7 +11,7 @@ const basicAlgorithms = {
     "y U' (f' L f)",
   ],
   3: ["y (L' U' L)", "y2 f' L' f", "y' (R' U' R)", "F' U' F"],
-  4: ["(R U R')", "y F U' F'", "y' f R f'"],
+  4: ["(R U R')", "y F U F'", "y' f R f'"],
   5: [
     "(U' R U R') U2 (R U' R')",
     "(U' R U R') U (R' F R F')",
