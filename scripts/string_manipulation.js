@@ -24,8 +24,6 @@ function mirrorAlg(alg) {
       }
     }
   }
-  // console.log(alg);
-  // console.log(algList.join(" "));
   return algList.join(" ");
 }
 
