@@ -417,10 +417,29 @@ function updateAlg() {
 
   // Save which Alg was selected
   GROUP.algorithmSelection[selectedCase] = selectedAlgNumber;
+
+  if (currentTrainCaseNumber >= 0) {
+    const CURRENT_TRAIN_CASE = trainCaseList[currentTrainCaseNumber];
+    if (!CURRENT_TRAIN_CASE.mirroring) {
+      trainCaseList[currentTrainCaseNumber].algHint = tempAlg;
+      ELEM_HINT.innerText = tempAlg;
+    } else {
+      trainCaseList[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
+      ELEM_HINT.innerText = mirrorAlg(tempAlg);
+    }
+  }
+
   closeOverlays();
 
   // Save
   saveUserData();
+}
+
+function editCurrentAlg() {
+  const INDEX_GROUP = trainCaseList[currentTrainCaseNumber].indexGroup;
+  const INDEX_CASE = trainCaseList[currentTrainCaseNumber].indexCase;
+
+  editAlgs(INDEX_GROUP, INDEX_CASE);
 }
 
 function editAlgs(indexGroup, indexCase) {
@@ -1225,11 +1244,13 @@ function hidePieces(piecesToHideArray, indexCase, mirroring) {
 }
 
 function mousedown(e) {
+  // onmousedown = "mousedown(event)";
   mousepositionLast = [e.clientX, e.clientY];
   // console.log("mousedown, position: " + mousepositionLast);
 }
 
 function mouseup(e) {
+  // onmouseup = "mouseup(event)";
   const mouseposition = [e.clientX, e.clientY];
 
   if (mouseposition.toString() === mousepositionLast.toString()) {
