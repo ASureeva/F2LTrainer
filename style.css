@@ -277,8 +277,8 @@ a {
 }
 
 .side-img {
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
 }
 
 .btn-edit,
@@ -814,7 +814,7 @@ twisty-player {
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
 } */
 
-#btn-change-state {
+.btn-change-state-alg {
   cursor: pointer;
   font-size: 1rem;
   margin-top: 1rem;
@@ -832,7 +832,7 @@ twisty-player {
 }
 
 .editalg-listentry:hover,
-#btn-change-state:hover,
+.btn-change-state-alg:hover,
 #change-mode:hover,
 #change-mode:focus,
 .side-button:hover,
@@ -1078,9 +1078,6 @@ twisty-player {
   twisty-player {
     width: 255px;
     height: calc(255px / 0.813);
-    /* aspect-ratio: 0.813; */
-    /* height: 380px; */
-    /* aspect-ratio: 0.813; */
   }
   .select-group {
     font-size: 1.5rem;
@@ -1120,6 +1117,13 @@ twisty-player {
   } */
   .div-press-me-train {
     font-size: 3rem;
+  }
+  .side-img {
+    width: 100%;
+    height: 100%;
+  }
+  .btn-change-state-alg{
+    font-size: 1.3rem;
   }
 }
 
