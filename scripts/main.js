@@ -149,6 +149,8 @@ const ELEM_INPUT_EXPORT = document.getElementById("input-export");
 
 let mousepositionLast = [0, 0];
 
+const ELEM_BTN_CHANGE_ALG = document.getElementById("btn-change-alg-id");
+
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
   readParams();
@@ -171,7 +173,13 @@ window.addEventListener("load", () => {
     ELEM_EDITALG_LISTENTRY[i].classList.add("editalg-listentry");
     ELEM_EDITALG_LISTENTRY[i].onclick = function () {
       // Change Background when selected
-      if (selectedAlgNumber < GROUPS[ELEM_SELECT_GROUP.selectedIndex].algorithms[selectedCase + 1].length) {
+      let indexGroup;
+      if (!mode) {
+        indexGroup = ELEM_SELECT_GROUP.selectedIndex;
+      } else {
+        indexGroup = generatedScrambles[currentTrainCaseNumber].indexGroup;
+      }
+      if (selectedAlgNumber < GROUPS[indexGroup].algorithms[selectedCase + 1].length) {
         ELEM_EDITALG_LISTENTRY[selectedAlgNumber].style.background = COLORS_ALG[0];
       } else {
         ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
@@ -395,7 +403,14 @@ function addElementsToDOM() {
 
 function updateAlg() {
   // Update Alg button clicked
-  const GROUP = GROUPS[ELEM_SELECT_GROUP.selectedIndex];
+  let indexGroup;
+  if (!mode) {
+    indexGroup = ELEM_SELECT_GROUP.selectedIndex;
+  } else {
+    indexGroup = generatedScrambles[currentTrainCaseNumber].indexGroup;
+  }
+  const GROUP = GROUPS[indexGroup];
+
   let tempAlg = "";
 
   // Read text in custom Alg Textbox
@@ -418,13 +433,13 @@ function updateAlg() {
   // Save which Alg was selected
   GROUP.algorithmSelection[selectedCase] = selectedAlgNumber;
 
-  if (currentTrainCaseNumber >= 0) {
-    const CURRENT_TRAIN_CASE = trainCaseList[currentTrainCaseNumber];
+  if (currentTrainCaseNumber >= 0 && mode == 1) {
+    const CURRENT_TRAIN_CASE = generatedScrambles[currentTrainCaseNumber];
     if (!CURRENT_TRAIN_CASE.mirroring) {
-      trainCaseList[currentTrainCaseNumber].algHint = tempAlg;
+      generatedScrambles[currentTrainCaseNumber].algHint = tempAlg;
       ELEM_HINT.innerText = tempAlg;
     } else {
-      trainCaseList[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
+      generatedScrambles[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
       ELEM_HINT.innerText = mirrorAlg(tempAlg);
     }
   }
@@ -436,8 +451,9 @@ function updateAlg() {
 }
 
 function editCurrentAlg() {
-  const INDEX_GROUP = trainCaseList[currentTrainCaseNumber].indexGroup;
-  const INDEX_CASE = trainCaseList[currentTrainCaseNumber].indexCase;
+  ELEM_BTN_CHANGE_ALG.blur();
+  const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
+  const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
 
   editAlgs(INDEX_GROUP, INDEX_CASE);
 }
@@ -1011,6 +1027,17 @@ let timeToString = function (time) {
 };
 
 function spaceDown() {
+  if (
+    ELEM_WELCOME_CONATINER.open ||
+    ELEM_WELCOME_CONATINER_TRAIN.open ||
+    ELEM_INFO_CONTAINER.open ||
+    ELEM_EDITALG_CONTAINER.open ||
+    ELEM_CONTAINER_TRAIN_SETTINGS.open ||
+    ELEM_CONTAINER_SELECT_SETTINGS.open ||
+    ELEM_CHANGE_STATE_POPUP.open
+  )
+    return;
+
   if (timerEnabled) {
     if (flagTimerRunning) {
       nextScramble(1);
