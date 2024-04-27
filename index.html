@@ -120,6 +120,14 @@
         <a href="https://github.com/Dave2ooo/F2LTrainer/issues" target="_blank" rel="noopener noreferrer">Github</a>
         if you need <b>help</b>, have ideas for <b>improvement</b> or find any <b>bugs</b>.
       </p>
+
+      <h2>Thanks</h2>
+      <p>
+        Thanks to
+        <a href="https://github.com/cubing/cubing.js" target="_blank" rel="noopener noreferrer">cubing.js</a> for the
+        interactive Rubiks cube.
+      </p>
+
       <div class="update-cancel-buttons">
         <form method="dialog">
           <button type="button" class="btn-overlay" id="btn-close-info" onclick="closeOverlays()">Close</button>
@@ -442,7 +450,10 @@
       <div id="timer">00:00</div>
       <div id="hint" onclick="showHint()">Press to show hint</div>
 
-      <button id="btn-change-state" onclick="showSetStateMenu()">Change state</button>
+      <div class="div-btn-change-state-alg">
+        <button class="btn-change-state-alg" onclick="showSetStateMenu()">Change State</button>
+        <button class="btn-change-state-alg" onclick="editCurrentAlg()">Change Alg</button>
+      </div>
 
       <button id="btn-show-hide-debug-info" onclick="showHideDebugInfo()">> Hide info</button>
       <div id="debug-info"></div>
