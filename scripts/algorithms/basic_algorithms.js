@@ -5,7 +5,7 @@ const basicAlgorithms = {
     "y' U' (R' U R)",
     "F R' F' R",
     "U' (F' U F)",
-    "d' L' U L	",
+    "d' L' U L",
     "r U R' U' M",
     "F l' U' l",
     "y U' (f' L f)",
