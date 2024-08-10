@@ -428,7 +428,12 @@ function updateAlg() {
 
   if (GROUP.flagMirrored[selectedCase] == true) tempAlg = mirrorAlg(tempAlg);
 
+  // Display algorithm in selection window
   GROUP.divAlgorithm[selectedCase].innerHTML = tempAlg;
+
+  // Update alg in Twisty Player
+  ELEM_TWISTY_PLAYER.alg = tempAlg;
+  ELEM_TWISTY_PLAYER.timestamp = 0;
 
   // Save which Alg was selected
   GROUP.algorithmSelection[selectedCase] = selectedAlgNumber;
