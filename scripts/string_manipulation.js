@@ -1,31 +1,47 @@
-let __moves = ["R", "L", "F", "B", "r", "l", "f", "b", "U", "D", "u", "d", "y", "S"];
-let __mirror = ["L", "R", "F", "B", "l", "r", "f", "b", "U", "D", "u", "d", "y", "S"];
+let __moves = [
+  ["R", "L'"],
+  ["R2", "L2'"],
+  ["L", "R'"],
+  ["L2", "R2'"],
+  ["F", "F'"],
+  ["B", "B'"],
+  ["r", "l'"],
+  ["r2", "l2'"],
+  ["l", "r'"],
+  ["l2", "r2'"],
+  ["f", "f'"],
+  ["b", "b'"],
+  ["U", "U'"],
+  ["D", "D'"],
+  ["u", "u'"],
+  ["d", "d'"],
+  ["y", "y'"],
+  ["S", "S'"],
+];
 
 function mirrorAlg(alg) {
+  alg = alg.replace(/\(/g, "( "); // Add space after "("
+  alg = alg.replace(/\)/g, " )"); // Add space before ")"
   let algList = alg.split(" ");
 
   for (let indexAlg = 0; indexAlg < algList.length; indexAlg++) {
-    const moveAlg = algList[indexAlg];
-
     for (let indexMirror = 0; indexMirror < __moves.length; indexMirror++) {
-      const moveMirror = __moves[indexMirror];
-
-      if (moveAlg.includes(moveMirror)) {
-        algList[indexAlg] = moveAlg.replace(moveMirror, __mirror[indexMirror]);
-        if (moveAlg.includes("'")) {
-          algList[indexAlg] = algList[indexAlg].replace("'", "");
-        } else if (!moveAlg.includes("2")) {
-          algList[indexAlg] = algList[indexAlg] + "'";
-          if (moveAlg.includes(")")) {
-            algList[indexAlg] = algList[indexAlg].replace(")", "") + ")";
-          }
-        }
-        break;
+      if (algList[indexAlg] == __moves[indexMirror][0]) {
+        algList[indexAlg] = __moves[indexMirror][1];
+        continue;
+      }
+      if (algList[indexAlg] == __moves[indexMirror][1]) {
+        algList[indexAlg] = __moves[indexMirror][0];
+        continue;
       }
     }
   }
-  return algList.join(" ");
+  let myMirroredAlg = algList.join(" ");
+  myMirroredAlg = myMirroredAlg.replace(/ \)/g, ")"); // Remove space before ")"
+  myMirroredAlg = myMirroredAlg.replace(/\( /g, "("); // Remove space after "("
+  return myMirroredAlg;
 }
+
 
 function addRandomUMove(alg) {
   const AUF = Math.floor(Math.random() * 4);
