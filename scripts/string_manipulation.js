@@ -25,7 +25,7 @@ let __moves = [
   ["d2", "d2'"],
   ["y", "y'"],
   ["S", "S'"],
-  ["S2", "S'"],
+  ["S2", "S2'"],
 ];
 
 function mirrorAlg(alg) {
