@@ -4,19 +4,28 @@ let __moves = [
   ["L", "R'"],
   ["L2", "R2'"],
   ["F", "F'"],
+  ["F2", "F2'"],
   ["B", "B'"],
+  ["B2", "B2'"],
   ["r", "l'"],
   ["r2", "l2'"],
   ["l", "r'"],
   ["l2", "r2'"],
   ["f", "f'"],
+  ["f2", "f2'"],
   ["b", "b'"],
+  ["b2", "b2'"],
   ["U", "U'"],
+  ["U2", "U2'"],
   ["D", "D'"],
+  ["D2", "D2'"],
   ["u", "u'"],
+  ["u2", "u2'"],
   ["d", "d'"],
+  ["d2", "d2'"],
   ["y", "y'"],
   ["S", "S'"],
+  ["S2", "S'"],
 ];
 
 function mirrorAlg(alg) {
@@ -41,7 +50,6 @@ function mirrorAlg(alg) {
   myMirroredAlg = myMirroredAlg.replace(/\( /g, "("); // Remove space after "("
   return myMirroredAlg;
 }
-
 
 function addRandomUMove(alg) {
   const AUF = Math.floor(Math.random() * 4);
