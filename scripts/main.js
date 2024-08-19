@@ -154,8 +154,10 @@ const ELEM_BTN_CHANGE_ALG = document.getElementById("btn-change-alg-id");
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
   readParams();
-  // Load User saved Data (user_saved.js)
   loadUserData();
+  localStorage.clear();
+  saveUserData();
+
   ELEM_SELECT_GROUP.selectedIndex = viewSelection; // Set view
 
   showWelcomePopup();

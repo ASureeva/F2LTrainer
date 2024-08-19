@@ -88,6 +88,21 @@ function saveUserData() {
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
+    // Save Collapse
+    localStorage.setItem(GROUP.saveName + "collapse", JSON.stringify(GROUP.collapse));
+    // Save Case Selection
+    localStorage.setItem(GROUP.saveName + "caseSelection", JSON.stringify(GROUP.caseSelection));
+    // Save Custom Algorithms
+    localStorage.setItem(GROUP.saveName + "customAlgorithms", JSON.stringify(GROUP.customAlgorithms));
+    // Save Algorithm Selection
+    localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
+    // Save Solve Counter
+    localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
+  }
+
+  /*
+  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+    const GROUP = GROUPS[indexGroup];
     for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
       localStorage.setItem(GROUP.saveName + "collapse" + indexCategory, GROUP.collapse[indexCategory]);
 
@@ -110,6 +125,7 @@ function saveUserData() {
     // console.log(JSON.stringify(GROUP.solveCounter));
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
   }
+  */
   // updateHintVisibility();
 }
 
@@ -140,7 +156,8 @@ function loadUserData() {
 
   temp = localStorage.getItem("hintSelection");
   if (temp != null) {
-    if (temp == "true") { // Select 2 (3D Cube) as default if localStorage is "true" from previous save without 3D Cube option
+    if (temp == "true") {
+      // Select 2 (3D Cube) as default if localStorage is "true" from previous save without 3D Cube option
       hintSelection = 2;
     } else hintSelection = parseInt(temp);
   }
@@ -148,11 +165,35 @@ function loadUserData() {
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
-  // hintSelection = loadBoolean("hintSelection", hintSelection);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
+
+    // New Restore Code Start
+    temp = localStorage.getItem(GROUP.saveName + "collapse");
+    if (temp !== null) {
+      GROUP.collapse = JSON.parse(temp);
+    }
+
+    // Load Case Selection
+    temp = localStorage.getItem(GROUP.saveName + "caseSelection");
+    if (temp !== null) {
+      GROUP.caseSelection = JSON.parse(temp);
+    }
+
+    // Load Custom Algorithms
+    temp = localStorage.getItem(GROUP.saveName + "customAlgorithms");
+    if (temp !== null) {
+      GROUP.customAlgorithms = JSON.parse(temp);
+    }
+
+    // Load Algorithm Selection
+    temp = localStorage.getItem(GROUP.saveName + "algorithmSelection");
+    if (temp !== null) {
+      GROUP.algorithmSelection = JSON.parse(temp);
+    }
+    // New Restore Code End
 
     for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
       temp = localStorage.getItem(GROUP.saveName + "collapse" + indexCategory);
