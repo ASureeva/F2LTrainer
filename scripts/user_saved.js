@@ -344,6 +344,7 @@ function importUserDataCases(URL_PARAM_CASE_SELECTION) {
   console.log("Importing case selection");
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
+    GROUP.caseSelection.length = 0;
     const IMPORT_DATA_STRING = URL_PARAM_CASE_SELECTION[indexGroup];
     if (IMPORT_DATA_STRING === undefined) continue;
 
@@ -357,8 +358,8 @@ function importUserDataCases(URL_PARAM_CASE_SELECTION) {
     // Save imported data
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
       GROUP.caseSelection[indexCase] = Math.floor(Number(importDataInt) / Math.pow(3, indexCase)) % 3;
-      localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
     }
+    localStorage.setItem(GROUP.saveName + "caseSelection", JSON.stringify(GROUP.caseSelection));
   }
 }
 
@@ -375,7 +376,10 @@ function importUserDataAlgs(URL_PARAM_ALG_SELECTION) {
 
       if (INDEX_CASE >= GROUP.numberCases) continue;
 
-      localStorage.setItem(GROUP.saveName + "algorithmSelection" + INDEX_CASE, ALG_SEL);
+      // Restoring, editing and savind is not clean but GROUP.algorithmSelection is empty at this point. Restoring from memory fixes it.
+      GROUP.algorithmSelection = JSON.parse(localStorage.getItem(GROUP.saveName + "algorithmSelection"));
+      GROUP.algorithmSelection[INDEX_CASE] = ALG_SEL;
+      localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
     }
   }
 }
