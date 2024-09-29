@@ -26,18 +26,18 @@
     <title>F2L Trainer - Rubiks Cube</title>
     <link rel="icon" href="images/full_cube.svg" />
     <link rel="stylesheet" href="style.css" />
-    
+
     <!-- Structured Data -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type" : "SoftwareApplication",
-      "name": "F2L Trainer",
-      "applicationCategory": "EducationalApplication",
-      "operatingSystem": "Internet Browser"
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "F2L Trainer",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Internet Browser"
+      }
     </script>
-    
+
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
@@ -130,7 +130,10 @@
 
       <div class="update-cancel-buttons">
         <form method="dialog">
-          <button type="button" class="btn-overlay" id="btn-close-info" onclick="closeOverlays()">Close</button>
+          <button type="button" class="btn-overlay" id="btn-close-info" onclick="closeOverlays()">
+            Close
+            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          </button>
         </form>
       </div>
     </dialog>
@@ -151,8 +154,13 @@
         <input type="text" placeholder="Enter Custom Algorithm" id="editalg-customalg" />
       </div>
       <div class="update-cancel-buttons">
-        <button type="button" class="btn-overlay" onclick="updateAlg()">Confirm</button>
-        <button type="button" class="btn-overlay" onclick="closeOverlays()">Cancel</button>
+        <button type="button" class="btn-overlay" onclick="updateAlg()">
+          Confirm
+          <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+        </button>
+        <button type="button" class="btn-overlay" onclick="closeOverlays()">
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+        </button>
       </div>
     </dialog>
 
@@ -164,7 +172,15 @@
 
     <!-- Train Settings -->
     <dialog id="train-settings-container" class="popup-container">
-      <h2>Algorithms to learn</h2>
+      <h2>Export</h2>
+      <!-- <p>Use this URL to transfer your selected cases to other devices.</p> -->
+
+      <input type="text" id="input-export" value="https://f2l-trainer.top" readonly disabled />
+
+      <div class="update-cancel-buttons">
+        <button type="button" class="btn-overlay" onclick="copyUTLtoClipboard()">Copy to clipboard</button>
+      </div>
+      <h2>Train settings</h2>
       <div id="div-algs-to-learn" class="div-checkbox-container-container">
         <!-- Checkbox: Unlearned, Learning, Finished -->
         <div class="checkbox-container">
@@ -285,8 +301,12 @@
       <!-- </form> -->
       <!-- </div> -->
       <div class="update-cancel-buttons">
-        <button type="button" class="btn-overlay" onclick="updateTrainCases()">Confirm</button>
-        <button type="button" class="btn-overlay" onclick="closeOverlays()">Cancel</button>
+        <button type="button" class="btn-overlay" onclick="updateTrainCases()">
+          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+        </button>
+        <button type="button" class="btn-overlay" onclick="closeOverlays()">
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+        </button>
       </div>
     </dialog>
 
@@ -330,13 +350,17 @@
       </div>
 
       <div class="update-cancel-buttons">
-        <button type="button" class="btn-overlay" onclick="changeStateRadio()">Confirm</button>
-        <button type="button" class="btn-overlay" onclick="closeOverlays()">Cancel</button>
+        <button type="button" class="btn-overlay" onclick="changeStateRadio()">
+          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+        </button>
+        <button type="button" class="btn-overlay" onclick="closeOverlays()">
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+        </button>
       </div>
     </dialog>
 
     <!-- Settings Selection Window Popup -->
-    <dialog id="select-settings-container" class="popup-container">
+    <!-- <dialog id="select-settings-container" class="popup-container">
       <h2>Export Settings</h2>
       <p>Use this URL to transfer your selected cases to other devices.</p>
 
@@ -352,21 +376,57 @@
       </div>
 
       <div class="update-cancel-buttons">
-        <input type="button" class="btn-overlay" onclick="closeOverlays()" value="Close" />
+        <button type="button" class="btn-overlay" onclick="closeOverlays()">
+          Close
+          <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+        </button>
       </div>
+    </dialog> -->
+
+    <!-- Feedback Popup -->
+    <dialog id="feedback-container" class="popup-container">
+      <h2>Feedback</h2>
+      <p>
+        Send your feedback via this form or create an issue on
+        <a href="https://github.com/Dave2ooo/F2LTrainer/issues" target="_blank" rel="noopener noreferrer">Github.</a>
+      </p>
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="70f60afc-3ab0-4491-80be-e854832fddb9" />
+
+        <input class="feedback-text" type="text" name="name" required placeholder="Your Name" />
+        <input class="feedback-text" type="email" name="email" required placeholder="Your Email" />
+        <textarea class="feedback-text" name="message" required placeholder="Your Feedback"></textarea>
+
+        <div class="update-cancel-buttons">
+          <button type="submit" class="btn-overlay">
+            Submit
+            <img src="./images/submit.svg" alt="Send" class="side-img" title="Submit" />
+          </button>
+          <button type="button" class="btn-overlay" onclick="closeOverlays()">
+            Close
+            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          </button>
+        </div>
+      </form>
     </dialog>
     <!-- POPUP-CONTAINER END -->
 
     <!-- Top bar -->
     <div id="side-container">
       <div>
+        <!-- Button Info -->
         <button type="button" class="side-button" id="btn-info" onclick="showInfo()">
           <img src="./images/info.svg" alt="Info" class="side-img" title="Info" />
         </button>
 
         <!-- Button Settings Select -->
-        <div class="side-button btn-settings-select" , onclick="showSettingsSelect()">
+        <div class="side-button btn-settings-select" , onclick="showSettingsTrain()">
           <img src="./images/settings.svg" alt="Settings" class="side-img" title="Settings" />
+        </div>
+
+        <!-- Button Feedback -->
+        <div class="side-button btn-settings-select" , onclick="showFeedback()">
+          <img src="./images/feedback.svg" alt="Feedback" class="side-img" title="Feedback" />
         </div>
       </div>
 
@@ -375,7 +435,7 @@
         <!-- for accesibility -->
         <select id="select-group-id" class="select-group" onchange="showSelectedGroup()">
           <option value="basic" selected>Basic Cases</option>
-          <option value="basicBack">Basic Cases Backslot</option>
+          <option value="basicBack">Basic Backslot</option>
           <option value="advanced">Advanced Cases</option>
           <option value="expert">Expert Cases</option>
         </select>
@@ -392,7 +452,7 @@
     <!-- All the Cases will be listed here -->
     <div id="window-select"></div>
 
-    <div id="overlay" onclick="closeOverlays()"></div>
+    <!-- <div id="overlay" onclick="closeOverlays()"></div> -->
 
     <!-- Train Mode -->
     <div class="window-train display-none">
@@ -452,7 +512,9 @@
 
       <div class="div-btn-change-state-alg">
         <button type="button" class="btn-change-state-alg" onclick="showSetStateMenu()">Change State</button>
-        <button type="button" class="btn-change-state-alg" id="btn-change-alg-id" onclick="editCurrentAlg()">Change Alg</button>
+        <button type="button" class="btn-change-state-alg" id="btn-change-alg-id" onclick="editCurrentAlg()">
+          Change Alg
+        </button>
       </div>
 
       <button id="btn-show-hide-debug-info" onclick="showHideDebugInfo()">> Hide info</button>

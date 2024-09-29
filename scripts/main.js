@@ -42,6 +42,7 @@ const ELEM_WELCOME_CONATINER_TRAIN = document.getElementById("welcome-container-
 const ELEM_INFO_CONTAINER = document.getElementById("info-container");
 const ELEM_LOADING_SCREEN = document.getElementById("loading-screen");
 const ELEM_CHANGE_STATE_POPUP = document.getElementById("popup-change-state");
+const ELEM_FEEDBACK_CONTAINER = document.getElementById("feedback-container");
 const ELEM_DIALOGS = document.querySelectorAll("dialog");
 
 // side buttons
@@ -84,9 +85,9 @@ const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
-const ELEM_BUTTON_SETTING_SELECT = document.querySelector(".btn-settings-select");
+// const ELEM_BUTTON_SETTING_SELECT = document.querySelector(".btn-settings-select");
 const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-container");
-const ELEM_CONTAINER_SELECT_SETTINGS = document.getElementById("select-settings-container");
+// const ELEM_CONTAINER_SELECT_SETTINGS = document.getElementById("select-settings-container");
 
 const ELEM_SCRAMBLE = document.getElementById("scramble");
 const ELEM_HINT = document.getElementById("hint");
@@ -115,7 +116,7 @@ let trainCaseList = [];
 let currentTrainCaseNumber = -1;
 
 // Basic, Basic Back, Advanced, Exert
-const ELEM_SELECT_GROUP = document.querySelector(".select-group");
+const ELEM_SELECT_GROUP = document.getElementById("select-group-id");
 
 let boolShowDebugInfo = true;
 const ELEM_BTN_SHOW_HIDE_DEBUG_INFO = document.getElementById("btn-show-hide-debug-info");
@@ -195,7 +196,7 @@ window.addEventListener("load", () => {
 
   // Close dialogs (popup-container) if clicked outside the dialog
   ELEM_DIALOGS.forEach((elem_dialog) => {
-    elem_dialog.addEventListener("click", function (event) {
+    elem_dialog.addEventListener("mousedown", function (event) {
       var rect = elem_dialog.getBoundingClientRect();
       var isInDialog =
         rect.top <= event.clientY &&
@@ -937,18 +938,20 @@ function changeMode() {
     ELEM_BTN_CHANGE_MODE.innerHTML = "Select cases";
     ELEM_WINDOW_SELECT.classList.add("display-none");
     ELEM_WINDOW_TRAIN.classList.remove("display-none");
-    ELEM_BUTTON_SETTING_SELECT.classList.add("display-none");
-    ELEM_BUTTON_SETTINGS.classList.remove("display-none");
-    ELEM_CONTAINER_SELECT_GROUP.classList.add("display-none");
+    //ELEM_BUTTON_SETTING_SELECT.classList.add("display-none");
+    //ELEM_BUTTON_SETTINGS.classList.remove("display-none");
+    // ELEM_CONTAINER_SELECT_GROUP.classList.add("display-none");
+    ELEM_SELECT_GROUP.classList.add("display-none");
     showWelcomeTrainPopup();
   } else {
     mode = 0;
     ELEM_BTN_CHANGE_MODE.innerHTML = "Train";
     ELEM_WINDOW_SELECT.classList.remove("display-none");
     ELEM_WINDOW_TRAIN.classList.add("display-none");
-    ELEM_BUTTON_SETTING_SELECT.classList.remove("display-none");
-    ELEM_BUTTON_SETTINGS.classList.add("display-none");
-    ELEM_CONTAINER_SELECT_GROUP.classList.remove("display-none");
+    //ELEM_BUTTON_SETTING_SELECT.classList.remove("display-none");
+    //ELEM_BUTTON_SETTINGS.classList.add("display-none");
+    // ELEM_CONTAINER_SELECT_GROUP.classList.remove("display-none");
+    ELEM_SELECT_GROUP.classList.remove("display-none");
   }
   ELEM_BTN_CHANGE_MODE.blur(); // Make button lose focus
 }
@@ -1304,8 +1307,9 @@ function closeOverlays() {
   ELEM_INFO_CONTAINER.close();
   ELEM_EDITALG_CONTAINER.close();
   ELEM_CONTAINER_TRAIN_SETTINGS.close();
-  ELEM_CONTAINER_SELECT_SETTINGS.close();
+  // ELEM_CONTAINER_SELECT_SETTINGS.close();
   ELEM_CHANGE_STATE_POPUP.close();
+  ELEM_FEEDBACK_CONTAINER.close();
 }
 
 function showWelcomePopup() {
@@ -1347,6 +1351,10 @@ function showSetStateMenu() {
   }
 
   openDialog(ELEM_CHANGE_STATE_POPUP);
+}
+
+function showFeedback() {
+  openDialog(ELEM_FEEDBACK_CONTAINER);
 }
 
 function openDialog(ELEM) {

@@ -271,14 +271,17 @@ a {
 
 .side-button {
   cursor: pointer;
-  padding: 5px;
-  width: 40px;
+  padding: 0px;
+  width: 30px;
   border-radius: 50%;
+  margin: 2px;
 }
 
 .side-img {
-  width: 80%;
-  height: 80%;
+  /* width: 80%;
+  height: 80%; */
+  width: 100%;
+  height: 100%;
 }
 
 .btn-edit,
@@ -291,7 +294,7 @@ a {
 .btn-settings-train,
 .btn-settings-select {
   display: inline-block;
-  width: 40px;
+  /* width: 40px; */
   margin: auto;
 }
 
@@ -523,6 +526,7 @@ a {
 }
 
 .btn-overlay {
+  display: flex;
   font-size: 1.3rem;
   background: transparent;
   color: var(--color-text);
@@ -532,6 +536,10 @@ a {
   border-radius: 8px;
   margin: 0 3px;
   cursor: pointer;
+}
+
+.img-cancel {
+  filter: var(--filter-black);
 }
 
 /* Train Settings */
@@ -936,6 +944,31 @@ twisty-player {
   border-radius: 20px;
 }
 
+.feedback-text {
+  display: flex;
+  background: transparent;
+  color: var(--color-text);
+  font-size: 1.2rem;
+  margin-left: 0;
+  margin-right: 0;
+  min-width: 30ch;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
+.feedback-text::placeholder {
+  font-size: 1.2rem;
+}
+
+textarea {
+  /* resize: none; */
+  height: 30ex;
+  max-width: 100%;
+  max-height: 90dvh;
+}
+
+/* -----------------------------   Loader   --------------------------------- */
+
 .loader {
   display: flex;
   width: 32px;
@@ -1026,7 +1059,7 @@ twisty-player {
   }
 }
 
-/* -------------------------------------------------------------- */
+/* -----------------------------   Media Query   --------------------------------- */
 
 /* Media Query */
 @media (max-width: 100em) {
@@ -1118,11 +1151,15 @@ twisty-player {
   .div-press-me-train {
     font-size: 3rem;
   }
-  .side-img {
+  /* .side-img {
     width: 100%;
     height: 100%;
+  } */
+  .side-button {
+    width: 40px;
+    /* margin: 5px; */ /* If uncommented, settings button is no longer centered */
   }
-  .btn-change-state-alg{
+  .btn-change-state-alg {
     font-size: 1.3rem;
   }
 }
