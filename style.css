@@ -951,7 +951,7 @@ twisty-player {
   font-size: 1.2rem;
   margin-left: 0;
   margin-right: 0;
-  min-width: 30ch;
+  width: 100%;
   margin-bottom: 5px;
   border-radius: 5px;
 }
