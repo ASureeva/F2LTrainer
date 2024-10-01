@@ -152,6 +152,8 @@ let mousepositionLast = [0, 0];
 
 const ELEM_BTN_CHANGE_ALG = document.getElementById("btn-change-alg-id");
 
+const ELEM_FEEDBACK_NAME = document.getElementById("feedback-name-id");
+
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
   readParams();
@@ -1355,6 +1357,7 @@ function showSetStateMenu() {
 
 function showFeedback() {
   openDialog(ELEM_FEEDBACK_CONTAINER);
+  ELEM_FEEDBACK_NAME.focus();
 }
 
 function openDialog(ELEM) {
