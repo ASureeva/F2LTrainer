@@ -155,6 +155,7 @@ const ELEM_BTN_CHANGE_ALG = document.getElementById("btn-change-alg-id");
 const ELEM_FEEDBACK_NAME = document.getElementById("feedback-name-id");
 
 const ELEM_IFRAME_VIDEO = document.getElementById("iframe-video");
+const ELEM_THUMBNAIL_BUTTON = document.getElementById("thumbnail-button");
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
@@ -1331,9 +1332,15 @@ function showWelcomeTrainPopup() {
 }
 
 function showInfo() {
+  openDialog(ELEM_INFO_CONTAINER);
+  ELEM_INFO_CONTAINER.scrollTo(0, 0);
+}
+
+function insertUrltoIframe() {
+  ELEM_THUMBNAIL_BUTTON.style.display = "none";
+  ELEM_IFRAME_VIDEO.style.display = "block";
   // The following replaces lazy load, which would crash Chrome on Android
   ELEM_IFRAME_VIDEO.src = "https://www.youtube.com/embed/EQbZvKssp7s?si=dfSdb3qlFpxnC89c&amp;start=20";
-  openDialog(ELEM_INFO_CONTAINER);
 }
 
 function showSettingsSelect() {
