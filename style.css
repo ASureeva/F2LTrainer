@@ -102,6 +102,7 @@ iframe {
 }
 
 #thumbnail-button {
+  display: none;
   width: 100%;
 }
 
