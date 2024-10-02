@@ -1333,15 +1333,15 @@ function showWelcomeTrainPopup() {
 
 function showInfo() {
   openDialog(ELEM_INFO_CONTAINER);
-  ELEM_INFO_CONTAINER.scrollTo(0, 0);
+  // ELEM_INFO_CONTAINER.scrollTo(0, 0);
 }
 
-function insertUrltoIframe() {
-  ELEM_THUMBNAIL_BUTTON.style.display = "none";
-  ELEM_IFRAME_VIDEO.style.display = "block";
-  // The following replaces lazy load, which would crash Chrome on Android
-  ELEM_IFRAME_VIDEO.src = "https://www.youtube.com/embed/EQbZvKssp7s?si=dfSdb3qlFpxnC89c&amp;start=20";
-}
+// function insertUrltoIframe() {
+//   ELEM_THUMBNAIL_BUTTON.style.display = "none";
+//   ELEM_IFRAME_VIDEO.style.display = "block";
+//   // The following replaces lazy load, which would crash Chrome on Android
+//   ELEM_IFRAME_VIDEO.src = "https://www.youtube.com/embed/EQbZvKssp7s?si=dfSdb3qlFpxnC89c&amp;start=20";
+// }
 
 function showSettingsSelect() {
   exportUserData();

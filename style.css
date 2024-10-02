@@ -96,15 +96,15 @@ button {
 }
 
 iframe {
-  display: none;
+  /* display: none; */
   width: 100%;
   aspect-ratio: 16/9;
 }
 
-#thumbnail-button {
+/* #thumbnail-button {
   display: none;
   width: 100%;
-}
+} */
 
 .side-img,
 .img-collapse-category,
