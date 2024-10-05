@@ -1048,7 +1048,7 @@ function spaceDown() {
     ELEM_INFO_CONTAINER.open ||
     ELEM_EDITALG_CONTAINER.open ||
     ELEM_CONTAINER_TRAIN_SETTINGS.open ||
-    ELEM_CONTAINER_SELECT_SETTINGS.open ||
+    //ELEM_CONTAINER_SELECT_SETTINGS.open ||
     ELEM_CHANGE_STATE_POPUP.open
   )
     return;
