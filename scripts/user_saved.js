@@ -53,6 +53,10 @@ let timerEnabled = false;
 let firstVisit = true;
 let firstVisitTrain = true;
 
+// Character set for Base62 encoding
+const BASE62_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const BASE = 62;
+
 // Save
 function saveUserData() {
   console.log("Saving User Data");
@@ -171,41 +175,60 @@ function loadUserData() {
     const GROUP = GROUPS[indexGroup];
 
     // New Restore Code Start
-    temp = localStorage.getItem(GROUP.saveName + "collapse");
+    GROUP.collapse = loadList(GROUP, "collapse", false);
+    /*temp = localStorage.getItem(GROUP.saveName + "collapse");
     if (temp !== null) {
       GROUP.collapse = JSON.parse(temp);
-    }
+    }*/
 
     // Load Case Selection
-    temp = localStorage.getItem(GROUP.saveName + "caseSelection");
+    GROUP.caseSelection = loadList(GROUP, "caseSelection", 0);
+
+    /*
     if (temp !== null) {
       GROUP.caseSelection = JSON.parse(temp);
+    } else {
+      GROUP.caseSelection = Array(GROUP.numberCases).fill(0);
     }
-
+*/
     // Load Custom Algorithms
-    temp = localStorage.getItem(GROUP.saveName + "customAlgorithms");
+    GROUP.customAlgorithms = loadList(GROUP, "customAlgorithms", "");
+
+    /*temp = localStorage.getItem(GROUP.saveName + "customAlgorithms");
     if (temp !== null) {
-      GROUP.customAlgorithms = JSON.parse(temp);
-    }
+      tamp = JSON.parse(temp);
+      if (temp.length > 0) {
+        GROUP.customAlgorithms = temp;
+      }
+    } else {
+      GROUP.customAlgorithms = Array(GROUP.numberCases).fill("");
+    }*/
 
     // Load Algorithm Selection
-    temp = localStorage.getItem(GROUP.saveName + "algorithmSelection");
-    if (temp !== null) {
+    GROUP.algorithmSelection = loadList(GROUP, "algorithmSelection", 0);
+
+    /*    temp = localStorage.getItem(GROUP.saveName + "algorithmSelection");
+    if (temp !== null && temp.length > 0) {
       GROUP.algorithmSelection = JSON.parse(temp);
+    } else {
+      GROUP.algorithmSelection = Array(GROUP.numberCases).fill(0);
     }
+      */
     // New Restore Code End
 
-    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
+    /*    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
       temp = localStorage.getItem(GROUP.saveName + "collapse" + indexCategory);
       if (temp !== null && temp == "true") {
         GROUP.collapse.push(true);
       } else {
         GROUP.collapse.push(false);
       }
-    }
+    }*/
 
+    /*
     for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
       // Load Case Selection
+
       temp = localStorage.getItem(GROUP.saveName + "caseSelection" + indexCase);
       if (temp !== null && temp >= 0 && temp <= 2) {
         GROUP.caseSelection.push(temp);
@@ -244,6 +267,7 @@ function loadUserData() {
         GROUP.algorithmSelection.push(0);
       }
     }
+      */
 
     // Load Solve Counter
     temp = localStorage.getItem(GROUP.saveName + "solveCounter");
@@ -259,7 +283,7 @@ function loadUserData() {
   updateHintVisibility();
 }
 
-function loadBoolean(saveName, varName) {
+function loadBoolean(saveName, defaultValue) {
   const TEMP = localStorage.getItem(saveName);
   if (TEMP != null) {
     if (TEMP == "true") {
@@ -268,8 +292,25 @@ function loadBoolean(saveName, varName) {
       return false;
     }
   } else {
-    return varName;
+    return defaultValue;
   }
+}
+
+function loadList(group, saveName, defaultValue) {
+  let out;
+  let temp = localStorage.getItem(group.saveName + saveName);
+  console.log("saveName = " + group.saveName + saveName);
+  if (temp !== null) {
+    temp = JSON.parse(temp);
+    if (temp.length > 0) {
+      out = temp;
+    } else {
+      out = Array(group.numberCases).fill(defaultValue);
+    }
+  } else {
+    out = Array(group.numberCases).fill(defaultValue);
+  }
+  return out;
 }
 
 function clearUserData() {
@@ -286,6 +327,7 @@ function setFirstVisitTrain() {
   localStorage.setItem("firstVisitTrain", false);
 }
 
+// Export Data is broken with new advanced Cases
 function exportUserData() {
   let exportNumberStrs = [];
   let exportAlgSels = [];
@@ -294,13 +336,7 @@ function exportUserData() {
     const GROUP = GROUPS[indexGroup];
 
     // Gernerate Case selection export
-    let exportNumber = BigInt(0);
-    let exportNumberInt = BigInt(0);
-    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      exportNumber += BigInt(GROUP.caseSelection[indexCase] * Math.pow(3, indexCase));
-    }
-    const exportNumberStr = exportNumber.toString(36);
-    exportNumberStrs[indexGroup] = exportNumberStr;
+    exportNumberStrs[indexGroup] = encodeBase3ToBase62(GROUP.caseSelection);
 
     // Gernerate Alg selection export
     let exportAlgSel = "";
@@ -314,6 +350,7 @@ function exportUserData() {
     }
     exportAlgSels[indexGroup] = exportAlgSel;
   }
+
   const URL_EXPORT =
     "https://f2l-trainer.top/?bc=" +
     exportNumberStrs[0] +
@@ -332,33 +369,26 @@ function exportUserData() {
     "&d=" +
     exportAlgSels[3];
 
-  // console.log("URL_EXPORT: " + URL_EXPORT);
   ELEM_INPUT_EXPORT.value = URL_EXPORT;
-  // ELEM_INPUT_EXPORT.blur();
-  // setTimeout(() => {
-  //   ELEM_INPUT_EXPORT.blur();
-  // }, 1);
 }
 
 function importUserDataCases(URL_PARAM_CASE_SELECTION) {
   console.log("Importing case selection");
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
+
     GROUP.caseSelection.length = 0;
     const IMPORT_DATA_STRING = URL_PARAM_CASE_SELECTION[indexGroup];
+    console.log(IMPORT_DATA_STRING);
     if (IMPORT_DATA_STRING === undefined) continue;
 
-    let importDataInt = BigInt(0);
-
-    for (let indexChar = 0; indexChar < IMPORT_DATA_STRING.length; indexChar++) {
-      char = IMPORT_DATA_STRING[indexChar];
-      importDataInt += BigInt(parseInt(char, 36) * Math.pow(36, IMPORT_DATA_STRING.length - indexChar - 1));
+    const base3Number = decodeBase62ToBase3(IMPORT_DATA_STRING);
+    let base3List = Array(GROUP.numberCases).fill(0);
+    for (let i = 0; i < base3Number.length; i++) {
+      base3List[GROUP.numberCases - 1 - i] = Number(base3Number[base3Number.length - 1 - i]);
     }
 
-    // Save imported data
-    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      GROUP.caseSelection[indexCase] = Math.floor(Number(importDataInt) / Math.pow(3, indexCase)) % 3;
-    }
+    GROUP.caseSelection = base3List;
     localStorage.setItem(GROUP.saveName + "caseSelection", JSON.stringify(GROUP.caseSelection));
   }
 }
@@ -382,4 +412,55 @@ function importUserDataAlgs(URL_PARAM_ALG_SELECTION) {
       localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
     }
   }
+}
+
+/**
+ * Encodes a base-3 number into a Base62 string.
+ * @param {list} base3Number - A string representing the base-3 number.
+ * @returns {string} - The encoded Base62 string.
+ */
+function encodeBase3ToBase62(base3Number) {
+  // Step 1: Convert base-3 string to decimal integer
+  console.log("original: " + base3Number.join(""));
+  let decimalValue = BigInt(0);
+  for (let i = 0; i < base3Number.length; i++) {
+    decimalValue = decimalValue * BigInt(3) + BigInt(base3Number[i]);
+  }
+  //console.log("decimalValue: " + decimalValue);
+
+  // Step 2: Convert decimal to Base62 string
+  let base62String = "";
+  do {
+    const remainder = decimalValue % BigInt(BASE);
+    base62String = BASE62_CHARSET[Number(remainder)] + base62String;
+    decimalValue = decimalValue / BigInt(BASE);
+  } while (decimalValue > 0);
+
+  return base62String;
+}
+
+/**
+ * Decodes a Base62 string back into a base-3 number.
+ * @param {string} base62String - The encoded Base62 string.
+ * @returns {list} - The original base-3 number as a string.
+ */
+function decodeBase62ToBase3(base62String) {
+  // Step 1: Convert Base62 string to decimal integer
+  let decimalValue = BigInt(0);
+  for (let i = 0; i < base62String.length; i++) {
+    const char = base62String[i];
+    const digit = BigInt(BASE62_CHARSET.indexOf(char));
+    decimalValue = decimalValue * BigInt(BASE) + digit;
+  }
+
+  // Step 2: Convert decimal integer back to base-3 string
+  let base3Number = "";
+  do {
+    const remainder = decimalValue % BigInt(3);
+    base3Number = remainder.toString() + base3Number;
+    decimalValue = decimalValue / BigInt(3);
+  } while (decimalValue > 0);
+
+  console.log("decoded:  " + base3Number);
+  return base3Number;
 }
