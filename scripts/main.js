@@ -410,7 +410,7 @@ function addElementsToDOM() {
 }
 
 function updateAlg() {
-  // Update Alg button clicked
+  // Confirm clicked in Change Alg popup
   let indexGroup;
   if (!mode) {
     indexGroup = ELEM_SELECT_GROUP.selectedIndex;
@@ -439,10 +439,6 @@ function updateAlg() {
   // Display algorithm in selection window
   GROUP.divAlgorithm[selectedCase].innerHTML = tempAlg;
 
-  // Update alg in Twisty Player
-  ELEM_TWISTY_PLAYER.alg = tempAlg;
-  ELEM_TWISTY_PLAYER.timestamp = 0;
-
   // Save which Alg was selected
   GROUP.algorithmSelection[selectedCase] = selectedAlgNumber;
 
@@ -451,11 +447,16 @@ function updateAlg() {
     if (!CURRENT_TRAIN_CASE.mirroring) {
       generatedScrambles[currentTrainCaseNumber].algHint = tempAlg;
       ELEM_HINT.innerText = tempAlg;
+      ELEM_TWISTY_PLAYER.alg = tempAlg;
     } else {
       generatedScrambles[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
       ELEM_HINT.innerText = mirrorAlg(tempAlg);
+      ELEM_TWISTY_PLAYER.alg = mirrorAlg(tempAlg);
     }
   }
+
+  // Reset Twisty Player progressbar
+  ELEM_TWISTY_PLAYER.timestamp = 0;
 
   closeOverlays();
 
@@ -642,7 +643,6 @@ function generateTrainCaseList() {
       let categoryItems = GROUP.categoryCases[indexCategory];
       for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
         let indexCase = categoryItems[indexCategoryItem] - 1;
-        //for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
         for (let state = 0; state < trainStateSelection.length; state++) {
           if (trainStateSelection[state] && GROUP.caseSelection[indexCase] == state) {
             if (GROUP.scrambles[indexCase + 1] == undefined)
@@ -1343,10 +1343,10 @@ function showInfo() {
 //   ELEM_IFRAME_VIDEO.src = "https://www.youtube.com/embed/EQbZvKssp7s?si=dfSdb3qlFpxnC89c&amp;start=20";
 // }
 
-function showSettingsSelect() {
-  exportUserData();
-  openDialog(ELEM_CONTAINER_SELECT_SETTINGS);
-}
+//function showSettingsSelect() {
+//  exportUserData();
+//  openDialog(ELEM_CONTAINER_SELECT_SETTINGS);
+//}
 
 function showSettingsTrain() {
   exportUserData();
