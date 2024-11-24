@@ -154,14 +154,15 @@ const ADVANCED_COLLECTION = {
   solveCounter: advancedSolveCounter,
   //
   imgPath: "./images/advanced_cases/",
-  numberCases: 36,
+  numberCases: 42,
 
   categoryNames: [
     "Slot in Front  / White facing Up",
     "Slot in Front / White facing Front",
     "Slot in Front / White facing Side",
     "Slot in Front / Corner in Adjacent Slot",
-    "Slot in Back / Corner in Front Slot",
+    "Slot in Back / Edge in Adjacent Front Slot", // new
+    "Slot in Back / Corner in Adjacent Front Slot",
     "Edge in Opposite Slot",
     "Corner in Opposite Slot",
   ],
@@ -170,6 +171,7 @@ const ADVANCED_COLLECTION = {
     [9, 10, 13, 14],
     [7, 8, 11, 12],
     [19, 20, 21, 22, 23, 24],
+    [37, 38, 39, 40, 41, 42], // new
     [25, 26, 27, 28, 29, 30],
     [5, 6, 17, 18, 15, 16],
     [31, 32, 33, 34, 35, 36],
@@ -200,8 +202,14 @@ const ADVANCED_COLLECTION = {
   imgCaseTrash: [],
   btnRecover: [],
   piecesToHide: [
-    4, 4, 2, 2, 1, 1, 4, 4, 2, 2, 2, 2, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    4, 4, 2, 2, 1, 1, 4, 4, 2, 2, 2, 2, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1,
   ],
+  // 1: hide red-green
+  // 2: hide red-blue
+  // 3: hide blue-orange
+  // 4: hide green-orange
+  // default: show all F2L
 };
 
 const EXPERT_COLLECTION = {
@@ -260,6 +268,11 @@ const EXPERT_COLLECTION = {
   imgCaseTrash: [],
   btnRecover: [],
   piecesToHide: [4, 4, 2, 2, 2, 2, 2, 4, 1, 2, 4, 2, 4, 2, 4, 2, 4],
+  // 1: hide red-green
+  // 2: hide red-blue
+  // 3: hide blue-orange
+  // 4: hide green-orange
+  // default: show all F2L
 };
 
 const GROUPS = [BASIC_COLLECTION, BASIC_BACK_COLLECTION, ADVANCED_COLLECTION, EXPERT_COLLECTION];
