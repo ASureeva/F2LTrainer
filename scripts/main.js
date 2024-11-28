@@ -83,6 +83,7 @@ const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
 const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
 
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
+const ELEM_CHECKBOX_SHOW_FULL_ALG = document.getElementById("checkboxShowFullAlgId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
 // const ELEM_BUTTON_SETTING_SELECT = document.querySelector(".btn-settings-select");
@@ -423,7 +424,7 @@ function updateAlg() {
 
   // Read text in custom Alg Textbox
   GROUP.customAlgorithms[selectedCase] = ELEM_EDITALG_CUSTOMALG.value;
-  // Check if selected alg is default or custom
+  // Check if selected alg is default of custom
   if (selectedAlgNumber < GROUP.algorithms[selectedCase + 1].length) {
     // If selected Alg is default
     tempAlg = GROUP.algorithms[selectedCase + 1][selectedAlgNumber];
@@ -574,23 +575,33 @@ function keyup(e) {
 }
 
 function updateTrainCases() {
-  trainStateSelection = [
-    ELEM_CHECKBOX_UNLEARNED.checked,
-    ELEM_CHECKBOX_LEARNING.checked,
-    ELEM_CHECKBOX_FINISHED.checked,
-  ];
-  trainGroupSelection = [
-    ELEM_CHECKBOX_BASIC.checked,
-    ELEM_CHECKBOX_BASIC_BACK.checked,
-    ELEM_CHECKBOX_ADVANCED.checked,
-    ELEM_CHECKBOX_EXPERT.checked,
-  ];
+  trainStateSelection[0] = ELEM_CHECKBOX_UNLEARNED.checked;
+  trainStateSelection[1] = ELEM_CHECKBOX_LEARNING.checked;
+  trainStateSelection[2] = ELEM_CHECKBOX_FINISHED.checked;
+
+  trainGroupSelection[0] = ELEM_CHECKBOX_BASIC.checked;
+  trainGroupSelection[1] = ELEM_CHECKBOX_BASIC_BACK.checked;
+  trainGroupSelection[2] = ELEM_CHECKBOX_ADVANCED.checked;
+  trainGroupSelection[3] = ELEM_CHECKBOX_EXPERT.checked;
+
   leftSelection = ELEM_CHECKBOX_LEFT.checked;
   rightSelection = ELEM_CHECKBOX_RIGHT.checked;
   aufSelection = ELEM_CHECKBOX_AUF.checked;
-  // hintSelection = ELEM_CHECKBOX_HINT.checked;
   hintSelection = ELEM_SELECT_HINT.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
+  showFullAlg = ELEM_CHECKBOX_SHOW_FULL_ALG.checked;
+
+  // Update hint display when setting changes
+  if (generatedScrambles.length > 0) {
+    if (showFullAlg) {
+      const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+      ELEM_HINT.innerText = ALG_LIST.join(" ");
+      ELEM_HINT.style.cursor = "default";
+    } else {
+      ELEM_HINT.innerText = "Click to show hint";
+      ELEM_HINT.style.cursor = "pointer";
+    }
+  }
 
   if (timerEnabled) {
     ELEM_TIMER.style.display = "block";
@@ -608,13 +619,17 @@ function updateTrainCases() {
 }
 
 function showHint() {
-  if (generatedScrambles.length == 0) return;
+  if (generatedScrambles.length == 0 || showFullAlg) return;
   // Get algorithm and convert to list
   const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+  
   ELEM_HINT_IMG.style.opacity = "1";
+  
+  // Show one move at a time
   if (hintCounter < ALG_LIST.length) {
     ELEM_HINT.innerText = ALG_LIST.slice(0, hintCounter + 1).join(" ");
   }
+  
   hintCounter++;
 }
 
@@ -718,44 +733,35 @@ function generateTrainCaseList() {
 }
 
 function nextScramble(nextPrevious) {
-  if (hintSelection == 1) {
-    ELEM_HINT_IMG.style.opacity = "0.3";
-    ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
+  if (generatedScrambles.length == 0) return;
+
+  currentTrainCaseNumber += nextPrevious;
+  if (currentTrainCaseNumber >= generatedScrambles.length) {
+    currentTrainCaseNumber = 0;
+  } else if (currentTrainCaseNumber < 0) {
+    currentTrainCaseNumber = generatedScrambles.length - 1;
   }
-  // updateHintVisibility();
+
+  // Reset hint counter
   hintCounter = 0;
-  ELEM_HINT.innerText = "Press to show hint";
-  /*if (flagSave) {
-    generateTrainCaseList();
-    flagSave = false;
-  }*/
-  if (nextPrevious) {
-    if (currentTrainCaseNumber >= 0)
-      // Increase Solve Counter
-      GROUPS[generatedScrambles[currentTrainCaseNumber].indexGroup].solveCounter[
-        generatedScrambles[currentTrainCaseNumber].indexCase
-      ] += 1;
-    currentTrainCaseNumber++;
-    if (currentTrainCaseNumber >= generatedScrambles.length) {
-      generateTrainCaseList();
-      if (generatedScrambles.length <= 0) {
-        return;
-      }
-    }
-  } else if (currentTrainCaseNumber > 0) {
-    currentTrainCaseNumber--;
+  
+  // Update scramble text
+  ELEM_SCRAMBLE.innerHTML = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
+  
+  // Reset or show full hint based on setting
+  if (showFullAlg) {
+    const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+    ELEM_HINT.innerText = ALG_LIST.join(" ");
+    ELEM_HINT.style.cursor = "default";
+  } else {
+    ELEM_HINT.innerText = "Click to show hint";
+    ELEM_HINT.style.cursor = "pointer";
   }
 
-  if (generatedScrambles[currentTrainCaseNumber] == undefined) return;
-
+  // Update hint image
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
   const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
-  const INDEX_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].indexScramble;
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
-  const SELECTED_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].selectedScramble;
-  const SELECTED_SCRAMBLE_AUF = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
-  const ALG_HINT = generatedScrambles[currentTrainCaseNumber].algHint;
-
   const GROUP = GROUPS[INDEX_GROUP];
 
   if (!MIRRORING) {
@@ -764,22 +770,19 @@ function nextScramble(nextPrevious) {
     ELEM_HINT_IMG.src = GROUP.imgPath + "left/F2L" + (INDEX_CASE + 1) + ".svg";
   }
 
-  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + SELECTED_SCRAMBLE;
-  ELEM_TWISTY_PLAYER.alg = ALG_HINT;
+  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
+  ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
   resetTwistyPlayerView();
   ELEM_TWISTY_PLAYER.timestamp = 0;
 
   hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
-
-  // Show scramble
-  ELEM_SCRAMBLE.innerText = SELECTED_SCRAMBLE_AUF;
 
   ELEM_DEBUG_INFO.innerHTML =
     GROUPS[INDEX_GROUP].name +
     ", Case " +
     (INDEX_CASE + 1) +
     ", Scramble " +
-    +INDEX_SCRAMBLE +
+    +generatedScrambles[currentTrainCaseNumber].indexScramble +
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
     ", Algorithm " +
@@ -809,6 +812,7 @@ function updateCheckboxStatus() {
   // ELEM_CHECKBOX_HINT.checked = hintSelection;
   ELEM_SELECT_HINT.selectedIndex = hintSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
+  ELEM_CHECKBOX_SHOW_FULL_ALG.checked = showFullAlg;
 }
 
 function updateHintVisibility() {
@@ -860,7 +864,7 @@ function changeState(indexGroup, indexCategory, indexCase) {
   GROUP.divContainer[indexCase].style.color = CATEGORY_TEXT_COLOR[GROUP.caseSelection[indexCase]];
   GROUP.divContainer[indexCase].style.borderStyle = CATEGORY_BORDERS[GROUP.caseSelection[indexCase]];
   GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
-  GROUP.btnMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
+  GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
   highlightBulkChangeTrainingStateButton(indexGroup, indexCategory, indexCase);
   saveUserData();
 
@@ -1375,4 +1379,14 @@ function showFeedback() {
 function openDialog(ELEM) {
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
+}
+
+function getCurrentAlgorithm() {
+  const GROUP = GROUPS[currentTrainGroup];
+  const indexCase = GROUP.trainCases[currentTrainCase];
+  const algNumber = GROUP.algorithmSelection[indexCase];
+  if (algNumber === -1) {
+    return GROUP.customAlgorithms[indexCase];
+  }
+  return GROUP.algorithms[indexCase + 1][algNumber];
 }
