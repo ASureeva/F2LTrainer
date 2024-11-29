@@ -744,13 +744,25 @@ function nextScramble(nextPrevious) {
   }
 
   if (generatedScrambles.length == 0) return;
-
-  currentTrainCaseNumber += nextPrevious;
-  if (currentTrainCaseNumber >= generatedScrambles.length) {
-    currentTrainCaseNumber = 0;
-  } else if (currentTrainCaseNumber < 0) {
-    currentTrainCaseNumber = generatedScrambles.length - 1;
+  
+  if (nextPrevious) {
+    if (currentTrainCaseNumber >= 0)
+      // Increase Solve Counter
+      GROUPS[generatedScrambles[currentTrainCaseNumber].indexGroup].solveCounter[
+        generatedScrambles[currentTrainCaseNumber].indexCase
+      ] += 1;
+    currentTrainCaseNumber++;
+    if (currentTrainCaseNumber >= generatedScrambles.length) {
+      generateTrainCaseList();
+      if (generatedScrambles.length <= 0) {
+        return;
+      }
+    }
+  } else if (currentTrainCaseNumber > 0) {
+    currentTrainCaseNumber--;
   }
+
+  if (generatedScrambles[currentTrainCaseNumber] == undefined) return;
 
   // Reset hint counter
   hintCounter = 0;
