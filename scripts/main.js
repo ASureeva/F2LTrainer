@@ -738,6 +738,11 @@ function generateTrainCaseList() {
 }
 
 function nextScramble(nextPrevious) {
+  if (hintSelection == 1) {
+    ELEM_HINT_IMG.style.opacity = "0.3";
+    ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
+  }
+
   if (generatedScrambles.length == 0) return;
 
   currentTrainCaseNumber += nextPrevious;
