@@ -203,6 +203,11 @@ window.addEventListener("load", () => {
   // Close dialogs (popup-container) if clicked outside the dialog
   ELEM_DIALOGS.forEach((elem_dialog) => {
     elem_dialog.addEventListener("mousedown", function (event) {
+      // Don't close if the click is on a select element or its options
+      if (event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
+        return;
+      }
+      
       var rect = elem_dialog.getBoundingClientRect();
       var isInDialog =
         rect.top <= event.clientY &&
@@ -424,7 +429,7 @@ function updateAlg() {
 
   // Read text in custom Alg Textbox
   GROUP.customAlgorithms[selectedCase] = ELEM_EDITALG_CUSTOMALG.value;
-  // Check if selected alg is default of custom
+  // Check if selected alg is default or custom
   if (selectedAlgNumber < GROUP.algorithms[selectedCase + 1].length) {
     // If selected Alg is default
     tempAlg = GROUP.algorithms[selectedCase + 1][selectedAlgNumber];
@@ -1379,14 +1384,4 @@ function showFeedback() {
 function openDialog(ELEM) {
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
-}
-
-function getCurrentAlgorithm() {
-  const GROUP = GROUPS[currentTrainGroup];
-  const indexCase = GROUP.trainCases[currentTrainCase];
-  const algNumber = GROUP.algorithmSelection[indexCase];
-  if (algNumber === -1) {
-    return GROUP.customAlgorithms[indexCase];
-  }
-  return GROUP.algorithms[indexCase + 1][algNumber];
 }
