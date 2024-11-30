@@ -48,6 +48,7 @@ let leftSelection = true;
 let rightSelection = true;
 let aufSelection = true;
 let hintSelection = 2;
+let showFullAlg = false;
 let timerEnabled = false;
 
 let firstVisit = true;
@@ -83,6 +84,9 @@ function saveUserData() {
 
   // Saving hint settings
   localStorage.setItem("hintSelection", hintSelection);
+
+  // Saving show full algorithm setting
+  localStorage.setItem("showFullAlg", showFullAlg);
 
   // Saving timer enable settings
   localStorage.setItem("timerEnabled", timerEnabled);
@@ -169,6 +173,7 @@ function loadUserData() {
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
+  showFullAlg = loadBoolean("showFullAlg", showFullAlg);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
@@ -202,7 +207,7 @@ function loadUserData() {
       }
     } else {
       GROUP.customAlgorithms = Array(GROUP.numberCases).fill("");
-    }*/
+   }*/
 
     // Load Algorithm Selection
     GROUP.algorithmSelection = loadList(GROUP, "algorithmSelection", 0);
