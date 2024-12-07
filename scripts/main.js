@@ -80,6 +80,7 @@ const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
 const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
 
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
+const ELEM_CHECKBOX_SHOW_FULL_ALG = document.getElementById("checkboxShowFullAlgId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
 const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-container");
@@ -198,6 +199,11 @@ window.addEventListener("load", () => {
   // Close dialogs (popup-container) if clicked outside the dialog
   ELEM_DIALOGS.forEach((elem_dialog) => {
     elem_dialog.addEventListener("mousedown", function (event) {
+      // Don't close if the click is on a select element or its options
+      if (event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
+        return;
+      }
+      
       var rect = elem_dialog.getBoundingClientRect();
       var isInDialog =
         rect.top <= event.clientY &&
@@ -588,6 +594,19 @@ function updateTrainCases() {
   aufSelection = ELEM_CHECKBOX_AUF.checked;
   hintSelection = ELEM_SELECT_HINT.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
+  showFullAlg = ELEM_CHECKBOX_SHOW_FULL_ALG.checked;
+
+  // Update hint display when setting changes
+  if (generatedScrambles.length > 0) {
+    if (showFullAlg) {
+      const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+      ELEM_HINT.innerText = ALG_LIST.join(" ");
+      ELEM_HINT.style.cursor = "default";
+    } else {
+      ELEM_HINT.innerText = "Click to show hint";
+      ELEM_HINT.style.cursor = "pointer";
+    }
+  }
 
   if (timerEnabled) {
     ELEM_TIMER.style.display = "block";
@@ -606,13 +625,17 @@ function updateTrainCases() {
 
 function showHint() {
   // Show hint button is pressed
-  if (generatedScrambles.length == 0) return;
+  if (generatedScrambles.length == 0 || showFullAlg) return;
   // Get algorithm and convert to list
   const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+  
   ELEM_HINT_IMG.style.opacity = "1";
+  
+  // Show one move at a time
   if (hintCounter < ALG_LIST.length) {
     ELEM_HINT.innerText = ALG_LIST.slice(0, hintCounter + 1).join(" ");
   }
+  
   hintCounter++;
 }
 
@@ -727,9 +750,8 @@ function nextScramble(nextPrevious) {
     ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
   }
 
-  // Reset hint functionality
-  hintCounter = 0;
-  ELEM_HINT.innerText = "Press to show hint";
+  if (generatedScrambles.length == 0) return;
+  
   if (nextPrevious) {
     if (currentTrainCaseNumber >= 0)
       // Increase Solve Counter
@@ -749,14 +771,26 @@ function nextScramble(nextPrevious) {
 
   if (generatedScrambles[currentTrainCaseNumber] == undefined) return;
 
+  // Reset hint counter
+  hintCounter = 0;
+  
+  // Update scramble text
+  ELEM_SCRAMBLE.innerHTML = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
+  
+  // Reset or show full hint based on setting
+  if (showFullAlg) {
+    const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+    ELEM_HINT.innerText = ALG_LIST.join(" ");
+    ELEM_HINT.style.cursor = "default";
+  } else {
+    ELEM_HINT.innerText = "Click to show hint";
+    ELEM_HINT.style.cursor = "pointer";
+  }
+
+  // Update hint image
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
   const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
-  const INDEX_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].indexScramble;
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
-  const SELECTED_SCRAMBLE = generatedScrambles[currentTrainCaseNumber].selectedScramble;
-  const SELECTED_SCRAMBLE_AUF = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
-  const ALG_HINT = generatedScrambles[currentTrainCaseNumber].algHint;
-
   const GROUP = GROUPS[INDEX_GROUP];
 
   if (!MIRRORING) {
@@ -765,22 +799,19 @@ function nextScramble(nextPrevious) {
     ELEM_HINT_IMG.src = GROUP.imgPath + "left/F2L" + (INDEX_CASE + 1) + ".svg";
   }
 
-  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + SELECTED_SCRAMBLE;
-  ELEM_TWISTY_PLAYER.alg = ALG_HINT;
+  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
+  ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
   resetTwistyPlayerView();
   ELEM_TWISTY_PLAYER.timestamp = 0;
 
   hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
-
-  // Show scramble
-  ELEM_SCRAMBLE.innerText = SELECTED_SCRAMBLE_AUF;
 
   ELEM_DEBUG_INFO.innerHTML =
     GROUPS[INDEX_GROUP].name +
     ", Case " +
     (INDEX_CASE + 1) +
     ", Scramble " +
-    +INDEX_SCRAMBLE +
+    +generatedScrambles[currentTrainCaseNumber].indexScramble +
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
     ", Algorithm " +
@@ -811,6 +842,7 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_AUF.checked = aufSelection;
   ELEM_SELECT_HINT.selectedIndex = hintSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
+  ELEM_CHECKBOX_SHOW_FULL_ALG.checked = showFullAlg;
 }
 
 function updateHintVisibility() {
@@ -863,7 +895,7 @@ function changeState(indexGroup, indexCategory, indexCase) {
   GROUP.divContainer[indexCase].style.color = CATEGORY_TEXT_COLOR[GROUP.caseSelection[indexCase]];
   GROUP.divContainer[indexCase].style.borderStyle = CATEGORY_BORDERS[GROUP.caseSelection[indexCase]];
   GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
-  GROUP.btnMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
+  GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
   highlightBulkChangeTrainingStateButton(indexGroup, indexCategory, indexCase);
   saveUserData();
 
