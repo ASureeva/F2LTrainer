@@ -103,34 +103,6 @@ function saveUserData() {
     // Save Solve Counter
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
   }
-
-  /*
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
-      localStorage.setItem(GROUP.saveName + "collapse" + indexCategory, GROUP.collapse[indexCategory]);
-
-      let categoryItems = GROUP.categoryCases[indexCategory];
-      // for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
-      //   let indexCase = categoryItems[indexCategoryItem] - 1;
-      // }
-
-      for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
-        let indexCase = categoryItems[indexCategoryItem] - 1;
-
-        // Save Case Selection
-        localStorage.setItem(GROUP.saveName + "caseSelection" + indexCase, GROUP.caseSelection[indexCase]);
-        // Save Custom Algorithms
-        localStorage.setItem(GROUP.saveName + "customAlgorithms" + indexCase, GROUP.customAlgorithms[indexCase]);
-        // Save Algorithm Selection
-        localStorage.setItem(GROUP.saveName + "algorithmSelection" + indexCase, GROUP.algorithmSelection[indexCase]);
-      }
-    }
-    // console.log(JSON.stringify(GROUP.solveCounter));
-    localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
-  }
-  */
-  // updateHintVisibility();
 }
 
 // Load
@@ -176,98 +148,13 @@ function loadUserData() {
 
     // New Restore Code Start
     GROUP.collapse = loadList(GROUP, "collapse", false);
-    /*temp = localStorage.getItem(GROUP.saveName + "collapse");
-    if (temp !== null) {
-      GROUP.collapse = JSON.parse(temp);
-    }*/
-
     // Load Case Selection
     GROUP.caseSelection = loadList(GROUP, "caseSelection", 0);
-
-    /*
-    if (temp !== null) {
-      GROUP.caseSelection = JSON.parse(temp);
-    } else {
-      GROUP.caseSelection = Array(GROUP.numberCases).fill(0);
-    }
-*/
     // Load Custom Algorithms
     GROUP.customAlgorithms = loadList(GROUP, "customAlgorithms", "");
 
-    /*temp = localStorage.getItem(GROUP.saveName + "customAlgorithms");
-    if (temp !== null) {
-      tamp = JSON.parse(temp);
-      if (temp.length > 0) {
-        GROUP.customAlgorithms = temp;
-      }
-    } else {
-      GROUP.customAlgorithms = Array(GROUP.numberCases).fill("");
-    }*/
-
     // Load Algorithm Selection
     GROUP.algorithmSelection = loadList(GROUP, "algorithmSelection", 0);
-
-    /*    temp = localStorage.getItem(GROUP.saveName + "algorithmSelection");
-    if (temp !== null && temp.length > 0) {
-      GROUP.algorithmSelection = JSON.parse(temp);
-    } else {
-      GROUP.algorithmSelection = Array(GROUP.numberCases).fill(0);
-    }
-      */
-    // New Restore Code End
-
-    /*    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
-      temp = localStorage.getItem(GROUP.saveName + "collapse" + indexCategory);
-      if (temp !== null && temp == "true") {
-        GROUP.collapse.push(true);
-      } else {
-        GROUP.collapse.push(false);
-      }
-    }*/
-
-    /*
-    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      // Load Case Selection
-
-      temp = localStorage.getItem(GROUP.saveName + "caseSelection" + indexCase);
-      if (temp !== null && temp >= 0 && temp <= 2) {
-        GROUP.caseSelection.push(temp);
-      } else {
-        // If site visited first time - set basic cases -> category 1 to "Learning"
-        if (indexGroup == 0) {
-          if (indexCase == 3) {
-            GROUP.caseSelection.push(0);
-          } else if (indexCase == 2) {
-            GROUP.caseSelection.push(2);
-          } else if (indexCase == 0) {
-            GROUP.caseSelection.push(1);
-          } else if (indexCase == 1) {
-            GROUP.caseSelection.push(1);
-          } else {
-            GROUP.caseSelection.push(0);
-          }
-        } else {
-          GROUP.caseSelection.push(0);
-        }
-      }
-
-      // Load Custom Algorithms
-      temp = localStorage.getItem(GROUP.saveName + "customAlgorithms" + indexCase);
-      if (temp !== null) {
-        GROUP.customAlgorithms.push(temp);
-      } else {
-        GROUP.customAlgorithms.push("");
-      }
-
-      // Load Algorithm Selection
-      temp = localStorage.getItem(GROUP.saveName + "algorithmSelection" + indexCase);
-      if (temp !== null) {
-        GROUP.algorithmSelection.push(temp);
-      } else {
-        GROUP.algorithmSelection.push(0);
-      }
-    }
-      */
 
     // Load Solve Counter
     temp = localStorage.getItem(GROUP.saveName + "solveCounter");
