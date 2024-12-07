@@ -45,8 +45,6 @@ const ELEM_CHANGE_STATE_POPUP = document.getElementById("popup-change-state");
 const ELEM_FEEDBACK_CONTAINER = document.getElementById("feedback-container");
 const ELEM_DIALOGS = document.querySelectorAll("dialog");
 
-// side buttons
-
 const CATEGORY_NAMES = ["Unlearned", "Learning", "Finished", "All"];
 
 const CATEGORY_COLORS = [COLOR_UNLEARNED, COLOR_LEARNING, COLOR_FINISHED];
@@ -79,15 +77,12 @@ const ELEM_CHECKBOX_RIGHT = document.getElementById("checkboxRightId");
 
 const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
 
-// const ELEM_CHECKBOX_HINT = document.getElementById("checkboxShowHintId");
 const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
 
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
-// const ELEM_BUTTON_SETTING_SELECT = document.querySelector(".btn-settings-select");
 const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-container");
-// const ELEM_CONTAINER_SELECT_SETTINGS = document.getElementById("select-settings-container");
 
 const ELEM_SCRAMBLE = document.getElementById("scramble");
 const ELEM_HINT = document.getElementById("hint");
@@ -164,7 +159,8 @@ window.addEventListener("load", () => {
   localStorage.clear();
   saveUserData();
 
-  ELEM_SELECT_GROUP.selectedIndex = viewSelection; // Set view
+  // Set Group to show
+  ELEM_SELECT_GROUP.selectedIndex = viewSelection;
 
   showWelcomePopup();
   // Create all Entries
@@ -465,6 +461,7 @@ function updateAlg() {
 }
 
 function editCurrentAlg() {
+  // Edit Alg button is clicked in train mode
   ELEM_BTN_CHANGE_ALG.blur();
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
   const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
@@ -574,6 +571,7 @@ function keyup(e) {
 }
 
 function updateTrainCases() {
+  // Executed when some settings are changed
   trainStateSelection = [
     ELEM_CHECKBOX_UNLEARNED.checked,
     ELEM_CHECKBOX_LEARNING.checked,
@@ -588,7 +586,6 @@ function updateTrainCases() {
   leftSelection = ELEM_CHECKBOX_LEFT.checked;
   rightSelection = ELEM_CHECKBOX_RIGHT.checked;
   aufSelection = ELEM_CHECKBOX_AUF.checked;
-  // hintSelection = ELEM_CHECKBOX_HINT.checked;
   hintSelection = ELEM_SELECT_HINT.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
 
@@ -608,6 +605,7 @@ function updateTrainCases() {
 }
 
 function showHint() {
+  // Show hint button is pressed
   if (generatedScrambles.length == 0) return;
   // Get algorithm and convert to list
   const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
@@ -619,7 +617,7 @@ function showHint() {
 }
 
 function showSelectedGroup() {
-  // Make only selected Group visible
+  // Make only selected Group visible (Executed when dropdown box is changed)
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     if (ELEM_SELECT_GROUP.selectedIndex === indexGroup) {
       ELEM_GROUP_CONTAINER[indexGroup].style.display = "flex";
@@ -634,16 +632,19 @@ function showSelectedGroup() {
 }
 
 function generateTrainCaseList() {
+  // Generate new list of Cases to be trained and add them to the current list
   trainCaseList = [];
-
+  // Add all cases that shall be learned to trainCaseList
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
+    // Skip if group is not selected in settings
     if (!trainGroupSelection[indexGroup]) continue;
     for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
       let categoryItems = GROUP.categoryCases[indexCategory];
       for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
         let indexCase = categoryItems[indexCategoryItem] - 1;
         for (let state = 0; state < trainStateSelection.length; state++) {
+          // Check if case is in selected state
           if (trainStateSelection[state] && GROUP.caseSelection[indexCase] == state) {
             if (GROUP.scrambles[indexCase + 1] == undefined)
               console.warn(
@@ -655,18 +656,18 @@ function generateTrainCaseList() {
                   GROUP.scrambles
               );
 
-            // Get scramble index
+            // Choose random scramble for current case
             const iNDEX_SCRAMBLE = parseInt(Math.random() * GROUP.scrambles[indexCase + 1].length);
             let selectedScramble = GROUP.scrambles[indexCase + 1][iNDEX_SCRAMBLE];
 
-            // Get hint algorithm
+            // Get hint algorithm for current case
             if (GROUP.algorithmSelection[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
               algHint = GROUP.customAlgorithms[indexCase];
             } else {
               algHint = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelection[indexCase]];
             }
 
-            // Mirror if wanted
+            // Mirror algorithm
             let mirroring;
             if (rightSelection && leftSelection) {
               mirroring = parseInt(Math.floor(Math.random() * 2));
@@ -680,7 +681,7 @@ function generateTrainCaseList() {
               algHint = mirrorAlg(algHint);
             }
 
-            // Add U move if wanted
+            // Add random U move to selected scramble
             let selectedScrambleAUF;
             if (aufSelection) {
               selectedScrambleAUF = addRandomUMove(selectedScramble);
@@ -714,27 +715,27 @@ function generateTrainCaseList() {
     trainCaseList[i] = trainCaseList[J];
     trainCaseList[J] = TEMP;
   }
+  // Add new cases to current list
   generatedScrambles = generatedScrambles.concat(trainCaseList);
 }
 
 function nextScramble(nextPrevious) {
+  // Show next/previous case
+  // (nextPrevious = 0: previous case, nextPrevious = 1: next case)
   if (hintSelection == 1) {
     ELEM_HINT_IMG.style.opacity = "0.3";
     ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
   }
-  // updateHintVisibility();
+
+  // Reset hint functionality
   hintCounter = 0;
   ELEM_HINT.innerText = "Press to show hint";
-  /*if (flagSave) {
-    generateTrainCaseList();
-    flagSave = false;
-  }*/
   if (nextPrevious) {
     if (currentTrainCaseNumber >= 0)
       // Increase Solve Counter
       GROUPS[generatedScrambles[currentTrainCaseNumber].indexGroup].solveCounter[
         generatedScrambles[currentTrainCaseNumber].indexCase
-      ] += 1;
+      ] ++;
     currentTrainCaseNumber++;
     if (currentTrainCaseNumber >= generatedScrambles.length) {
       generateTrainCaseList();
@@ -796,6 +797,8 @@ function nextScramble(nextPrevious) {
 }
 
 function updateCheckboxStatus() {
+  // Set checkboxes to display the current settings
+  // Executed when the settings dialog is opened
   ELEM_CHECKBOX_UNLEARNED.checked = trainStateSelection[0];
   ELEM_CHECKBOX_LEARNING.checked = trainStateSelection[1];
   ELEM_CHECKBOX_FINISHED.checked = trainStateSelection[2];
@@ -806,7 +809,6 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_LEFT.checked = leftSelection;
   ELEM_CHECKBOX_RIGHT.checked = rightSelection;
   ELEM_CHECKBOX_AUF.checked = aufSelection;
-  // ELEM_CHECKBOX_HINT.checked = hintSelection;
   ELEM_SELECT_HINT.selectedIndex = hintSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
 }
@@ -814,30 +816,31 @@ function updateCheckboxStatus() {
 function updateHintVisibility() {
   switch (ELEM_SELECT_HINT.selectedIndex) {
     case 0:
-      // console.log("none");
+      // No hint
       ELEM_DIV_HINT_IMG.classList.remove("display-none");
       ELEM_HINT_IMG.style.visibility = "hidden";
       ELEM_DIV_TWISTY_PLAYER.classList.add("display-none");
       break;
     case 1:
-      // console.log("2D");
+      // 2D image as hint
       ELEM_DIV_HINT_IMG.classList.remove("display-none");
       ELEM_HINT_IMG.style.visibility = "visible";
       ELEM_DIV_TWISTY_PLAYER.classList.add("display-none");
       break;
     case 2:
-      // console.log("3D");
+      // 3D cube as hint
       ELEM_DIV_HINT_IMG.classList.add("display-none");
       ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
       break;
     default:
-      // console.log("3D");
+      // 3D cube as hint
       ELEM_DIV_HINT_IMG.classList.add("display-none");
       ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
   }
 }
 
 function showHideDebugInfo() {
+  // Show/hide debug info on the bottom of train mode
   if (boolShowDebugInfo) {
     boolShowDebugInfo = false;
     ELEM_BTN_SHOW_HIDE_DEBUG_INFO.innerHTML = "> Show info";
@@ -849,8 +852,8 @@ function showHideDebugInfo() {
   }
 }
 
-// Called when image is clicked
 function changeState(indexGroup, indexCategory, indexCase) {
+  // Executed when image is clicked in select mode
   const GROUP = GROUPS[indexGroup];
   GROUP.caseSelection[indexCase]++;
   if (GROUP.caseSelection[indexCase] >= 3) {
@@ -864,11 +867,12 @@ function changeState(indexGroup, indexCategory, indexCase) {
   highlightBulkChangeTrainingStateButton(indexGroup, indexCategory, indexCase);
   saveUserData();
 
-  // Hide Press me text
+  // Hide Press me text that is shown when site is visited first time
   if ((indexGroup == 0) & (indexCase == 3) & (divPressMe != undefined)) divPressMe.classList.add("display-none");
 }
 
 function collapseCategory(indexGroup, indexCategory) {
+  // Collapse/Minimize the category in select mode
   const GROUP = GROUPS[indexGroup];
   const CATEGORY_CONATINER = GROUP.categoryContainer[indexCategory];
   if (GROUP.collapse[indexCategory] == true) {
@@ -886,6 +890,7 @@ function collapseCategory(indexGroup, indexCategory) {
 }
 
 function collapse(target, duration = 300) {
+  // Collapse/Minimize the specific category in select mode
   target.style.transitionProperty = "height, margin, padding";
   target.style.transitionDuration = duration + "ms";
   target.style.boxSizing = "border-box";
@@ -911,6 +916,7 @@ function collapse(target, duration = 300) {
 }
 
 let expand = (target, duration = 300) => {
+  // Expand the specific category in select mode
   target.classList.remove("display-none");
   let height = target.offsetHeight;
   target.style.overflow = "hidden";
@@ -937,6 +943,8 @@ let expand = (target, duration = 300) => {
 };
 
 function changeMode() {
+  // Change between select mode and train mode
+  // (mode: 0 = select, 1 = train)
   if (mode == 0) {
     mode = 1;
     updateTrainCases();
@@ -962,6 +970,7 @@ function changeMode() {
 }
 
 function checkForDuplicates() {
+  // Check if there are any duplicate cases in GROUPS
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
     const FLATTENED_LIST = GROUP.categoryCases.flat();
@@ -977,6 +986,8 @@ function checkForDuplicates() {
 }
 
 function changeStateRadio() {
+  // Change the learning state of the current case
+  // (Executed whe learning state is changed in train mode)
   const GROUP = GROUPS[currentTrainGroup];
   if (GROUP == undefined) return;
   // console.log(GROUP.caseSelection[currentTrainCase]);
@@ -1081,6 +1092,8 @@ function spaceUp() {
 }
 
 function changeLearningStateBulk(indexGroup, indexCategory, state) {
+  // Change the learning state of all cases in a category
+
   // console.log("indexGroup: " + indexGroup + ", indexCategory: " + indexCategory + ", state: " + state);
   const GROUP = GROUPS[indexGroup];
   let categoryItems = GROUP.categoryCases[indexCategory];
@@ -1106,6 +1119,7 @@ function changeLearningStateBulk(indexGroup, indexCategory, state) {
 }
 
 function highlightBulkChangeTrainingStateButton(indexGroup, indexCategory) {
+  // Make the button bigger if all cases in category are in the same learning state
   const GROUP = GROUPS[indexGroup];
   let categoryItems = GROUP.categoryCases[indexCategory];
   let numUnlearned = 0,
@@ -1142,6 +1156,8 @@ function highlightAllBulkChangeTrainingStateButtons() {
 }
 
 function mirrorCase(indexGroup, indexCase) {
+  // Mirror single case
+  // (Executed when Mirror button is pressed in select mode)
   const GROUP = GROUPS[indexGroup];
   let tempAlg = "";
 
@@ -1163,6 +1179,7 @@ function mirrorCase(indexGroup, indexCase) {
 }
 
 function showPressMeText() {
+  // Shows the "Press me" text that is shown when site is visited first time
   if (firstVisit) {
     divPressMe = document.createElement("div");
     divPressMe.classList.add("div-press-me");
@@ -1178,6 +1195,7 @@ function hidePressMeTrainText() {
 }
 
 function readParams() {
+  // Read URL parameters
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   if (!queryString.length) return;
@@ -1218,10 +1236,12 @@ function copyUTLtoClipboard() {
 }
 
 function showResetButton() {
+  // Show reset button in twisty player (3D cube in train mode)
   ELEM_BTN_RESET_PLAYER_VIEW.classList.remove("display-none");
 }
 
 function resetTwistyPlayerView() {
+  // Reset twisty player (3D cube in train mode)
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
 
   if (!MIRRORING) {
@@ -1235,9 +1255,10 @@ function resetTwistyPlayerView() {
 }
 
 function hidePieces(piecesToHideArray, indexCase, mirroring) {
+  // This function sets the pieces in Twisty player (3D cube in train mode) to be shown/hidden
+  // In some cases three slots are solves. In some cases only two slots are solved. For the user to know which case is to be solved, the pieces of the other F2L slot need to be hidden.
   if (piecesToHideArray !== undefined) {
     const piecesToHide = piecesToHideArray[indexCase];
-    // console.log("piecesToHide: " + piecesToHide);
 
     if (!mirroring) {
       switch (piecesToHide) {
@@ -1336,6 +1357,7 @@ function showInfo() {
   // ELEM_INFO_CONTAINER.scrollTo(0, 0);
 }
 
+// This is an attemt to load the YouTube video only if it needs to be shown. Similar to lazy load which would crash Chrome on Android
 // function insertUrltoIframe() {
 //   ELEM_THUMBNAIL_BUTTON.style.display = "none";
 //   ELEM_IFRAME_VIDEO.style.display = "block";
