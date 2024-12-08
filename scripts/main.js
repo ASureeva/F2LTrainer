@@ -200,10 +200,10 @@ window.addEventListener("load", () => {
   ELEM_DIALOGS.forEach((elem_dialog) => {
     elem_dialog.addEventListener("mousedown", function (event) {
       // Don't close if the click is on a select element or its options
-      if (event.target.tagName === 'SELECT' || event.target.tagName === 'OPTION') {
+      if (event.target.tagName === "SELECT" || event.target.tagName === "OPTION") {
         return;
       }
-      
+
       var rect = elem_dialog.getBoundingClientRect();
       var isInDialog =
         rect.top <= event.clientY &&
@@ -628,14 +628,14 @@ function showHint() {
   if (generatedScrambles.length == 0 || showFullAlg) return;
   // Get algorithm and convert to list
   const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
-  
+
   ELEM_HINT_IMG.style.opacity = "1";
-  
+
   // Show one move at a time
   if (hintCounter < ALG_LIST.length) {
     ELEM_HINT.innerText = ALG_LIST.slice(0, hintCounter + 1).join(" ");
   }
-  
+
   hintCounter++;
 }
 
@@ -751,13 +751,13 @@ function nextScramble(nextPrevious) {
   }
 
   if (generatedScrambles.length == 0) return;
-  
+
   if (nextPrevious) {
     if (currentTrainCaseNumber >= 0)
       // Increase Solve Counter
       GROUPS[generatedScrambles[currentTrainCaseNumber].indexGroup].solveCounter[
         generatedScrambles[currentTrainCaseNumber].indexCase
-      ] ++;
+      ]++;
     currentTrainCaseNumber++;
     if (currentTrainCaseNumber >= generatedScrambles.length) {
       generateTrainCaseList();
@@ -773,10 +773,10 @@ function nextScramble(nextPrevious) {
 
   // Reset hint counter
   hintCounter = 0;
-  
+
   // Update scramble text
   ELEM_SCRAMBLE.innerHTML = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
-  
+
   // Reset or show full hint based on setting
   if (showFullAlg) {
     const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
@@ -802,7 +802,9 @@ function nextScramble(nextPrevious) {
   ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
   ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
   resetTwistyPlayerView();
-  ELEM_TWISTY_PLAYER.timestamp = 0;
+  ELEM_TWISTY_PLAYER.jumpToStart();
+  ELEM_TWISTY_PLAYER.flash();
+  ELEM_TWISTY_PLAYER.blur();
 
   hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
 
