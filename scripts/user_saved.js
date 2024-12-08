@@ -191,7 +191,7 @@ function loadBoolean(saveName, defaultValue) {
 function loadList(group, saveName, defaultValue) {
   let out;
   let temp = localStorage.getItem(group.saveName + saveName);
-  console.log("saveName = " + group.saveName + saveName);
+  // console.log("saveName = " + group.saveName + saveName);
   if (temp !== null) {
     temp = JSON.parse(temp);
     if (temp.length > 0) {
@@ -313,7 +313,7 @@ function importUserDataAlgs(URL_PARAM_ALG_SELECTION) {
  */
 function encodeBase3ToBase62(base3Number) {
   // Step 1: Convert base-3 string to decimal integer
-  console.log("original: " + base3Number.join(""));
+  // console.log("original: " + base3Number.join(""));
   let decimalValue = BigInt(0);
   for (let i = 0; i < base3Number.length; i++) {
     decimalValue = decimalValue * BigInt(3) + BigInt(base3Number[i]);
