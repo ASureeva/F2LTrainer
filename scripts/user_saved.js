@@ -47,8 +47,8 @@ let trainGroupSelection = [true, true, true, true];
 let leftSelection = true;
 let rightSelection = true;
 let aufSelection = true;
-let hintSelection = 2;
-let showFullAlg = false;
+let hintImageSelection = 2;
+let hintAlgSelection = 0;
 let timerEnabled = false;
 
 let firstVisit = true;
@@ -82,11 +82,11 @@ function saveUserData() {
   // Saving AUF selection
   localStorage.setItem("aufSelection", aufSelection);
 
-  // Saving hint settings
-  localStorage.setItem("hintSelection", hintSelection);
+  // Saving hint image settings
+  localStorage.setItem("hintImageSelection", hintImageSelection);
+  // Saving hint alg settings
 
-  // Saving show full algorithm setting
-  localStorage.setItem("showFullAlg", showFullAlg);
+  localStorage.setItem("hintAlgSelection", hintAlgSelection);
 
   // Saving timer enable settings
   localStorage.setItem("timerEnabled", timerEnabled);
@@ -134,18 +134,19 @@ function loadUserData() {
     trainGroupSelection[i] = loadBoolean("trainGroupSelection" + i, trainGroupSelection[i]);
   }
 
-  temp = localStorage.getItem("hintSelection");
+  temp = localStorage.getItem("hintImageSelection");
   if (temp != null) {
-    if (temp == "true") {
-      // Select 2 (3D Cube) as default if localStorage is "true" from previous save without 3D Cube option
-      hintSelection = 2;
-    } else hintSelection = parseInt(temp);
+    hintImageSelection = parseInt(temp);
+  }
+
+  temp = localStorage.getItem("hintAlgSelection");
+  if (temp != null) {
+    hintAlgSelection = parseInt(temp);
   }
 
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
-  showFullAlg = loadBoolean("showFullAlg", showFullAlg);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {

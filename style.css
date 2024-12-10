@@ -725,7 +725,7 @@ twisty-player {
   margin: auto;
 }
 
-#hint {
+#hint-container {
   display: flex;
   justify-content: center;
   border: solid;
@@ -738,6 +738,25 @@ twisty-player {
   text-align: center;
   cursor: pointer;
   border-color: var(--color-img);
+}
+
+#hint-placeholder {
+  display: flex;
+  /* display: none; */
+}
+
+twisty-alg-viewer {
+  display: none;
+  /* display: none; */
+}
+
+twisty-alg-viewer .wrapper {
+  display: none;
+}
+
+.twisty-alg-current-move {
+  background-color: rgb(255, 0, 0);
+  color: white;
 }
 
 /* #btn-next-scramble {

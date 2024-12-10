@@ -77,16 +77,17 @@ const ELEM_CHECKBOX_RIGHT = document.getElementById("checkboxRightId");
 
 const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
 
-const ELEM_SELECT_HINT = document.getElementById("select-hint-id");
+const ELEM_SELECT_HINT_IMAGE = document.getElementById("select-hint-image");
+const ELEM_SELECT_HINT_ALG = document.getElementById("select-hint-alg");
 
 const ELEM_CHECKBOX_TIMER_ENABLE = document.getElementById("checkboxEnableTimerId");
-const ELEM_CHECKBOX_SHOW_FULL_ALG = document.getElementById("checkboxShowFullAlgId");
 
 const ELEM_BUTTON_SETTINGS = document.querySelector(".btn-settings-train");
 const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-container");
 
 const ELEM_SCRAMBLE = document.getElementById("scramble");
-const ELEM_HINT = document.getElementById("hint");
+const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
+const ELEM_HINT_PLACEHOLDER = document.getElementById("hint-placeholder");
 const ELEM_HINT_IMG = document.getElementById("hint-img");
 const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
 
@@ -95,6 +96,8 @@ let algHint = "";
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
 const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
+// document.body.append(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
+// console.log("TwistyAlgViewer: " + TwistyAlgViewer);
 
 const ELEM_RADIO_UNLEARNED = document.getElementById("radio-state-unlearned");
 const ELEM_RADIO_LEARNING = document.getElementById("radio-state-learning");
@@ -448,11 +451,9 @@ function updateAlg() {
     const CURRENT_TRAIN_CASE = generatedScrambles[currentTrainCaseNumber];
     if (!CURRENT_TRAIN_CASE.mirroring) {
       generatedScrambles[currentTrainCaseNumber].algHint = tempAlg;
-      ELEM_HINT.innerText = tempAlg;
       ELEM_TWISTY_PLAYER.alg = tempAlg;
     } else {
       generatedScrambles[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
-      ELEM_HINT.innerText = mirrorAlg(tempAlg);
       ELEM_TWISTY_PLAYER.alg = mirrorAlg(tempAlg);
     }
   }
@@ -592,21 +593,9 @@ function updateTrainCases() {
   leftSelection = ELEM_CHECKBOX_LEFT.checked;
   rightSelection = ELEM_CHECKBOX_RIGHT.checked;
   aufSelection = ELEM_CHECKBOX_AUF.checked;
-  hintSelection = ELEM_SELECT_HINT.selectedIndex;
+  hintImageSelection = ELEM_SELECT_HINT_IMAGE.selectedIndex;
+  hintAlgSelection = ELEM_SELECT_HINT_ALG.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
-  showFullAlg = ELEM_CHECKBOX_SHOW_FULL_ALG.checked;
-
-  // Update hint display when setting changes
-  if (generatedScrambles.length > 0) {
-    if (showFullAlg) {
-      const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
-      ELEM_HINT.innerText = ALG_LIST.join(" ");
-      ELEM_HINT.style.cursor = "default";
-    } else {
-      ELEM_HINT.innerText = "Click to show hint";
-      ELEM_HINT.style.cursor = "pointer";
-    }
-  }
 
   if (timerEnabled) {
     ELEM_TIMER.style.display = "block";
@@ -625,18 +614,29 @@ function updateTrainCases() {
 
 function showHint() {
   // Show hint button is pressed
-  if (generatedScrambles.length == 0 || showFullAlg) return;
-  // Get algorithm and convert to list
-  const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+  if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
 
-  ELEM_HINT_IMG.style.opacity = "1";
+  document.querySelector("twisty-alg-viewer").style.display = "flex";
+  ELEM_HINT_PLACEHOLDER.style.display = "none";
 
-  // Show one move at a time
-  if (hintCounter < ALG_LIST.length) {
-    ELEM_HINT.innerText = ALG_LIST.slice(0, hintCounter + 1).join(" ");
+  if (hintAlgSelection == 0) {
+    if (hintCounter == 0)
+      document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "hidden"));
+
+    document.querySelector("twisty-alg-viewer").style.display = "flex";
+    ELEM_HINT_PLACEHOLDER.style.display = "none";
+
+    ELEM_HINT_IMG.style.opacity = "1";
+
+    // Get algorithm and convert to list
+    const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
+    // Show one move at a time
+    if (hintCounter < ALG_LIST.length) {
+      document.querySelectorAll(".twisty-alg-move")[hintCounter].style.visibility = "visible";
+    }
+
+    hintCounter++;
   }
-
-  hintCounter++;
 }
 
 function showSelectedGroup() {
@@ -745,7 +745,7 @@ function generateTrainCaseList() {
 function nextScramble(nextPrevious) {
   // Show next/previous case
   // (nextPrevious = 0: previous case, nextPrevious = 1: next case)
-  if (hintSelection == 1) {
+  if (hintImageSelection == 1) {
     ELEM_HINT_IMG.style.opacity = "0.3";
     ELEM_LOADING_CASE.classList.remove(CLASS_DISPLAY_NONE);
   }
@@ -771,20 +771,21 @@ function nextScramble(nextPrevious) {
 
   if (generatedScrambles[currentTrainCaseNumber] == undefined) return;
 
-  // Reset hint counter
-  hintCounter = 0;
-
   // Update scramble text
   ELEM_SCRAMBLE.innerHTML = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
 
+  // Reset hint counter
+  hintCounter = 0;
   // Reset or show full hint based on setting
-  if (showFullAlg) {
-    const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
-    ELEM_HINT.innerText = ALG_LIST.join(" ");
-    ELEM_HINT.style.cursor = "default";
-  } else {
-    ELEM_HINT.innerText = "Click to show hint";
-    ELEM_HINT.style.cursor = "pointer";
+  document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "visible"));
+  if (hintAlgSelection == 0 || hintAlgSelection == 1) {
+    // Reveal step-by-step or Reveal all at once
+    document.querySelector("twisty-alg-viewer").style.display = "none";
+    ELEM_HINT_PLACEHOLDER.style.display = "flex";
+    // ELEM_HINT_CONTAINER.style.cursor = "pointer";
+  } else if (hintAlgSelection == 2) {
+    document.querySelector("twisty-alg-viewer").style.display = "flex";
+    ELEM_HINT_PLACEHOLDER.style.display = "none";
   }
 
   // Update hint image
@@ -842,13 +843,13 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_LEFT.checked = leftSelection;
   ELEM_CHECKBOX_RIGHT.checked = rightSelection;
   ELEM_CHECKBOX_AUF.checked = aufSelection;
-  ELEM_SELECT_HINT.selectedIndex = hintSelection;
+  ELEM_SELECT_HINT_IMAGE.selectedIndex = hintImageSelection;
+  ELEM_SELECT_HINT_ALG.selectedIndex = hintAlgSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
-  ELEM_CHECKBOX_SHOW_FULL_ALG.checked = showFullAlg;
 }
 
 function updateHintVisibility() {
-  switch (ELEM_SELECT_HINT.selectedIndex) {
+  switch (ELEM_SELECT_HINT_IMAGE.selectedIndex) {
     case 0:
       // No hint
       ELEM_DIV_HINT_IMG.classList.remove("display-none");
@@ -1432,3 +1433,5 @@ function openDialog(ELEM) {
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
 }
+
+function test() {}

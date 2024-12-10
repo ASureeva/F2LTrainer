@@ -271,17 +271,20 @@
 
       <h2>Hint</h2>
       <div class="checkbox-container">
-        <label class="checkbox" for="checkboxShowFullAlgId">
-          <input type="checkbox" class="checkbox__input" name="checkboxShowFullAlg" id="checkboxShowFullAlgId" />
-          <div class="checkbox__box"></div>
-          Show Full Algorithm
-        </label>
         <div class="div-select-hint">
           <p>Hint image:</p>
-          <select id="select-hint-id" class="select-hint">
+          <select id="select-hint-image" class="select-hint">
             <option value="none">None</option>
             <option value="2d">2D Image</option>
             <option value="3d" selected>3D Cube</option>
+          </select>
+        </div>
+        <div class="div-select-hint">
+          <p>Algorithm:</p>
+          <select id="select-hint-alg" class="select-hint">
+            <option value="step-by-step">Reveal step-by-step</option>
+            <option value="all-at-once">Reveal all at once</option>
+            <option value="all-time" selected>Show all time</option>
           </select>
         </div>
       </div>
@@ -518,7 +521,10 @@
       </div>
 
       <div id="timer">00:00</div>
-      <div id="hint" onclick="showHint()">Press to show hint</div>
+      <div id="hint-container" onclick="showHint()">
+        <div id="hint-placeholder">Press to show hint</div>
+        <!-- TwistyAlgViewer is inserted here  -->
+      </div>
 
       <div class="div-btn-change-state-alg">
         <button type="button" class="btn-change-state-alg" onclick="showSetStateMenu()">Change State</button>
@@ -556,6 +562,12 @@
 
     <!-- cubing.js -->
     <script src="https://cdn.cubing.net/js/cubing/twisty" type="module" defer></script>
+    <script type="module">
+      import { TwistyAlgViewer } from "https://cdn.cubing.net/js/cubing/twisty";
+      const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
+      const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
+      ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
+    </script>
 
     <!-- Google Tag Manager (noscript) -->
     <noscript
