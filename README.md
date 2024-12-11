@@ -26,8 +26,17 @@ This [F2L Trainer](https://f2l-trainer.top/) was created to help you find and pr
 # Further Help
 Feel free to create an [issue](https://github.com/Dave2ooo/F2LTrainer/issues) if you need any help, have ideas for improvement or find any bugs. I'm happy to help.
 
+
+# Contributing
+
+Feel free to tackle any [Issue](https://github.com/Dave2ooo/F2LTrainer/issues) on your own. If you want to change something that is not covered in an issue, please create an issue first, to make sure the pull request will be approved.
+
+
+
 # Thanks
 
 This [F2L Trainer](https://dave2ooo.github.io/F2LTrainer/) was inspired by JPerms [OLL Trainer](https://jperm.net/algs/oll) and Romans [OLL Trainer](https://bestsiteever.ru/oll/) / [PLL Trainer](https://bestsiteever.ru/pll/).
 
 Thanks to [cubing.js](https://github.com/cubing/cubing.js) for the interactive Rubiks cube.
+
+
