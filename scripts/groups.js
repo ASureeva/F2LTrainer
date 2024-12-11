@@ -2,6 +2,7 @@ const BASIC_COLLECTION = {
   // renamed!!!!! from basicCollection
   saveName: "basic_",
   saveNameCasesURL: "bc",
+  saveNameAlgURL: "ba",
   name: "Basic Cases",
   idName: "Basic",
   scrambles: basicScrambles,
@@ -73,6 +74,7 @@ const BASIC_BACK_COLLECTION = {
   // renamed!!!!! from basicBackCollection
   saveName: "basicBack_",
   saveNameCasesURL: "bbc",
+  saveNameAlgURL: "bba",
   name: "Basic Cases Backslot",
   idName: "BasicBack",
   scrambles: basicScramblesBack,
@@ -144,6 +146,7 @@ const ADVANCED_COLLECTION = {
   // renamed!!!!! from advancedCollection
   saveName: "advanced_",
   saveNameCasesURL: "ac",
+  saveNameAlgURL: "aa",
   name: "Advanced Cases",
   idName: "Advanced",
   scrambles: advancedScrambles,
@@ -219,6 +222,7 @@ const EXPERT_COLLECTION = {
   // renamed!!!!! from expertCollection
   saveName: "expert_",
   saveNameCasesURL: "ec",
+  saveNameAlgURL: "ea",
   name: "Expert Cases",
   idName: "Expert",
   scrambles: expertScrambles,
