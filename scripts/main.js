@@ -242,6 +242,10 @@ window.addEventListener("load", () => {
   }, 2300);*/
 });
 
+/**
+ * Creates all necessary elements in the DOM for the case selection page.
+ * Called when the page is loaded.
+ */
 function addElementsToDOM() {
   // Iterate over all groups (basic, basic back, advanced, expert)
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
@@ -414,8 +418,13 @@ function addElementsToDOM() {
   }
 }
 
+/**
+ * Updates the shown algorithm in the selection window and the generatedScrambles array.
+ * If in train mode, also updates the Twisty Player's algorithm and reset the progressbar.
+ * Saves the user data afterwards.
+ * Called when user clicks on Confirm in the Change Alg popup.
+ */
 function updateAlg() {
-  // Confirm clicked in Change Alg popup
   let indexGroup;
   if (!mode) {
     indexGroup = ELEM_SELECT_GROUP.selectedIndex;
@@ -467,8 +476,13 @@ function updateAlg() {
   saveUserData();
 }
 
+/**
+ * Handles the "Edit Alg" button click event in train mode.
+ * Blurs the button and retrieves the current group and case indices
+ * from the generated scrambles array, then calls editAlgs to
+ * initiate the algorithm editing process.
+ */
 function editCurrentAlg() {
-  // Edit Alg button is clicked in train mode
   ELEM_BTN_CHANGE_ALG.blur();
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
   const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
@@ -476,6 +490,19 @@ function editCurrentAlg() {
   editAlgs(INDEX_GROUP, INDEX_CASE);
 }
 
+/**
+ * Displays and allows editing of algorithms for a selected case in a group.
+ *
+ * This function sets the image and algorithm list for the current case,
+ * making the appropriate elements visible or invisible based on the number
+ * of algorithms available. It also highlights the selected algorithm,
+ * differentiating between default and custom algorithms, and sets the
+ * custom algorithm text input to the saved value. Finally, it opens the
+ * algorithm editing dialog and focuses on the image.
+ *
+ * @param {number} indexGroup - The index of the group containing the case.
+ * @param {number} indexCase - The index of the case within the group.
+ */
 function editAlgs(indexGroup, indexCase) {
   selectedCase = indexCase;
   const GROUP = GROUPS[indexGroup];
@@ -515,9 +542,14 @@ function editAlgs(indexGroup, indexCase) {
   ELEM_EDITALG_IMG.focus();
 }
 
+/**
+ * Handles the custom algorithm text input box being clicked.
+ * Resets the background of the previously selected algorithm and sets
+ * the background of the custom algorithm text box to the selected color.
+ * Sets the selected algorithm to the custom algorithm.
+ * for the current case, indicating that the custom algorithm is selected.
+ */
 function customAlgSelected() {
-  // Custon Alg Textbox clicked
-
   // Set Background of Textbox
   ELEM_EDITALG_LISTENTRY[selectedAlgNumber].style.background = COLORS_ALG[0];
   // Reset Background of previously selected Alg
@@ -526,6 +558,23 @@ function customAlgSelected() {
   selectedAlgNumber = GROUPS[ELEM_SELECT_GROUP.selectedIndex].algorithms[selectedCase + 1].length;
 }
 
+/**
+ * Handles keydown events and executes corresponding actions based on the key pressed.
+ *
+ * Supported keys and their actions:
+ * - 'C' (KeyCode: 67): Clears user data on double press.
+ * - 'G' (KeyCode: 71): Logs the local storage.
+ * - Space (KeyCode: 32): Triggers spaceDown() if not in case select mode.
+ * - Right Arrow (KeyCode: 39): Calls showHint() if not in case select mode.
+ * - Left Arrow (KeyCode: 37): Reserved for future actions.
+ * - 'S' (KeyCode: 83): Reserved for saving user data.
+ * - 'L' (KeyCode: 76): Reserved for loading user data.
+ *
+ * The function respects the current mode and does not perform certain actions
+ * (like spaceDown or showHint) if the mode is case select (mode === 0).
+ *
+ * @param {Event} e - The event object containing information about the key pressed.
+ */
 function keydown(e) {
   /*
   rechts: 39
@@ -577,8 +626,26 @@ function keyup(e) {
   }
 }
 
+/**
+ * Updates the list of cases to be trained based on the current settings.
+ * Called when settings are changed.
+ *
+ * Updates the following variables:
+ * - trainStateSelection
+ * - trainGroupSelection
+ * - leftSelection
+ * - rightSelection
+ * - aufSelection
+ * - hintImageSelection
+ * - hintAlgSelection
+ * - timerEnabled
+ * - currentTrainCaseNumber
+ * - generatedScrambles
+ *
+ * Then it generates a new list of cases to be trained and updates the hint visibility.
+ * Finally, it displays the next scramble.
+ */
 function updateTrainCases() {
-  // Executed when some settings are changed
   trainStateSelection = [
     ELEM_CHECKBOX_UNLEARNED.checked,
     ELEM_CHECKBOX_LEARNING.checked,
@@ -612,8 +679,15 @@ function updateTrainCases() {
   nextScramble(1);
 }
 
+/**
+ * Called when the Show Hint button is pressed.
+ * Shows the hint for the current scramble.
+ * If the hint setting is set to "Reveal step-by-step", it shows one move at a time.
+ * If the hint setting is set to "Reveal all at once", it shows the full algorithm.
+ * If the hint setting is set to "Show all time", it does nothing.
+ * @returns {void}
+ */
 function showHint() {
-  // Show hint button is pressed
   if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
 
   document.querySelector("twisty-alg-viewer").style.display = "flex";
@@ -639,8 +713,11 @@ function showHint() {
   }
 }
 
+/**
+ * Shows only the selected group in select mode (Executed when dropdown box is changed)
+ * Scrolls to the top of the page and saves the selection to local storage.
+ */
 function showSelectedGroup() {
-  // Make only selected Group visible (Executed when dropdown box is changed)
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     if (ELEM_SELECT_GROUP.selectedIndex === indexGroup) {
       ELEM_GROUP_CONTAINER[indexGroup].style.display = "flex";
@@ -654,8 +731,16 @@ function showSelectedGroup() {
   saveUserData();
 }
 
+/**
+ * Generates a new list of cases to be trained and adds them to the current list.
+ * Called when settings are changed or when the list of cases to be trained is empty.
+ * Adds all cases that shall be learned to trainCaseList, chooses a random scramble for each case,
+ * gets the hint algorithm for each case, mirrors the algorithm and scramble if right selection is true,
+ * adds a random U move to the scramble if auf selection is true, and adds the case to the list.
+ * Randomizes the order of the cases in the list, and adds the new cases to the current list.
+ * If no cases are selected, the text "no case selected" is displayed on the page.
+ */
 function generateTrainCaseList() {
-  // Generate new list of Cases to be trained and add them to the current list
   trainCaseList = [];
   // Add all cases that shall be learned to trainCaseList
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
@@ -742,6 +827,11 @@ function generateTrainCaseList() {
   generatedScrambles = generatedScrambles.concat(trainCaseList);
 }
 
+/**
+ * Show next/previous case
+ * Called when user clicks on Previous/Next Scramble button or presses space
+ * @param {number} nextPrevious - 0 to show previous case, 1 to show next case
+ */
 function nextScramble(nextPrevious) {
   // Show next/previous case
   // (nextPrevious = 0: previous case, nextPrevious = 1: next case)
@@ -830,9 +920,11 @@ function nextScramble(nextPrevious) {
   saveUserData();
 }
 
+/**
+ * Sets the checkboxes to display the current settings.
+ * Executed when the settings dialog is opened.
+ */
 function updateCheckboxStatus() {
-  // Set checkboxes to display the current settings
-  // Executed when the settings dialog is opened
   ELEM_CHECKBOX_UNLEARNED.checked = trainStateSelection[0];
   ELEM_CHECKBOX_LEARNING.checked = trainStateSelection[1];
   ELEM_CHECKBOX_FINISHED.checked = trainStateSelection[2];
@@ -848,6 +940,10 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
 }
 
+/**
+ * Updates the visibility of the hint image and the Twisty Player based on the value of the "Hint image" select element.
+ * Called when settings are changed.
+ */
 function updateHintVisibility() {
   switch (ELEM_SELECT_HINT_IMAGE.selectedIndex) {
     case 0:
@@ -874,6 +970,10 @@ function updateHintVisibility() {
   }
 }
 
+/**
+ * Toggles the visibility of the debug information section in train mode.
+ * Updates the button text to indicate the current state as "Show info" or "Hide info".
+ */
 function showHideDebugInfo() {
   // Show/hide debug info on the bottom of train mode
   if (boolShowDebugInfo) {
@@ -887,8 +987,15 @@ function showHideDebugInfo() {
   }
 }
 
+/**
+ * Executed when image is clicked in select mode.
+ * Changes the learning state of a case and updates the corresponding visual elements.
+ * Called when image in pressen in select mode or learning state in changed in tranin mode.
+ * @param {number} indexGroup - Index of the group.
+ * @param {number} indexCategory - Index of the category within the group.
+ * @param {number} indexCase - Index of the case.
+ */
 function changeState(indexGroup, indexCategory, indexCase) {
-  // Executed when image is clicked in select mode
   const GROUP = GROUPS[indexGroup];
   GROUP.caseSelection[indexCase]++;
   if (GROUP.caseSelection[indexCase] >= 3) {
@@ -906,8 +1013,15 @@ function changeState(indexGroup, indexCategory, indexCase) {
   if ((indexGroup == 0) & (indexCase == 3) & (divPressMe != undefined)) divPressMe.classList.add("display-none");
 }
 
+/**
+ * Toggles the expansion and collapse of a category in select mode.
+ * Updates the visual state of the category container and arrow icon,
+ * and saves the updated user data.
+ *
+ * @param {number} indexGroup - Index of the group.
+ * @param {number} indexCategory - Index of the category within the group.
+ */
 function collapseCategory(indexGroup, indexCategory) {
-  // Collapse/Minimize the category in select mode
   const GROUP = GROUPS[indexGroup];
   const CATEGORY_CONATINER = GROUP.categoryContainer[indexCategory];
   if (GROUP.collapse[indexCategory] == true) {
@@ -924,8 +1038,15 @@ function collapseCategory(indexGroup, indexCategory) {
   saveUserData();
 }
 
+/**
+ * Collapse/Minimize the specific category in select mode.
+ * Updates the visual state of the category container
+ * by setting height, padding, margin, and overflow properties.
+ *
+ * @param {HTMLElement} target - The element to collapse.
+ * @param {number} [duration=300] - The duration of the collapse animation in milliseconds.
+ */
 function collapse(target, duration = 300) {
-  // Collapse/Minimize the specific category in select mode
   target.style.transitionProperty = "height, margin, padding";
   target.style.transitionDuration = duration + "ms";
   target.style.boxSizing = "border-box";
@@ -950,6 +1071,14 @@ function collapse(target, duration = 300) {
   }, duration);
 }
 
+/**
+ * Expand the specific category in select mode.
+ * Updates the visual state of the category container
+ * by setting height, padding, margin, and overflow properties.
+ *
+ * @param {HTMLElement} target - The element to expand.
+ * @param {number} [duration=300] - The duration of the expand animation in milliseconds.
+ */
 let expand = (target, duration = 300) => {
   // Expand the specific category in select mode
   target.classList.remove("display-none");
@@ -977,9 +1106,11 @@ let expand = (target, duration = 300) => {
   }, duration);
 };
 
+/**
+ * Toggle between select mode and train mode.
+ * mode: 0 = select, 1 = train
+ */
 function changeMode() {
-  // Change between select mode and train mode
-  // (mode: 0 = select, 1 = train)
   if (mode == 0) {
     mode = 1;
     updateTrainCases();
@@ -1007,6 +1138,11 @@ function changeMode() {
   ELEM_BTN_CHANGE_MODE.blur(); // Make button lose focus
 }
 
+/**
+ * Checks for duplicate cases within each group in the GROUPS array.
+ * Iterates through all cases in each group's categoryCases and logs a warning
+ * in the console if any duplicate cases are found.
+ */
 function checkForDuplicates() {
   // Check if there are any duplicate cases in GROUPS
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
@@ -1023,9 +1159,11 @@ function checkForDuplicates() {
   }
 }
 
+/**
+ * Change the learning state of the current case
+ * (Executed when learning state is changed in train mode)
+ */
 function changeStateRadio() {
-  // Change the learning state of the current case
-  // (Executed whe learning state is changed in train mode)
   const GROUP = GROUPS[currentTrainGroup];
   if (GROUP == undefined) return;
   // console.log(GROUP.caseSelection[currentTrainCase]);
@@ -1044,6 +1182,11 @@ function changeStateRadio() {
   closeOverlays();
 }
 
+/**
+ * Toggle the timer on and off
+ * If the timer is currently running, this function will stop the timer.
+ * If the timer is currently stopped, this function will start the timer from 0.
+ */
 function toggleTimer() {
   if (flagTimerRunning) {
     flagTimerRunning = false;
@@ -1055,6 +1198,11 @@ function toggleTimer() {
   }
 }
 
+/**
+ * Updates the timer display every 10 milliseconds while the timer is running.
+ * Increments the count variable until it reaches 100, then increments the second variable.
+ * Formats the timer display with leading zeros and updates the HTML element.
+ */
 function timer() {
   if (flagTimerRunning) {
     count++;
@@ -1078,6 +1226,12 @@ function timer() {
   }
 }
 
+/**
+ * Converts a timer time (in 10ms units) into a string of the form "ss:cc",
+ * where ss is the number of seconds and cc is the number of centiseconds.
+ * @param {number} time - The timer time in 10ms units.
+ * @returns {string} A string of the form "ss:cc" representing the time.
+ */
 let timeToString = function (time) {
   let countString = time % 100;
   let secString = Math.floor(time / 100);
@@ -1090,6 +1244,15 @@ let timeToString = function (time) {
   return secString + ":" + countString;
 };
 
+/**
+ * Handles the spacebar key press event.
+ *
+ * If the timer is enabled, toggle the timer and go to the next case if the timer was running.
+ * If the timer is not enabled, go to the next case.
+ *
+ * @see toggleTimer
+ * @see nextScramble
+ */
 function spaceDown() {
   if (
     ELEM_WELCOME_CONATINER.open ||
@@ -1119,6 +1282,14 @@ function spaceDown() {
   ELEM_PRESS_ME_TRAIN.classList.add("display-none");
 }
 
+/**
+ * Handles the spacebar key release event.
+ *
+ * If the timer is enabled, toggle the timer if the timer was running and the spacebar was not pressed before.
+ * If the timer is not enabled, do nothing.
+ *
+ * @see toggleTimer
+ */
 function spaceUp() {
   if (timerEnabled) {
     if (spacePressFlag == false) {
@@ -1129,9 +1300,16 @@ function spaceUp() {
   }
 }
 
+/**
+ * Changes the learning state of all cases within a specified category.
+ * Adjusts the visual elements associated with each case to reflect the new state.
+ * Resizes the button corresponding to the selected state to indicate active selection.
+ *
+ * @param {number} indexGroup - The index of the group containing the category.
+ * @param {number} indexCategory - The index of the category within the group.
+ * @param {number} state - The new learning state to set for all cases in the category.
+ */
 function changeLearningStateBulk(indexGroup, indexCategory, state) {
-  // Change the learning state of all cases in a category
-
   // console.log("indexGroup: " + indexGroup + ", indexCategory: " + indexCategory + ", state: " + state);
   const GROUP = GROUPS[indexGroup];
   let categoryItems = GROUP.categoryCases[indexCategory];
@@ -1156,6 +1334,11 @@ function changeLearningStateBulk(indexGroup, indexCategory, state) {
   saveUserData();
 }
 
+/**
+ * Makes the button bigger if all cases in category are in the same learning state.
+ * @param {number} indexGroup - The index of the group containing the category.
+ * @param {number} indexCategory - The index of the category within the group.
+ */
 function highlightBulkChangeTrainingStateButton(indexGroup, indexCategory) {
   // Make the button bigger if all cases in category are in the same learning state
   const GROUP = GROUPS[indexGroup];
@@ -1184,6 +1367,11 @@ function highlightBulkChangeTrainingStateButton(indexGroup, indexCategory) {
   // console.log("numUnlearned: " + numUnlearned + ", numLearning: " + numLearning + ", numFinished: " + numFinished);
 }
 
+/**
+ * Iterates over all groups and categories to highlight the bulk change training state buttons.
+ * Calls the `highlightBulkChangeTrainingStateButton` function for each category in each group,
+ * adjusting button size based on the learning state of all cases within the category.
+ */
 function highlightAllBulkChangeTrainingStateButtons() {
   for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
     const GROUP = GROUPS[indexGroup];
@@ -1193,9 +1381,13 @@ function highlightAllBulkChangeTrainingStateButtons() {
   }
 }
 
+/**
+ * Mirror single case
+ * Called when Mirror button is pressed in select mode
+ * @param {number} indexGroup - The index of the group containing the case.
+ * @param {number} indexCase - The index of the case within the group.
+ */
 function mirrorCase(indexGroup, indexCase) {
-  // Mirror single case
-  // (Executed when Mirror button is pressed in select mode)
   const GROUP = GROUPS[indexGroup];
   let tempAlg = "";
 
@@ -1216,8 +1408,13 @@ function mirrorCase(indexGroup, indexCase) {
   }
 }
 
+/**
+ * Displays a "Press me" text when the site is visited for the first time.
+ * Creates a new div element with the class "div-press-me" and appends it to the
+ * specified image container of the first group. The text is shown only if it's the
+ * user's first visit, as indicated by the `firstVisit` flag.
+ */
 function showPressMeText() {
-  // Shows the "Press me" text that is shown when site is visited first time
   if (firstVisit) {
     divPressMe = document.createElement("div");
     divPressMe.classList.add("div-press-me");
@@ -1232,42 +1429,6 @@ function hidePressMeTrainText() {
   }
 }
 
-function readParams() {
-  // Read URL parameters
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  if (!queryString.length) return;
-
-  // Reset URL
-  if (window.location.hostname == "127.0.0.1") {
-    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
-  } else {
-    window.history.pushState({}, document.title, "/");
-  }
-
-  let URL_PARAM_CASE_SELECTION = [];
-  let URL_PARAM_ALG_SELECTION = [];
-
-  if (urlParams.has("bc")) URL_PARAM_CASE_SELECTION[0] = urlParams.get("bc");
-  if (urlParams.has("bcb")) URL_PARAM_CASE_SELECTION[1] = urlParams.get("bcb");
-  if (urlParams.has("ac")) URL_PARAM_CASE_SELECTION[2] = urlParams.get("ac");
-  if (urlParams.has("ec")) URL_PARAM_CASE_SELECTION[3] = urlParams.get("ec");
-
-  if (urlParams.has("a")) URL_PARAM_ALG_SELECTION[0] = urlParams.get("a");
-  if (urlParams.has("b")) URL_PARAM_ALG_SELECTION[1] = urlParams.get("b");
-  if (urlParams.has("c")) URL_PARAM_ALG_SELECTION[2] = urlParams.get("c");
-  if (urlParams.has("d")) URL_PARAM_ALG_SELECTION[3] = urlParams.get("d");
-
-  if (URL_PARAM_CASE_SELECTION.length == 0 && URL_PARAM_ALG_SELECTION.length == 0) {
-    alert("Incorrect URL Parameters");
-    return;
-  }
-  if (!confirm("Import data from URL?")) return;
-
-  if (URL_PARAM_CASE_SELECTION.length != 0) importUserDataCases(URL_PARAM_CASE_SELECTION);
-  if (URL_PARAM_ALG_SELECTION.length != 0) importUserDataAlgs(URL_PARAM_ALG_SELECTION);
-}
-
 function copyUTLtoClipboard() {
   alert("URL copied to clipboard");
   navigator.clipboard.writeText(ELEM_INPUT_EXPORT.value);
@@ -1278,6 +1439,10 @@ function showResetButton() {
   ELEM_BTN_RESET_PLAYER_VIEW.classList.remove("display-none");
 }
 
+/**
+ * Resets the TwistyPlayer's (3D cube in train mode) camera view to the
+ * default position.
+ */
 function resetTwistyPlayerView() {
   // Reset twisty player (3D cube in train mode)
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
@@ -1292,9 +1457,14 @@ function resetTwistyPlayerView() {
   ELEM_BTN_RESET_PLAYER_VIEW.classList.add("display-none");
 }
 
+/**
+ * This function sets the pieces in Twisty player (3D cube in train mode) to be shown/hidden
+ * In some cases three slots are solves. In some cases only two slots are solved. For the user to know which case is to be solved, the pieces of the other F2L slot need to be hidden.
+ * @param {number[]} piecesToHideArray An array of numbers indicating which pieces to hide for each case.
+ * @param {number} indexCase The index of the case to be shown.
+ * @param {boolean} mirroring If true, the pieces are mirrored.
+ */
 function hidePieces(piecesToHideArray, indexCase, mirroring) {
-  // This function sets the pieces in Twisty player (3D cube in train mode) to be shown/hidden
-  // In some cases three slots are solves. In some cases only two slots are solved. For the user to know which case is to be solved, the pieces of the other F2L slot need to be hidden.
   if (piecesToHideArray !== undefined) {
     const piecesToHide = piecesToHideArray[indexCase];
 
@@ -1433,5 +1603,3 @@ function openDialog(ELEM) {
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
 }
-
-function test() {}
