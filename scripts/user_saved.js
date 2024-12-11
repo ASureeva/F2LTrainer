@@ -229,9 +229,7 @@ function setFirstVisitTrain() {
  * containing the localStorage data.
  */
 function exportLocalStorage() {
-  // Convert localStorage to JSON
-  //const data = JSON.stringify(localStorage);
-
+  // These are the keys of localstorage that get exported to the URL
   const keysToExport = [
     "basic_caseSelection",
     "advanced_caseSelection",
