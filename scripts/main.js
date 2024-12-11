@@ -1,5 +1,6 @@
 "use strict";
 
+//#region Variables
 const ELEM_BODY = document.querySelector("body");
 
 // Get colors from css
@@ -155,6 +156,7 @@ const ELEM_FEEDBACK_NAME = document.getElementById("feedback-name-id");
 
 const ELEM_IFRAME_VIDEO = document.getElementById("iframe-video");
 const ELEM_THUMBNAIL_BUTTON = document.getElementById("thumbnail-button");
+//#endregion
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
