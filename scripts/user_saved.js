@@ -58,7 +58,10 @@ let firstVisitTrain = true;
 const BASE62_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE = 62;
 
-// Save
+/**
+ * Saves all user data to localStorage.
+ * This function is called when the user wants to save his data.
+ */
 function saveUserData() {
   console.log("Saving User Data");
   flagSave = true;
@@ -109,7 +112,9 @@ function saveUserData() {
   }
 }
 
-// Load
+/**
+ * Loads all user data from local storage
+ */
 function loadUserData() {
   console.log("Loading User Data");
   let temp;
@@ -176,6 +181,13 @@ function loadUserData() {
   updateHintVisibility();
 }
 
+/**
+ * Loads a boolean value from local storage.
+ * If the value does not exist, return the defaultValue.
+ * @param {string} saveName - The name of the value to load in local storage.
+ * @param {boolean} defaultValue - The default value if the value does not exist.
+ * @returns {boolean} The value stored in local storage if it exists, otherwise the defaultValue.
+ */
 function loadBoolean(saveName, defaultValue) {
   const TEMP = localStorage.getItem(saveName);
   if (TEMP != null) {
@@ -189,6 +201,18 @@ function loadBoolean(saveName, defaultValue) {
   }
 }
 
+/**
+ * Loads a list from local storage. If the list does not exist or is empty,
+ * a list of the correct length is created and filled with the defaultValue.
+ * The list is then sliced to the correct length to ensure it is not too
+ * large because of a bug in previous versions of the save function.
+ * @param {object} group - A group object containing the name of the value to
+ *   load in local storage.
+ * @param {string} saveName - The name of the value to load in local storage.
+ * @param {*} defaultValue - The default value if the value does not exist.
+ * @returns {Array} The list stored in local storage if it exists, otherwise a
+ *   list of the correct length filled with the defaultValue.
+ */
 function loadList(group, saveName, defaultValue) {
   let out;
   let temp = localStorage.getItem(group.saveName + saveName);
@@ -210,6 +234,12 @@ function loadList(group, saveName, defaultValue) {
   // return out;
 }
 
+/**
+ * Clears all user data stored in localStorage after user confirmation.
+ * Prompts the user with a confirmation dialog to reset all saved data,
+ * including learning states and selected/custom algorithms.
+ * If confirmed, clears the localStorage and reloads the page.
+ */
 function clearUserData() {
   if (confirm("Reset all saved data? (learning states, selected/custom algorithms)")) {
     console.log("Clearing");
@@ -219,99 +249,22 @@ function clearUserData() {
   }
 }
 
+/**
+ * Sets a flag in localStorage indicating that the user has visited the
+ * train page for the first time.
+ */
 function setFirstVisitTrain() {
-  // Saving that the user visited the Train View the first time
   localStorage.setItem("firstVisitTrain", false);
 }
 
 /**
- * Exports the current localStorage data as a query parameter
- * in the current window's URL. This allows for easy sharing
- * of the localStorage data as a URL, and can be used to
- * import the data using the `importLocalStorage` function.
- * @returns {string} The generated URL with the query parameter
- * containing the localStorage data.
+ * Creates a URL that can be used to import the current case selection.
+ * The URL is constructed by taking the base URL of the site and appending
+ * the case selection of each group as a URL parameter.
+ * The case selection is first converted to a base 3 number, then to a base 62 string.
+ * The base 62 string is then appended to the URL as a parameter.
+ * The URL is then set as the value of the export input field.
  */
-function exportLocalStorageOld() {
-  // These are the keys of localstorage that get exported to the URL
-  const keysToExport = [
-    "basic_caseSelection",
-    "advanced_caseSelection",
-    "basicBack_caseSelection",
-    "expert_caseSelection",
-  ];
-  // "basic_algorithmSelection",
-  // "basicBack_algorithmSelection",
-  // "advanced_algorithmSelection",
-  // "expert_algorithmSelection",
-
-  const selectedData = {};
-  keysToExport.forEach((key) => {
-    const value = localStorage.getItem(key);
-    if (value !== null) {
-      selectedData[key] = value; // Include only existing keys
-    }
-  });
-  const data = JSON.stringify(selectedData); // Convert selected data to JSON
-
-  // Encode JSON for use in URL
-  const encodedData = encodeURIComponent(data);
-
-  // Base URL of your site
-  let baseURL = window.location.origin;
-
-  // If on localhost, use a different base URL
-  if (baseURL == "http://127.0.0.1:5500") baseURL = "http://127.0.0.1:5500/F2LTrainer/index.html";
-
-  // Append query param
-  const exportURL = `${baseURL}?localStorage=${encodedData}`;
-
-  console.log("Export URL:", exportURL);
-  ELEM_INPUT_EXPORT.value = exportURL;
-}
-
-/**
- * Imports localStorage data from the current URL's query parameter.
- * Parses the URL to extract the `localStorage` parameter, decodes it,
- * and attempts to restore each key-value pair into the browser's localStorage.
- * Logs a success message if the import is successful, or an error message
- * if the process fails or if no data is found.
- */
-function importLocalStorageOld() {
-  // Parse URL params
-  const urlParams = new URLSearchParams(window.location.search);
-
-  // Get `localStorage` param
-  const encodedData = urlParams.get("localStorage");
-
-  // If no data is found, return
-  if (!encodedData) return;
-
-  // Ask user to import data from URL
-  if (confirm("Import data from URL?")) {
-    // Attempt to import data
-    try {
-      // Decode JSON
-      const data = JSON.parse(decodeURIComponent(encodedData));
-
-      // Restore each item
-      for (const [key, value] of Object.entries(data)) {
-        localStorage.setItem(key, value);
-      }
-      console.log("LocalStorage imported successfully.");
-    } catch (error) {
-      console.error("Failed to import localStorage:", error);
-    }
-  }
-
-  // Reset URL in addressbar
-  if (window.location.hostname == "127.0.0.1") {
-    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
-  } else {
-    window.history.pushState({}, document.title, "/");
-  }
-}
-
 function exportLocalStorage() {
   // Base URL of your site
   let baseURL = window.location.origin;
@@ -337,6 +290,12 @@ function exportLocalStorage() {
   // importData(exportURL);
 }
 
+/**
+ * Imports the case selection from the URL parameters.
+ * The case selection is extracted from the URL parameters and saved to localStorage.
+ * If no URL parameters are found, the function does nothing.
+ * If the user confirms the import, the case selection is imported and the URL is reset.
+ */
 function importLocalStorage() {
   const urlParams = new URLSearchParams(window.location.search);
   console.log("urlParams", urlParams);
@@ -374,6 +333,16 @@ function importLocalStorage() {
   }
 }
 
+/**
+ * Encodes a base-3 number as a Base62 string.
+ *
+ * This function takes a base-3 number (represented as a string of digits),
+ * converts it to a decimal integer, and then encodes that integer as a
+ * Base62 string using a predefined character set.
+ *
+ * @param {string} base3Number - The base-3 number to encode.
+ * @returns {string} - The encoded Base62 string.
+ */
 function encodeBase3ToBase62(base3Number) {
   // Step 1: Convert base-3 string to decimal integer
   // console.log("original: " + base3Number.join(""));
@@ -396,8 +365,8 @@ function encodeBase3ToBase62(base3Number) {
 
 /**
  * Decodes a Base62 string back into a base-3 number.
- * @param {string} base62String - The encoded Base62 string.
- * @returns {list} - The original base-3 number as a string.
+ * @param {string} base62String The encoded Base62 string.
+ * @returns {list} The original base-3 number as a string.
  */
 function decodeBase62ToBase3(base62String) {
   // Step 1: Convert Base62 string to decimal integer
@@ -419,3 +388,5 @@ function decodeBase62ToBase3(base62String) {
   // console.log("decoded:  " + base3Number);
   return base3Number;
 }
+
+decode;
