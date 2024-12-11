@@ -239,11 +239,12 @@ function exportLocalStorage() {
     "advanced_caseSelection",
     "basicBack_caseSelection",
     "expert_caseSelection",
-    "basic_algorithmSelection",
-    "basicBack_algorithmSelection",
-    "advanced_algorithmSelection",
-    "expert_algorithmSelection",
   ];
+  // "basic_algorithmSelection",
+  // "basicBack_algorithmSelection",
+  // "advanced_algorithmSelection",
+  // "expert_algorithmSelection",
+
   const selectedData = {};
   keysToExport.forEach((key) => {
     const value = localStorage.getItem(key);
