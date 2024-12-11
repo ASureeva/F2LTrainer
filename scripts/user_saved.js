@@ -230,7 +230,26 @@ function setFirstVisitTrain() {
  */
 function exportLocalStorage() {
   // Convert localStorage to JSON
-  const data = JSON.stringify(localStorage);
+  //const data = JSON.stringify(localStorage);
+
+  const keysToExport = [
+    "basic_caseSelection",
+    "advanced_caseSelection",
+    "basicBack_caseSelection",
+    "expert_caseSelection",
+    "basic_algorithmSelection",
+    "basicBack_algorithmSelection",
+    "advanced_algorithmSelection",
+    "expert_algorithmSelection",
+  ];
+  const selectedData = {};
+  keysToExport.forEach((key) => {
+    const value = localStorage.getItem(key);
+    if (value !== null) {
+      selectedData[key] = value; // Include only existing keys
+    }
+  });
+  const data = JSON.stringify(selectedData); // Convert selected data to JSON
 
   // Encode JSON for use in URL
   const encodedData = encodeURIComponent(data);
