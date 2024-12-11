@@ -321,6 +321,7 @@ function exportLocalStorage() {
 
   exportURL = baseURL + "?";
   GROUPS.forEach((group, i) => {
+    // Case selection
     const caseSelection = group.caseSelection;
     console.log("caseSelection", caseSelection);
     const caseSelectionString = caseSelection.join("");
@@ -349,6 +350,7 @@ function importLocalStorage() {
       console.log("saveName", saveName);
       const base62String = urlParams.get(group.saveNameCasesURL);
       console.log("base62String", base62String);
+      if (base62String === null) return;
       let base3Number = decodeBase62ToBase3(base62String);
       console.log("base3Number", base3Number);
 
