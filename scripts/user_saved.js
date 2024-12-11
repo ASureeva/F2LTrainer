@@ -52,7 +52,7 @@ let hintAlgSelection = 0;
 let timerEnabled = false;
 
 let firstVisit = true;
-// let firstVisitTrain = true;
+let firstVisitTrain = true;
 
 // Character set for Base62 encoding
 const BASE62_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -122,7 +122,7 @@ function loadUserData() {
   if (localStorage.getItem("firstVisit") != null) firstVisit = false;
 
   // Check if user visits train view for the first time
-  // if (localStorage.getItem("firstVisitTrain") != null) firstVisitTrain = false;
+  if (localStorage.getItem("firstVisitTrain") != null) firstVisitTrain = false;
 
   // Load trainStateSelection
   for (let i = 0; i < trainStateSelection.length; i++) {
@@ -215,10 +215,10 @@ function clearUserData() {
   }
 }
 
-// function setFirstVisitTrain() {
-//   // Saving that the user visited the Train View the first time
-//   localStorage.setItem("firstVisitTrain", false);
-// }
+function setFirstVisitTrain() {
+  // Saving that the user visited the Train View the first time
+  localStorage.setItem("firstVisitTrain", false);
+}
 
 // Export Data is broken with new advanced Cases
 function exportUserData() {

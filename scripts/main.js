@@ -990,7 +990,10 @@ function changeMode() {
     //ELEM_BUTTON_SETTINGS.classList.remove("display-none");
     // ELEM_CONTAINER_SELECT_GROUP.classList.add("display-none");
     ELEM_SELECT_GROUP.classList.add("display-none");
-    // showWelcomeTrainPopup();
+    if (firstVisitTrain) {
+      firstVisitTrain = false;
+      //showWelcomeTrainPopup();
+    }
   } else {
     mode = 0;
     ELEM_BTN_CHANGE_MODE.innerHTML = "Train";
@@ -1379,13 +1382,10 @@ function showWelcomePopup() {
   }
 }
 
-// function showWelcomeTrainPopup() {
-//   if (firstVisitTrain) {
-//     firstVisitTrain = false;
-//     setFirstVisitTrain();
-//     openDialog(ELEM_WELCOME_CONATINER_TRAIN);
-//   }
-// }
+function showWelcomeTrainPopup() {
+  setFirstVisitTrain();
+  openDialog(ELEM_WELCOME_CONATINER_TRAIN);
+}
 
 function showInfo() {
   openDialog(ELEM_INFO_CONTAINER);
