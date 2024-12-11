@@ -158,7 +158,7 @@ const ELEM_THUMBNAIL_BUTTON = document.getElementById("thumbnail-button");
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
-  readParams();
+  importLocalStorage();
   loadUserData();
   localStorage.clear();
   saveUserData();
@@ -1406,7 +1406,7 @@ function showInfo() {
 //}
 
 function showSettingsTrain() {
-  exportUserData();
+  exportLocalStorage();
   updateCheckboxStatus();
   openDialog(ELEM_CONTAINER_TRAIN_SETTINGS);
 }

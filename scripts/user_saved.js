@@ -220,140 +220,72 @@ function setFirstVisitTrain() {
   localStorage.setItem("firstVisitTrain", false);
 }
 
-// Export Data is broken with new advanced Cases
-function exportUserData() {
-  let exportNumberStrs = [];
-  let exportAlgSels = [];
+/**
+ * Exports the current localStorage data as a query parameter
+ * in the current window's URL. This allows for easy sharing
+ * of the localStorage data as a URL, and can be used to
+ * import the data using the `importLocalStorage` function.
+ * @returns {string} The generated URL with the query parameter
+ * containing the localStorage data.
+ */
+function exportLocalStorage() {
+  // Convert localStorage to JSON
+  const data = JSON.stringify(localStorage);
 
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
+  // Encode JSON for use in URL
+  const encodedData = encodeURIComponent(data);
 
-    // Gernerate Case selection export
-    exportNumberStrs[indexGroup] = encodeBase3ToBase62(GROUP.caseSelection);
+  // Base URL of your site
+  let baseURL = window.location.origin;
 
-    // Gernerate Alg selection export
-    let exportAlgSel = "";
-    for (let indexCase = 0; indexCase < GROUP.numberCases; indexCase++) {
-      if (GROUP.algorithmSelection[indexCase] != 0) {
-        let temp = indexCase.toString(36);
-        if (temp.length == 1) temp = "0" + temp;
-        temp += GROUP.algorithmSelection[indexCase];
-        exportAlgSel += temp;
+  // If on localhost, use a different base URL
+  if (baseURL == "http://127.0.0.1:5500") baseURL = "http://127.0.0.1:5500/F2LTrainer/index.html";
+
+  // Append query param
+  const exportURL = `${baseURL}?localStorage=${encodedData}`;
+
+  console.log("Export URL:", exportURL);
+  ELEM_INPUT_EXPORT.value = exportURL;
+}
+
+/**
+ * Imports localStorage data from the current URL's query parameter.
+ * Parses the URL to extract the `localStorage` parameter, decodes it,
+ * and attempts to restore each key-value pair into the browser's localStorage.
+ * Logs a success message if the import is successful, or an error message
+ * if the process fails or if no data is found.
+ */
+function importLocalStorage() {
+  // Parse URL params
+  const urlParams = new URLSearchParams(window.location.search);
+
+  // Get `localStorage` param
+  const encodedData = urlParams.get("localStorage");
+
+  // If no data is found, return
+  if (!encodedData) return;
+
+  // Ask user to import data from URL
+  if (confirm("Import data from URL?")) {
+    // Attempt to import data
+    try {
+      // Decode JSON
+      const data = JSON.parse(decodeURIComponent(encodedData));
+
+      // Restore each item
+      for (const [key, value] of Object.entries(data)) {
+        localStorage.setItem(key, value);
       }
-    }
-    exportAlgSels[indexGroup] = exportAlgSel;
-  }
-
-  const URL_EXPORT =
-    "https://f2l-trainer.top/?bc=" +
-    exportNumberStrs[0] +
-    "&bcb=" +
-    exportNumberStrs[1] +
-    "&ac=" +
-    exportNumberStrs[2] +
-    "&ec=" +
-    exportNumberStrs[3] +
-    "&a=" +
-    exportAlgSels[0] +
-    "&b=" +
-    exportAlgSels[1] +
-    "&c=" +
-    exportAlgSels[2] +
-    "&d=" +
-    exportAlgSels[3];
-
-  ELEM_INPUT_EXPORT.value = URL_EXPORT;
-}
-
-function importUserDataCases(URL_PARAM_CASE_SELECTION) {
-  console.log("Importing case selection");
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-
-    GROUP.caseSelection.length = 0;
-    const IMPORT_DATA_STRING = URL_PARAM_CASE_SELECTION[indexGroup];
-    console.log(IMPORT_DATA_STRING);
-    if (IMPORT_DATA_STRING === undefined) continue;
-
-    const base3Number = decodeBase62ToBase3(IMPORT_DATA_STRING);
-    let base3List = Array(GROUP.numberCases).fill(0);
-    for (let i = 0; i < base3Number.length; i++) {
-      base3List[GROUP.numberCases - 1 - i] = Number(base3Number[base3Number.length - 1 - i]);
-    }
-
-    GROUP.caseSelection = base3List;
-    localStorage.setItem(GROUP.saveName + "caseSelection", JSON.stringify(GROUP.caseSelection));
-  }
-}
-
-function importUserDataAlgs(URL_PARAM_ALG_SELECTION) {
-  console.log("Importing alg selection");
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-    const IMPORT_DATA_STRING = URL_PARAM_ALG_SELECTION[indexGroup];
-    if (IMPORT_DATA_STRING === undefined) continue;
-
-    for (var i = 0; i < IMPORT_DATA_STRING.length; i += 3) {
-      const INDEX_CASE = parseInt(IMPORT_DATA_STRING.slice(i, i + 2), 36);
-      const ALG_SEL = parseInt(IMPORT_DATA_STRING.slice(i + 2, i + 3), 36);
-
-      if (INDEX_CASE >= GROUP.numberCases) continue;
-
-      // Restoring, editing and savind is not clean but GROUP.algorithmSelection is empty at this point. Restoring from memory fixes it.
-      GROUP.algorithmSelection = JSON.parse(localStorage.getItem(GROUP.saveName + "algorithmSelection"));
-      GROUP.algorithmSelection[INDEX_CASE] = ALG_SEL;
-      localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
+      console.log("LocalStorage imported successfully.");
+    } catch (error) {
+      console.error("Failed to import localStorage:", error);
     }
   }
-}
 
-/**
- * Encodes a base-3 number into a Base62 string.
- * @param {list} base3Number - A string representing the base-3 number.
- * @returns {string} - The encoded Base62 string.
- */
-function encodeBase3ToBase62(base3Number) {
-  // Step 1: Convert base-3 string to decimal integer
-  // console.log("original: " + base3Number.join(""));
-  let decimalValue = BigInt(0);
-  for (let i = 0; i < base3Number.length; i++) {
-    decimalValue = decimalValue * BigInt(3) + BigInt(base3Number[i]);
+  // Reset URL in addressbar
+  if (window.location.hostname == "127.0.0.1") {
+    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
+  } else {
+    window.history.pushState({}, document.title, "/");
   }
-  //console.log("decimalValue: " + decimalValue);
-
-  // Step 2: Convert decimal to Base62 string
-  let base62String = "";
-  do {
-    const remainder = decimalValue % BigInt(BASE);
-    base62String = BASE62_CHARSET[Number(remainder)] + base62String;
-    decimalValue = decimalValue / BigInt(BASE);
-  } while (decimalValue > 0);
-
-  return base62String;
-}
-
-/**
- * Decodes a Base62 string back into a base-3 number.
- * @param {string} base62String - The encoded Base62 string.
- * @returns {list} - The original base-3 number as a string.
- */
-function decodeBase62ToBase3(base62String) {
-  // Step 1: Convert Base62 string to decimal integer
-  let decimalValue = BigInt(0);
-  for (let i = 0; i < base62String.length; i++) {
-    const char = base62String[i];
-    const digit = BigInt(BASE62_CHARSET.indexOf(char));
-    decimalValue = decimalValue * BigInt(BASE) + digit;
-  }
-
-  // Step 2: Convert decimal integer back to base-3 string
-  let base3Number = "";
-  do {
-    const remainder = decimalValue % BigInt(3);
-    base3Number = remainder.toString() + base3Number;
-    decimalValue = decimalValue / BigInt(3);
-  } while (decimalValue > 0);
-
-  console.log("decoded:  " + base3Number);
-  return base3Number;
 }
