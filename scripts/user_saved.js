@@ -203,7 +203,11 @@ function loadList(group, saveName, defaultValue) {
   } else {
     out = Array(group.numberCases).fill(defaultValue);
   }
-  return out;
+  // In previous versions the localstorage save had an issue where some entries
+  // would be added to the end of the array. This made the lists immensly large.
+  // To fix this, the list is sliced to the correct length.
+  return out.slice(0, group.numberCases);
+  // return out;
 }
 
 function clearUserData() {
