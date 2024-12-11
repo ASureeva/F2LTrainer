@@ -232,7 +232,7 @@ function setFirstVisitTrain() {
  * @returns {string} The generated URL with the query parameter
  * containing the localStorage data.
  */
-function exportLocalStorage() {
+function exportLocalStorageOld() {
   // These are the keys of localstorage that get exported to the URL
   const keysToExport = [
     "basic_caseSelection",
@@ -277,7 +277,7 @@ function exportLocalStorage() {
  * Logs a success message if the import is successful, or an error message
  * if the process fails or if no data is found.
  */
-function importLocalStorage() {
+function importLocalStorageOld() {
   // Parse URL params
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -310,4 +310,110 @@ function importLocalStorage() {
   } else {
     window.history.pushState({}, document.title, "/");
   }
+}
+
+function exportLocalStorage() {
+  // Base URL of your site
+  let baseURL = window.location.origin;
+
+  // If on localhost, use a different base URL
+  if (baseURL == "http://127.0.0.1:5500") baseURL = "http://127.0.0.1:5500/F2LTrainer/index.html";
+
+  exportURL = baseURL + "?";
+  GROUPS.forEach((group, i) => {
+    const caseSelection = group.caseSelection;
+    console.log("caseSelection", caseSelection);
+    const caseSelectionString = caseSelection.join("");
+    console.log("caseSelectionString", caseSelectionString);
+    base62String = encodeBase3ToBase62(caseSelectionString);
+    console.log("base62String", base62String);
+    base3Number = decodeBase62ToBase3(base62String);
+    console.log("base3Number", base3Number);
+    exportURL += "&" + group.saveNameCasesURL + "=" + base62String;
+  });
+  console.log("exportURL: " + exportURL);
+  ELEM_INPUT_EXPORT.value = exportURL;
+  // importData(exportURL);
+}
+
+function importLocalStorage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log("urlParams", urlParams);
+
+  // If no URL parameters found, return
+  if (!urlParams.size) return;
+
+  if (confirm("Import data from URL?")) {
+    GROUPS.forEach((group, i) => {
+      const saveName = group.saveNameCasesURL;
+      console.log("saveName", saveName);
+      const base62String = urlParams.get(group.saveNameCasesURL);
+      console.log("base62String", base62String);
+      let base3Number = decodeBase62ToBase3(base62String);
+      console.log("base3Number", base3Number);
+
+      // Fill list with 0s until it has the correct length
+      // Reason: Leading zeroes were discarded when converted to number
+      while (base3Number.length < group.numberCases) base3Number = "0" + base3Number;
+      console.log("base3Number", base3Number);
+
+      let caseSelectionList = base3Number.split("");
+      console.log("caseSelectionList", caseSelectionList);
+
+      localStorage.setItem(group.saveName + "caseSelection", JSON.stringify(caseSelectionList));
+    });
+  }
+
+  // Reset URL in addressbar
+  if (window.location.hostname == "127.0.0.1") {
+    window.history.pushState({}, document.title, "/F2LTrainer/index.html");
+  } else {
+    window.history.pushState({}, document.title, "/");
+  }
+}
+
+function encodeBase3ToBase62(base3Number) {
+  // Step 1: Convert base-3 string to decimal integer
+  // console.log("original: " + base3Number.join(""));
+  let decimalValue = BigInt(0);
+  for (let i = 0; i < base3Number.length; i++) {
+    decimalValue = decimalValue * BigInt(3) + BigInt(base3Number[i]);
+  }
+  //console.log("decimalValue: " + decimalValue);
+
+  // Step 2: Convert decimal to Base62 string
+  let base62String = "";
+  do {
+    const remainder = decimalValue % BigInt(BASE);
+    base62String = BASE62_CHARSET[Number(remainder)] + base62String;
+    decimalValue = decimalValue / BigInt(BASE);
+  } while (decimalValue > 0);
+
+  return base62String;
+}
+
+/**
+ * Decodes a Base62 string back into a base-3 number.
+ * @param {string} base62String - The encoded Base62 string.
+ * @returns {list} - The original base-3 number as a string.
+ */
+function decodeBase62ToBase3(base62String) {
+  // Step 1: Convert Base62 string to decimal integer
+  let decimalValue = BigInt(0);
+  for (let i = 0; i < base62String.length; i++) {
+    const char = base62String[i];
+    const digit = BigInt(BASE62_CHARSET.indexOf(char));
+    decimalValue = decimalValue * BigInt(BASE) + digit;
+  }
+
+  // Step 2: Convert decimal integer back to base-3 string
+  let base3Number = "";
+  do {
+    const remainder = decimalValue % BigInt(3);
+    base3Number = remainder.toString() + base3Number;
+    decimalValue = decimalValue / BigInt(3);
+  } while (decimalValue > 0);
+
+  // console.log("decoded:  " + base3Number);
+  return base3Number;
 }
