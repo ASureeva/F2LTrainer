@@ -746,6 +746,7 @@ twisty-player {
 }
 
 twisty-alg-viewer {
+  color-scheme: dark;
   display: none;
   /* display: none; */
 }
