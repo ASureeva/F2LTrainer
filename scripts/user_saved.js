@@ -97,8 +97,7 @@ function saveUserData() {
   // Saving that the user just visited the site
   localStorage.setItem("firstVisit", false);
 
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
+  GROUPS.forEach((GROUP) => {
     // Save Collapse
     localStorage.setItem(GROUP.saveName + "collapse", JSON.stringify(GROUP.collapse));
     // Save Case Selection
@@ -109,7 +108,7 @@ function saveUserData() {
     localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
     // Save Solve Counter
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
-  }
+  });
 }
 
 /**
@@ -154,13 +153,13 @@ function loadUserData() {
   aufSelection = loadBoolean("aufSelection", aufSelection);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
+  GROUPS.forEach((GROUP) => {
 
-    // New Restore Code Start
+    // Load collapse state
     GROUP.collapse = loadList(GROUP, "collapse", false);
     // Load Case Selection
     GROUP.caseSelection = loadList(GROUP, "caseSelection", 0);
+
     // Load Custom Algorithms
     GROUP.customAlgorithms = loadList(GROUP, "customAlgorithms", "");
 
@@ -175,6 +174,13 @@ function loadUserData() {
       // Populate array with zeroes
       GROUP.solveCounter = Array(GROUP.numberCases).fill(0);
     }
+  });
+
+  // Set learning state of some cases on first visit, so that the user can see the options
+  if (firstVisit) {
+    GROUPS[0].caseSelection[0] = 1;
+    GROUPS[0].caseSelection[1] = 1;
+    GROUPS[0].caseSelection[2] = 2;
   }
 
   updateCheckboxStatus();
@@ -388,5 +394,3 @@ function decodeBase62ToBase3(base62String) {
   // console.log("decoded:  " + base3Number);
   return base3Number;
 }
-
-decode;
