@@ -402,7 +402,13 @@
         <a href="https://github.com/Dave2ooo/F2LTrainer/issues" target="_blank" rel="noopener noreferrer">Github.</a>
       </p>
       <form action="https://api.web3forms.com/submit" method="POST">
+        <!-- Custom Access Key -->
         <input type="hidden" name="access_key" value="70f60afc-3ab0-4491-80be-e854832fddb9" />
+        <!-- Subject of the email -->
+        <input type="hidden" name="subject" value="F2L Trainer feedback" />
+
+        <input type="checkbox" name="botcheck" class="hidden" style="display: none" />
+        <div class="h-captcha" data-captcha="true"></div>
 
         <input id="feedback-name-id" class="feedback-text" type="text" name="name" required placeholder="Your Name" />
         <input class="feedback-text" type="email" name="email" required placeholder="Your Email" />
