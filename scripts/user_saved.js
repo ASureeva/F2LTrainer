@@ -154,7 +154,6 @@ function loadUserData() {
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   GROUPS.forEach((GROUP) => {
-
     // Load collapse state
     GROUP.collapse = loadList(GROUP, "collapse", false);
     // Load Case Selection
@@ -304,7 +303,6 @@ function exportLocalStorage() {
  */
 function importLocalStorage() {
   const urlParams = new URLSearchParams(window.location.search);
-  console.log("urlParams", urlParams);
 
   // If no URL parameters found, return
   if (!urlParams.size) return;
