@@ -408,7 +408,8 @@
         <input type="hidden" name="subject" value="F2L Trainer feedback" />
 
         <input type="checkbox" name="botcheck" class="hidden" style="display: none" />
-        <div class="h-captcha" data-captcha="true"></div>
+        <!-- Captcha check (needs script to be uncommented at bottom of index.html) -->
+        <!-- <div class="h-captcha" data-captcha="true"></div> -->
 
         <input id="feedback-name-id" class="feedback-text" type="text" name="name" required placeholder="Your Name" />
         <input class="feedback-text" type="email" name="email" required placeholder="Your Email" />
@@ -574,6 +575,9 @@
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
     </script>
+
+    <!-- web3forms (Feedback function) Required only if you are using hCaptcha or Advanced File Upload. -->
+    <!-- <script src="https://web3forms.com/client/script.js" async defer></script> -->
 
     <!-- Google Tag Manager (noscript) -->
     <noscript
