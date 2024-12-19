@@ -49,7 +49,7 @@ const ELEM_SIDE_CONTAINER = document.getElementById("side-container");
 const ELEM_BTN_CHANGE_MODE = document.getElementById("change-mode");
 const ELEM_OVERLAY = document.getElementById("overlay");
 const ELEM_WELCOME_CONATINER = document.getElementById("welcome-container");
-const ELEM_WELCOME_CONATINER_TRAIN = document.getElementById("welcome-container-train");
+// const ELEM_WELCOME_CONATINER_TRAIN = document.getElementById("welcome-container-train");
 const ELEM_INFO_CONTAINER = document.getElementById("info-container");
 const ELEM_LOADING_SCREEN = document.getElementById("loading-screen");
 const ELEM_CHANGE_STATE_POPUP = document.getElementById("popup-change-state");
@@ -1455,7 +1455,7 @@ let timeToString = function (time) {
 function spaceDown() {
   if (
     ELEM_WELCOME_CONATINER.open ||
-    ELEM_WELCOME_CONATINER_TRAIN.open ||
+    // ELEM_WELCOME_CONATINER_TRAIN.open ||
     ELEM_INFO_CONTAINER.open ||
     ELEM_EDITALG_CONTAINER.open ||
     ELEM_CONTAINER_TRAIN_SETTINGS.open ||
@@ -1743,7 +1743,7 @@ function mouseup(e) {
 function closeOverlays() {
   ELEM_BODY.style.overflow = "auto";
   ELEM_WELCOME_CONATINER.close();
-  ELEM_WELCOME_CONATINER_TRAIN.close();
+  // ELEM_WELCOME_CONATINER_TRAIN.close();
   ELEM_INFO_CONTAINER.close();
   ELEM_EDITALG_CONTAINER.close();
   ELEM_CONTAINER_TRAIN_SETTINGS.close();
@@ -1760,7 +1760,7 @@ function showWelcomePopup() {
 
 function showWelcomeTrainPopup() {
   setFirstVisitTrain();
-  openDialog(ELEM_WELCOME_CONATINER_TRAIN);
+  // openDialog(ELEM_WELCOME_CONATINER_TRAIN);
 }
 
 function showInfo() {
