@@ -1764,6 +1764,7 @@ function showWelcomeTrainPopup() {
 }
 
 function showInfo() {
+  ELEM_IFRAME_VIDEO.src = "https://www.youtube-nocookie.com/embed/EQbZvKssp7s?si=tEuX7PxLo8i5UdiT&amp;start=20";
   openDialog(ELEM_INFO_CONTAINER);
   // ELEM_INFO_CONTAINER.scrollTo(0, 0);
 }
