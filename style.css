@@ -754,6 +754,12 @@ twisty-alg-viewer {
   color-scheme: dark;
   display: none;
   /* display: none; */
+  width: 100%;
+  justify-content: center;
+}
+
+twisty-alg-wrapper-elem{
+  width: 100%
 }
 
 twisty-alg-viewer .wrapper {
@@ -999,6 +1005,66 @@ textarea {
   height: 30ex;
   max-width: 100%;
   max-height: 90dvh;
+}
+
+/* -----------------------------   Toggle Switch   --------------------------------- */
+.switch-container {
+  display: block;
+  margin-bottom: 0.8rem;
+  /* position: relative; */
+}
+
+.switch {
+  display: flex;
+  position: relative;
+  width: 200px;
+  /* height: 50px; */
+  /* background: transparent; */
+  overflow: hidden;
+  align-items: center;
+  justify-content: space-around;
+  margin: auto;
+}
+
+.switch input {
+  display: none;
+}
+
+.switch label {
+  flex: 1;
+  text-align: center;
+  line-height: 4ch;
+  font-weight: bold;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  color: var(--color-text);
+  opacity: 0.4;
+  transition: opacity 150ms;
+}
+
+.switch input:checked + label {
+  /* color: #000; */
+  /* color: var(--color-text); */
+  opacity: 1;
+}
+
+.indicator {
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  width: 50%; /* Matches half of the switch width */
+  background-color: var(--color-text);
+  transition: transform 150ms;
+  left: 0; /* Start from the left */
+}
+
+#switch-left-id:checked ~ .indicator {
+  transform: translateX(0); /* No movement for "Left" */
+}
+
+#switch-right-id:checked ~ .indicator {
+  transform: translateX(100%); /* Moves to the "Right" */
 }
 
 /* -----------------------------   Loader   --------------------------------- */

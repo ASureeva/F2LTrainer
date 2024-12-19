@@ -20,12 +20,22 @@ const COLOR_FINISHED = getComputedStyle(document.documentElement).getPropertyVal
 
 const ELEM_EDITALG_CONTAINER = document.getElementById("editalg-container");
 const ELEM_EDITALG_IMG = document.getElementById("editalg-img");
+const ELEM_IDENTICAL_ALG = document.getElementById("checkboxIdenticalAlgId");
+const ELEM_SWITCH_LEFT = document.getElementById("switch-left-id");
+const ELEM_SWITCH_RIGHT = document.getElementById("switch-right-id");
 const ELEM_EDITALG_LIST = document.getElementById("editalg-list");
 const ELEM_EDITALG_CUSTOMALG = document.getElementById("editalg-customalg");
 const ELEM_EDITALG_LISTENTRY = [];
 
-let selectedCase = 0;
-let selectedAlgNumber = 0;
+// Global variable for editAlg function
+let editAlgGlobal = {
+  indexGroup: 0,
+  indexCase: 0,
+  selectedAlgNumberRight: 0,
+  selectedAlgNumberLeft: 0,
+  customAlgRight: "",
+  customAlgLeft: "",
+};
 
 // Maximum number of algs per Case
 const NUM_ALG = 20;
@@ -91,8 +101,6 @@ const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
 const ELEM_HINT_PLACEHOLDER = document.getElementById("hint-placeholder");
 const ELEM_HINT_IMG = document.getElementById("hint-img");
 const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
-
-let algHint = "";
 
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
@@ -181,21 +189,29 @@ window.addEventListener("load", () => {
   for (let i = 0; i < NUM_ALG; i++) {
     ELEM_EDITALG_LISTENTRY.push(document.createElement("div"));
     ELEM_EDITALG_LISTENTRY[i].classList.add("editalg-listentry");
+
+    // Called when alg is pressed in editAlg popup
     ELEM_EDITALG_LISTENTRY[i].onclick = function () {
-      // Change Background when selected
-      let indexGroup;
-      if (!mode) {
-        indexGroup = ELEM_SELECT_GROUP.selectedIndex;
-      } else {
-        indexGroup = generatedScrambles[currentTrainCaseNumber].indexGroup;
-      }
-      if (selectedAlgNumber < GROUPS[indexGroup].algorithms[selectedCase + 1].length) {
-        ELEM_EDITALG_LISTENTRY[selectedAlgNumber].style.background = COLORS_ALG[0];
-      } else {
-        ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
-      }
+      // Set background to transparent on all algs
+      ELEM_EDITALG_LISTENTRY.forEach((element) => {
+        element.style.background = COLORS_ALG[0];
+      });
+      ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
+
+      // Set background to selected on selected alg
       ELEM_EDITALG_LISTENTRY[i].style.background = COLORS_ALG[1];
-      selectedAlgNumber = i;
+
+      // Save selected alg globally. i is the index of selected alg
+      if (ELEM_IDENTICAL_ALG.checked) {
+        editAlgGlobal.selectedAlgNumberRight = i;
+        editAlgGlobal.selectedAlgNumberLeft = i;
+      } else {
+        if (ELEM_SWITCH_RIGHT.checked) {
+          editAlgGlobal.selectedAlgNumberRight = i;
+        } else {
+          editAlgGlobal.selectedAlgNumberLeft = i;
+        }
+      }
     };
 
     ELEM_EDITALG_LIST.appendChild(ELEM_EDITALG_LISTENTRY[i]);
@@ -363,7 +379,7 @@ function addElementsToDOM() {
         GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
         GROUP.imgEdit[indexCase].alt = "edit case " + (indexCase + 1);
         GROUP.imgEdit[indexCase].onclick = function () {
-          editAlgs(indexGroup, indexCase);
+          editAlgs(indexGroup, indexCase, GROUP.flagMirrored[indexCase]);
         };
 
         // Mirror
@@ -388,11 +404,11 @@ function addElementsToDOM() {
         GROUP.imgCase[indexCase].loading = "lazy";
 
         // Set shown alg
-        if (GROUP.algorithmSelection[indexCase] < GROUP.algorithms[indexCase + 1].length) {
+        if (GROUP.algorithmSelectionRight[indexCase] < GROUP.algorithms[indexCase + 1].length) {
           GROUP.divAlgorithm[indexCase].innerHTML =
-            GROUP.algorithms[indexCase + 1][GROUP.algorithmSelection[indexCase]];
+            GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionRight[indexCase]];
         } else {
-          GROUP.divAlgorithm[indexCase].innerHTML = GROUP.customAlgorithms[indexCase];
+          GROUP.divAlgorithm[indexCase].innerHTML = GROUP.customAlgorithmsRight[indexCase];
         }
 
         GROUP.imgMirror[indexCase].src = "./images/mirror1.svg";
@@ -427,45 +443,73 @@ function addElementsToDOM() {
  * Called when user clicks on Confirm in the Change Alg popup.
  */
 function updateAlg() {
-  let indexGroup;
-  if (!mode) {
-    indexGroup = ELEM_SELECT_GROUP.selectedIndex;
+  const INDEX_GROUP = editAlgGlobal.indexGroup;
+  const INDEX_CASE = editAlgGlobal.indexCase;
+  const GROUP = GROUPS[INDEX_GROUP];
+
+  let tempAlgRight,
+    tempAlgLeft = "";
+
+  // Set global variable
+  if (ELEM_SWITCH_RIGHT.checked) {
+    editAlgGlobal.customAlgRight = ELEM_EDITALG_CUSTOMALG.value;
+    if (ELEM_IDENTICAL_ALG.checked) {
+      editAlgGlobal.customAlgLeft = mirrorAlg(editAlgGlobal.customAlgRight);
+    }
   } else {
-    indexGroup = generatedScrambles[currentTrainCaseNumber].indexGroup;
+    editAlgGlobal.customAlgLeft = ELEM_EDITALG_CUSTOMALG.value;
+    if (ELEM_IDENTICAL_ALG.checked) {
+      editAlgGlobal.customAlgRight = mirrorAlg(editAlgGlobal.customAlgLeft);
+    }
   }
-  const GROUP = GROUPS[indexGroup];
 
-  let tempAlg = "";
+  // "Save" custom algs from global variable
+  GROUP.customAlgorithmsRight[INDEX_CASE] = editAlgGlobal.customAlgRight;
+  GROUP.customAlgorithmsLeft[INDEX_CASE] = editAlgGlobal.customAlgLeft;
 
-  // Read text in custom Alg Textbox
-  GROUP.customAlgorithms[selectedCase] = ELEM_EDITALG_CUSTOMALG.value;
-  // Check if selected alg is default or custom
-  if (selectedAlgNumber < GROUP.algorithms[selectedCase + 1].length) {
+  // "Save" alg selection from global variable
+  GROUP.algorithmSelectionRight[INDEX_CASE] = editAlgGlobal.selectedAlgNumberRight;
+  GROUP.algorithmSelectionLeft[INDEX_CASE] = editAlgGlobal.selectedAlgNumberLeft;
+
+  // "Save" identical alg
+  GROUP.identicalAlgorithm[INDEX_CASE] = ELEM_IDENTICAL_ALG.checked;
+
+  // Check if selected right alg is default or custom
+  if (editAlgGlobal.selectedAlgNumberRight < GROUP.algorithms[INDEX_CASE + 1].length) {
     // If selected Alg is default
-    tempAlg = GROUP.algorithms[selectedCase + 1][selectedAlgNumber];
+    tempAlgRight = GROUP.algorithms[INDEX_CASE + 1][editAlgGlobal.selectedAlgNumberRight];
   } else {
     // If selected Alg is custom
-    tempAlg = GROUP.customAlgorithms[selectedCase];
+    tempAlgRight = editAlgGlobal.customAlgRight;
   }
 
-  if (tempAlg == "") return;
+  // Check if selected left alg is default or custom
+  if (editAlgGlobal.selectedAlgNumberLeft < GROUP.algorithms[INDEX_CASE + 1].length) {
+    // If selected Alg is default
+    tempAlgLeft = mirrorAlg(GROUP.algorithms[INDEX_CASE + 1][editAlgGlobal.selectedAlgNumberLeft]);
+  } else {
+    // If selected Alg is custom
+    tempAlgLeft = editAlgGlobal.customAlgLeft;
+  }
 
-  if (GROUP.flagMirrored[selectedCase] == true) tempAlg = mirrorAlg(tempAlg);
+  // exit if algs are empty
+  if (tempAlgRight == "") return;
+  if (tempAlgLeft == "") return;
 
-  // Display algorithm in selection window
-  GROUP.divAlgorithm[selectedCase].innerHTML = tempAlg;
+  // Show selected alg in select mode
+  let tempAlg = tempAlgRight;
+  if (GROUP.flagMirrored[INDEX_CASE] == true) tempAlg = tempAlgLeft;
+  GROUP.divAlgorithm[INDEX_CASE].innerHTML = tempAlg;
 
-  // Save which Alg was selected
-  GROUP.algorithmSelection[selectedCase] = selectedAlgNumber;
-
+  // Show selected alg in train mode
   if (currentTrainCaseNumber >= 0 && mode == 1) {
     const CURRENT_TRAIN_CASE = generatedScrambles[currentTrainCaseNumber];
     if (!CURRENT_TRAIN_CASE.mirroring) {
-      generatedScrambles[currentTrainCaseNumber].algHint = tempAlg;
-      ELEM_TWISTY_PLAYER.alg = tempAlg;
+      generatedScrambles[currentTrainCaseNumber].algHint = tempAlgRight;
+      ELEM_TWISTY_PLAYER.alg = tempAlgRight;
     } else {
-      generatedScrambles[currentTrainCaseNumber].algHint = mirrorAlg(tempAlg);
-      ELEM_TWISTY_PLAYER.alg = mirrorAlg(tempAlg);
+      generatedScrambles[currentTrainCaseNumber].algHint = tempAlgLeft;
+      ELEM_TWISTY_PLAYER.alg = tempAlgLeft;
     }
   }
 
@@ -488,11 +532,13 @@ function editCurrentAlg() {
   ELEM_BTN_CHANGE_ALG.blur();
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
   const INDEX_CASE = generatedScrambles[currentTrainCaseNumber].indexCase;
+  const MIRRORED = generatedScrambles[currentTrainCaseNumber].mirroring;
 
-  editAlgs(INDEX_GROUP, INDEX_CASE);
+  editAlgs(INDEX_GROUP, INDEX_CASE, MIRRORED);
 }
 
 /**
+ * Called when edit alg button is pressed
  * Displays and allows editing of algorithms for a selected case in a group.
  *
  * This function sets the image and algorithm list for the current case,
@@ -505,19 +551,29 @@ function editCurrentAlg() {
  * @param {number} indexGroup - The index of the group containing the case.
  * @param {number} indexCase - The index of the case within the group.
  */
-function editAlgs(indexGroup, indexCase) {
-  selectedCase = indexCase;
+function editAlgs(indexGroup, indexCase, mirrored) {
+  editAlgGlobal.indexGroup = indexGroup;
+  editAlgGlobal.indexCase = indexCase;
+
+  const INDEX_CASE = indexCase;
   const GROUP = GROUPS[indexGroup];
-  selectedAlgNumber = GROUP.algorithmSelection[selectedCase];
+
+  // Set switch to default state (right)
+  ELEM_SWITCH_RIGHT.checked = true;
+  ELEM_SWITCH_LEFT.checked = false;
+
+  // Set global variables for alg selection
+  editAlgGlobal.selectedAlgNumberRight = GROUP.algorithmSelectionRight[INDEX_CASE];
+  editAlgGlobal.selectedAlgNumberLeft = GROUP.algorithmSelectionLeft[INDEX_CASE];
 
   // Set image
-  ELEM_EDITALG_IMG.src = GROUP.imgPath + "right/F2L" + (selectedCase + 1) + ".svg";
+  ELEM_EDITALG_IMG.src = GROUP.imgPath + "right/F2L" + (INDEX_CASE + 1) + ".svg";
 
   // Iterate through all algorithms
   for (let alg = 0; alg < NUM_ALG; alg++) {
-    if (alg < GROUP.algorithms[selectedCase + 1].length) {
+    if (alg < GROUP.algorithms[INDEX_CASE + 1].length) {
       // Set Text to Alg
-      ELEM_EDITALG_LISTENTRY[alg].innerHTML = GROUP.algorithms[selectedCase + 1][alg];
+      ELEM_EDITALG_LISTENTRY[alg].innerHTML = GROUP.algorithms[INDEX_CASE + 1][alg];
       // Make all used elements visible
       ELEM_EDITALG_LISTENTRY[alg].style.display = "block";
     } else {
@@ -527,10 +583,11 @@ function editAlgs(indexGroup, indexCase) {
     // Reset all backgrounds
     ELEM_EDITALG_LISTENTRY[alg].style.background = COLORS_ALG[0];
   }
-  // Check if previously saved alg is default of custom
-  if (selectedAlgNumber < GROUP.algorithms[selectedCase + 1].length) {
+
+  // Check if previously saved alg is default or custom
+  if (editAlgGlobal.selectedAlgNumberRight < GROUP.algorithms[INDEX_CASE + 1].length) {
     // If alg is default set color of selected alg
-    ELEM_EDITALG_LISTENTRY[GROUP.algorithmSelection[selectedCase]].style.background = COLORS_ALG[1];
+    ELEM_EDITALG_LISTENTRY[GROUP.algorithmSelectionRight[INDEX_CASE]].style.background = COLORS_ALG[1];
     // and reset color of custom
     ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
   } else {
@@ -538,8 +595,22 @@ function editAlgs(indexGroup, indexCase) {
     ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[1];
   }
 
-  // Set text in Textbox to saved value
-  ELEM_EDITALG_CUSTOMALG.value = GROUP.customAlgorithms[selectedCase];
+  // Set text in custom alg textbox to saved value
+  ELEM_EDITALG_CUSTOMALG.value = GROUP.customAlgorithmsRight[INDEX_CASE];
+
+  // Set global variables for custom alg left
+  editAlgGlobal.customAlgLeft = GROUP.customAlgorithmsLeft[INDEX_CASE];
+
+  // Switch to left case if wanted
+  if (mirrored) {
+    ELEM_SWITCH_RIGHT.checked = false;
+    ELEM_SWITCH_LEFT.checked = true;
+    switchLeftRight();
+  }
+
+  // Set checkbox to saved state
+  ELEM_IDENTICAL_ALG.checked = GROUP.identicalAlgorithm[INDEX_CASE];
+
   openDialog(ELEM_EDITALG_CONTAINER);
   ELEM_EDITALG_IMG.focus();
 }
@@ -552,12 +623,127 @@ function editAlgs(indexGroup, indexCase) {
  * for the current case, indicating that the custom algorithm is selected.
  */
 function customAlgSelected() {
-  // Set Background of Textbox
-  ELEM_EDITALG_LISTENTRY[selectedAlgNumber].style.background = COLORS_ALG[0];
-  // Reset Background of previously selected Alg
+  const INDEX_GROUP = editAlgGlobal.indexGroup;
+  const INDEX_CASE = editAlgGlobal.indexCase;
+  const GROUP = GROUPS[INDEX_GROUP];
+
+  // Set background to transparent on all algs
+  ELEM_EDITALG_LISTENTRY.forEach((element) => {
+    element.style.background = COLORS_ALG[0];
+  });
+  ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
+
+  // Set Background of custom alg to selected
   ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[1];
-  // Set selected Alg to number of selected Alg
-  selectedAlgNumber = GROUPS[ELEM_SELECT_GROUP.selectedIndex].algorithms[selectedCase + 1].length;
+
+  // Save selected alg globally
+  const selectedAlgTemp = GROUP.algorithms[INDEX_CASE + 1].length;
+  if (ELEM_IDENTICAL_ALG.checked) {
+    editAlgGlobal.selectedAlgNumberRight = selectedAlgTemp;
+    editAlgGlobal.selectedAlgNumberLeft = selectedAlgTemp;
+  } else {
+    if (ELEM_SWITCH_RIGHT.checked) {
+      editAlgGlobal.selectedAlgNumberRight = selectedAlgTemp;
+    } else {
+      editAlgGlobal.selectedAlgNumberLeft = selectedAlgTemp;
+    }
+  }
+}
+
+function switchLeftRight() {
+  const INDEX_GROUP = editAlgGlobal.indexGroup;
+  const INDEX_CASE = editAlgGlobal.indexCase;
+  const GROUP = GROUPS[INDEX_GROUP];
+
+  // Set background to transparent on all algs
+  ELEM_EDITALG_LISTENTRY.forEach((element) => {
+    element.style.background = COLORS_ALG[0];
+  });
+  ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[0];
+
+  let selectedAlgTemp = 0;
+  if (ELEM_SWITCH_RIGHT.checked) {
+    // Code for right case
+
+    // Set right image
+    ELEM_EDITALG_IMG.src = GROUP.imgPath + "right/F2L" + (INDEX_CASE + 1) + ".svg";
+
+    // Fill textboxes with algorithms for right case
+    for (let index = 0; index < GROUP.algorithms[INDEX_CASE + 1].length; index++) {
+      ELEM_EDITALG_LISTENTRY[index].innerHTML = GROUP.algorithms[INDEX_CASE + 1][index];
+    }
+
+    // Save current left alg globally
+    editAlgGlobal.customAlgLeft = ELEM_EDITALG_CUSTOMALG.value;
+
+    // Show custom alg for right case
+    ELEM_EDITALG_CUSTOMALG.value = editAlgGlobal.customAlgRight;
+
+    selectedAlgTemp = editAlgGlobal.selectedAlgNumberRight;
+
+    // If identical is checked, show the same (mirrored) alg
+    if (ELEM_IDENTICAL_ALG.checked) {
+      ELEM_EDITALG_CUSTOMALG.value = mirrorAlg(editAlgGlobal.customAlgLeft);
+    }
+  } else {
+    // Code for left case
+
+    // Set left image
+    ELEM_EDITALG_IMG.src = GROUP.imgPath + "left/F2L" + (INDEX_CASE + 1) + ".svg";
+
+    // Fill textboxes with algorithms for left case
+    for (let index = 0; index < GROUP.algorithms[INDEX_CASE + 1].length; index++) {
+      ELEM_EDITALG_LISTENTRY[index].innerHTML = mirrorAlg(GROUP.algorithms[INDEX_CASE + 1][index]);
+    }
+
+    // Save current right alg globally
+    editAlgGlobal.customAlgRight = ELEM_EDITALG_CUSTOMALG.value;
+
+    // Show custom alg for left case
+    ELEM_EDITALG_CUSTOMALG.value = editAlgGlobal.customAlgLeft;
+
+    selectedAlgTemp = editAlgGlobal.selectedAlgNumberLeft;
+
+    // If identical is checked, show the same (mirrored) alg
+    if (ELEM_IDENTICAL_ALG.checked) {
+      ELEM_EDITALG_CUSTOMALG.value = mirrorAlg(editAlgGlobal.customAlgRight);
+    }
+  }
+
+  // Check if custom or default alg is selected
+  if (selectedAlgTemp < GROUP.algorithms[INDEX_CASE + 1].length) {
+    // If alg is default, set color of selected alg
+    ELEM_EDITALG_LISTENTRY[selectedAlgTemp].style.background = COLORS_ALG[1];
+  } else {
+    // If alg is custom, set color
+    ELEM_EDITALG_CUSTOMALG.style.background = COLORS_ALG[1];
+  }
+}
+
+function syncLeftRightAlgSelection() {
+  if (!ELEM_IDENTICAL_ALG.checked) return;
+
+  const INDEX_GROUP = editAlgGlobal.indexGroup;
+  const INDEX_CASE = editAlgGlobal.indexCase;
+  const GROUP = GROUPS[INDEX_GROUP];
+
+  // Sync selected algs
+  if (ELEM_SWITCH_RIGHT.checked) {
+    editAlgGlobal.selectedAlgNumberLeft = editAlgGlobal.selectedAlgNumberRight;
+  } else {
+    editAlgGlobal.selectedAlgNumberRight = editAlgGlobal.selectedAlgNumberLeft;
+  }
+
+  // Sync custom algs, if custom alg is selected
+  if (ELEM_SWITCH_RIGHT.checked) {
+    if (editAlgGlobal.selectedAlgNumberRight >= GROUP.algorithms[INDEX_CASE + 1].length) {
+      editAlgGlobal.customAlgLeft = mirrorAlg(editAlgGlobal.customAlgRight);
+    }
+  } else {
+    if (editAlgGlobal.selectedAlgNumberLeft >= GROUP.algorithms[INDEX_CASE + 1].length) {
+      editAlgGlobal.customAlgRight = mirrorAlg(editAlgGlobal.customAlgLeft);
+    }
+  }
 }
 
 /**
@@ -770,11 +956,20 @@ function generateTrainCaseList() {
             const iNDEX_SCRAMBLE = parseInt(Math.random() * GROUP.scrambles[indexCase + 1].length);
             let selectedScramble = GROUP.scrambles[indexCase + 1][iNDEX_SCRAMBLE];
 
+            let algHint,
+              algHintRight,
+              algHintLeft = "";
             // Get hint algorithm for current case
-            if (GROUP.algorithmSelection[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
-              algHint = GROUP.customAlgorithms[indexCase];
+            if (GROUP.algorithmSelectionRight[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
+              algHintRight = GROUP.customAlgorithmsRight[indexCase];
             } else {
-              algHint = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelection[indexCase]];
+              algHintRight = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionRight[indexCase]];
+            }
+
+            if (GROUP.algorithmSelectionLeft[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
+              algHintLeft = GROUP.customAlgorithmsLeft[indexCase];
+            } else {
+              algHintLeft = mirrorAlg(GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionLeft[indexCase]]);
             }
 
             // Mirror algorithm
@@ -786,9 +981,11 @@ function generateTrainCaseList() {
             } else if (!rightSelection && leftSelection) {
               mirroring = 1;
             }
+
+            algHint = algHintRight;
             if (mirroring) {
               selectedScramble = mirrorAlg(selectedScramble);
-              algHint = mirrorAlg(algHint);
+              algHint = algHintLeft;
             }
 
             // Add random U move to selected scramble
@@ -910,7 +1107,7 @@ function nextScramble(nextPrevious) {
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
     ", Algorithm " +
-    GROUPS[INDEX_GROUP].algorithmSelection[INDEX_CASE] +
+    GROUPS[INDEX_GROUP].algorithmSelectionRight[INDEX_CASE] +
     ", " +
     STRING_MIRRORED[MIRRORING] +
     " Slot, Solve Counter: " +
@@ -1391,22 +1588,29 @@ function highlightAllBulkChangeTrainingStateButtons() {
  */
 function mirrorCase(indexGroup, indexCase) {
   const GROUP = GROUPS[indexGroup];
-  let tempAlg = "";
+  let tempAlgRight,
+    tempAlgLeft = "";
 
-  if (GROUP.algorithmSelection[indexCase] < GROUP.algorithms[indexCase + 1].length) {
-    tempAlg = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelection[indexCase]];
+  if (GROUP.algorithmSelectionRight[indexCase] < GROUP.algorithms[indexCase + 1].length) {
+    tempAlgRight = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionRight[indexCase]];
   } else {
-    tempAlg = GROUP.customAlgorithms[indexCase];
+    tempAlgRight = GROUP.customAlgorithmsRight[indexCase];
   }
 
-  if (GROUP.flagMirrored[indexCase] == true) {
+  if (GROUP.algorithmSelectionLeft[indexCase] < GROUP.algorithms[indexCase + 1].length) {
+    tempAlgLeft = mirrorAlg(GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionLeft[indexCase]]);
+  } else {
+    tempAlgLeft = GROUP.customAlgorithmsLeft[indexCase];
+  }
+
+  if (GROUP.flagMirrored[indexCase]) {
     GROUP.imgCase[indexCase].src = GROUP.imgPath + "right/F2L" + (indexCase + 1) + ".svg";
     GROUP.flagMirrored[indexCase] = false;
-    GROUP.divAlgorithm[indexCase].innerHTML = tempAlg;
+    GROUP.divAlgorithm[indexCase].innerHTML = tempAlgRight;
   } else {
     GROUP.imgCase[indexCase].src = GROUP.imgPath + "left/F2L" + (indexCase + 1) + ".svg";
     GROUP.flagMirrored[indexCase] = true;
-    GROUP.divAlgorithm[indexCase].innerHTML = mirrorAlg(tempAlg);
+    GROUP.divAlgorithm[indexCase].innerHTML = tempAlgLeft;
   }
 }
 

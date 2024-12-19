@@ -149,7 +149,23 @@
       <div id="editalg-img-container">
         <img id="editalg-img" src="./images/basic_cases/right/F2L1.svg" alt="Image of Case" loading="lazy" />
       </div>
-      <div id="editalg-text">Choose algorithm</div>
+      <label class="checkbox" for="checkboxIdenticalAlgId">
+        <input type="checkbox" class="checkbox__input" name="checkboxIdenticalAlg" id="checkboxIdenticalAlgId" onchange="syncLeftRightAlgSelection()"/>
+        <div class="checkbox__box"></div>
+        Same alg for left and right (mirrored)
+      </label>
+      <!-- <div id="editalg-text">Choose algorithm</div> -->
+
+      <div class="switch-container">
+        <div class="switch">
+          <input type="radio" id="switch-left-id" name="switch" onchange="switchLeftRight()" />
+          <label for="switch-left-id">Left</label>
+          <input type="radio" id="switch-right-id" name="switch" onchange="switchLeftRight()" checked />
+          <label for="switch-right-id">Right</label>
+          <div class="indicator"></div>
+        </div>
+      </div>
+
       <div id="editalg-list">
         <!-- <div class="editalg-listentry">U (R U' R)</div> -->
         <!-- <div class="editalg-listentry">R' F R F'</div> -->

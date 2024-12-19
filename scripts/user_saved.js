@@ -1,32 +1,45 @@
+//#region Variables
 // Basic
 let basicTrash = [];
 let basicCaseSelection = [];
-let basicAlgorithmSelection = [];
-let basicCustomAlgorithms = [];
+let basicAlgorithmSelectionRight = [];
+let basicAlgorithmSelectionLeft = [];
+let basicIdenticalAlgorithm = [];
+let basicCustomAlgorithmsRight = [];
+let basicCustomAlgorithmsLeft = [];
 let basicCollapse = [];
 let basicSolveCounter = [];
 
 // Basic Back
 let basicBackTrash = [];
 let basicBackCaseSelection = [];
-let basicBackAlgorithmSelection = [];
-let basicBackCustomAlgorithms = [];
+let basicBackAlgorithmSelectionRight = [];
+let basicBackAlgorithmSelectionLeft = [];
+let basicBackIdenticalAlgorithm = [];
+let basicBackCustomAlgorithmsRight = [];
+let basicBackCustomAlgorithmsLeft = [];
 let basicBackCollapse = [];
 let basicBackSolveCounter = [];
 
 // Advanced
 let advancedTrash = [];
 let advancedCaseSelection = [];
-let advancedAlgorithmSelection = [];
-let advandedCustomAlgorithms = [];
+let advancedAlgorithmSelectionRight = [];
+let advancedAlgorithmSelectionLeft = [];
+let advancedIdenticalAlgorithm = [];
+let advandedCustomAlgorithmsRight = [];
+let advandedCustomAlgorithmsLeft = [];
 let advancedCollapse = [];
 let advancedSolveCounter = [];
 
 // Expert
 let expertTrash = [];
 let expertCaseSelection = [];
-let expertAlgorithmSelection = [];
-let expertCustomAlgorithms = [];
+let expertAlgorithmSelectionRight = [];
+let expertAlgorithmSelectionLeft = [];
+let expertIdenticalAlgorithm = [];
+let expertCustomAlgorithmsRight = [];
+let expertCustomAlgorithmsLeft = [];
 let expertCollapse = [];
 let expertSolveCounter = [];
 
@@ -57,6 +70,8 @@ let firstVisitTrain = true;
 // Character set for Base62 encoding
 const BASE62_CHARSET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const BASE = 62;
+
+//#endregion
 
 /**
  * Saves all user data to localStorage.
@@ -102,10 +117,16 @@ function saveUserData() {
     localStorage.setItem(GROUP.saveName + "collapse", JSON.stringify(GROUP.collapse));
     // Save Case Selection
     localStorage.setItem(GROUP.saveName + "caseSelection", JSON.stringify(GROUP.caseSelection));
-    // Save Custom Algorithms
-    localStorage.setItem(GROUP.saveName + "customAlgorithms", JSON.stringify(GROUP.customAlgorithms));
-    // Save Algorithm Selection
-    localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelection));
+    // Save Custom Algorithms Right
+    localStorage.setItem(GROUP.saveName + "customAlgorithms", JSON.stringify(GROUP.customAlgorithmsRight));
+    // Save Custom Algorithms Left
+    localStorage.setItem(GROUP.saveName + "customAlgorithmsLeft", JSON.stringify(GROUP.customAlgorithmsLeft));
+    // Identical Algorithm for Left & Right
+    localStorage.setItem(GROUP.saveName + "identicalAlgorithm", JSON.stringify(GROUP.identicalAlgorithm));
+    // Save Algorithm Selection Right
+    localStorage.setItem(GROUP.saveName + "algorithmSelection", JSON.stringify(GROUP.algorithmSelectionRight));
+    // Save Algorithm Selection Left
+    localStorage.setItem(GROUP.saveName + "algorithmSelectionLeft", JSON.stringify(GROUP.algorithmSelectionLeft));
     // Save Solve Counter
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
   });
@@ -159,11 +180,20 @@ function loadUserData() {
     // Load Case Selection
     GROUP.caseSelection = loadList(GROUP, "caseSelection", 0);
 
-    // Load Custom Algorithms
-    GROUP.customAlgorithms = loadList(GROUP, "customAlgorithms", "");
+    // Load Custom Algorithms Right
+    GROUP.customAlgorithmsRight = loadList(GROUP, "customAlgorithms", "");
 
-    // Load Algorithm Selection
-    GROUP.algorithmSelection = loadList(GROUP, "algorithmSelection", 0);
+    // Load Custom Algorithms Left
+    GROUP.customAlgorithmsLeft = loadList(GROUP, "customAlgorithmsLeft", "");
+
+    // Load Custom Algorithms Left
+    GROUP.identicalAlgorithm = loadList(GROUP, "identicalAlgorithm", true);
+
+    // Load Algorithm Selection Right
+    GROUP.algorithmSelectionRight = loadList(GROUP, "algorithmSelection", 0);
+
+    // Load Algorithm Selection Left
+    GROUP.algorithmSelectionLeft = loadList(GROUP, "algorithmSelectionLeft", 0);
 
     // Load Solve Counter
     temp = localStorage.getItem(GROUP.saveName + "solveCounter");
@@ -223,10 +253,15 @@ function loadList(group, saveName, defaultValue) {
   let temp = localStorage.getItem(group.saveName + saveName);
   // console.log("saveName = " + group.saveName + saveName);
   if (temp !== null) {
-    temp = JSON.parse(temp);
-    if (temp.length > 0) {
-      out = temp;
-    } else {
+    try {
+      temp = JSON.parse(temp);
+      if (temp.length > 0) {
+        out = temp;
+      } else {
+        out = Array(group.numberCases).fill(defaultValue);
+      }
+    } catch (e) {
+      console.error(e);
       out = Array(group.numberCases).fill(defaultValue);
     }
   } else {
