@@ -251,7 +251,6 @@ function loadBoolean(saveName, defaultValue) {
 function loadList(group, saveName, defaultValue) {
   let out;
   let temp = localStorage.getItem(group.saveName + saveName);
-  // console.log("saveName = " + group.saveName + saveName);
   if (temp !== null) {
     try {
       temp = JSON.parse(temp);
@@ -316,16 +315,11 @@ function exportLocalStorage() {
   GROUPS.forEach((group, i) => {
     // Case selection
     const caseSelection = group.caseSelection;
-    console.log("caseSelection", caseSelection);
     const caseSelectionString = caseSelection.join("");
-    console.log("caseSelectionString", caseSelectionString);
     base62String = encodeBase3ToBase62(caseSelectionString);
-    console.log("base62String", base62String);
     base3Number = decodeBase62ToBase3(base62String);
-    console.log("base3Number", base3Number);
     exportURL += "&" + group.saveNameCasesURL + "=" + base62String;
   });
-  console.log("exportURL: " + exportURL);
   ELEM_INPUT_EXPORT.value = exportURL;
   // importData(exportURL);
 }
@@ -345,20 +339,15 @@ function importLocalStorage() {
   if (confirm("Import data from URL?")) {
     GROUPS.forEach((group, i) => {
       const saveName = group.saveNameCasesURL;
-      console.log("saveName", saveName);
       const base62String = urlParams.get(group.saveNameCasesURL);
-      console.log("base62String", base62String);
       if (base62String === null) return;
       let base3Number = decodeBase62ToBase3(base62String);
-      console.log("base3Number", base3Number);
 
       // Fill list with 0s until it has the correct length
       // Reason: Leading zeroes were discarded when converted to number
       while (base3Number.length < group.numberCases) base3Number = "0" + base3Number;
-      console.log("base3Number", base3Number);
 
       let caseSelectionList = base3Number.split("");
-      console.log("caseSelectionList", caseSelectionList);
 
       localStorage.setItem(group.saveName + "caseSelection", JSON.stringify(caseSelectionList));
     });
@@ -384,12 +373,10 @@ function importLocalStorage() {
  */
 function encodeBase3ToBase62(base3Number) {
   // Step 1: Convert base-3 string to decimal integer
-  // console.log("original: " + base3Number.join(""));
   let decimalValue = BigInt(0);
   for (let i = 0; i < base3Number.length; i++) {
     decimalValue = decimalValue * BigInt(3) + BigInt(base3Number[i]);
   }
-  //console.log("decimalValue: " + decimalValue);
 
   // Step 2: Convert decimal to Base62 string
   let base62String = "";
@@ -424,6 +411,5 @@ function decodeBase62ToBase3(base62String) {
     decimalValue = decimalValue / BigInt(3);
   } while (decimalValue > 0);
 
-  // console.log("decoded:  " + base3Number);
   return base3Number;
 }
