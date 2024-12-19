@@ -68,7 +68,12 @@
         algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
       </p>
       <div class="div-centering">
-        <img src="./images/instructions_select_page.png" alt="Select Page Instructions" class="img-instructions" />
+        <img
+          src="./images/instructions_select_page.png"
+          alt="Select Page Instructions"
+          class="img-instructions"
+          loading="lazy"
+        />
       </div>
       <div class="update-cancel-buttons">
         <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
@@ -139,7 +144,7 @@
         <form method="dialog">
           <button type="button" class="btn-overlay" id="btn-close-info" onclick="closeOverlays()">
             Close
-            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy"/>
           </button>
         </form>
       </div>
@@ -185,10 +190,10 @@
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="updateAlg()">
           Confirm
-          <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+          <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy"/>
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
         </button>
       </div>
     </dialog>
@@ -336,10 +341,10 @@
       <!-- </div> -->
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="updateTrainCases()">
-          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy"/>
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy"/>
         </button>
       </div>
     </dialog>
@@ -385,10 +390,10 @@
 
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="changeStateRadio()">
-          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" />
+          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy" />
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
         </button>
       </div>
     </dialog>
@@ -412,7 +417,7 @@
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
           Close
-          <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+          <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
         </button>
       </div>
     </dialog> -->
@@ -441,11 +446,11 @@
         <div class="update-cancel-buttons">
           <button type="submit" class="btn-overlay">
             Submit
-            <img src="./images/submit.svg" alt="Send" class="side-img" title="Submit" />
+            <img src="./images/submit.svg" alt="Send" class="side-img" title="Submit" loading="lazy"/>
           </button>
           <button type="button" class="btn-overlay" onclick="closeOverlays()">
             Close
-            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" />
+            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
           </button>
         </div>
       </form>
@@ -506,6 +511,7 @@
             id="btn-next-scramble"
             class="btn-next-prev"
             title="Previous Scramble"
+            loading="lazy"
           />
           <div id="scramble">no case selected</div>
           <img
@@ -515,6 +521,7 @@
             id="btn-next-scramble"
             class="btn-next-prev"
             title="Next Scramble"
+            loading="lazy"
           />
         </div>
       </div>
@@ -547,6 +554,7 @@
           onmousedown="resetTwistyPlayerView()"
           alt="Reset View"
           class="btn-reset-player-view display-none"
+          loading="lazy"
         />
       </div>
 
@@ -591,13 +599,13 @@
     <script src="./scripts/main.js"></script>
 
     <!-- cubing.js -->
-    <script src="https://cdn.cubing.net/js/cubing/twisty" type="module" defer></script>
+    <!-- <script src="https://cdn.cubing.net/js/cubing/twisty" type="module" defer></script>
     <script type="module">
       import { TwistyAlgViewer } from "https://cdn.cubing.net/js/cubing/twisty";
       const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
-    </script>
+    </script> -->
 
     <!-- web3forms (Feedback function) Required only if you are using hCaptcha or Advanced File Upload. -->
     <!-- <script src="https://web3forms.com/client/script.js" async defer></script> -->
