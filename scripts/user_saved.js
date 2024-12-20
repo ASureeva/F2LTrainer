@@ -81,38 +81,26 @@ function saveUserData() {
   console.log("Saving User Data");
   flagSave = true;
 
-  // Saving trainStateSelection
-  for (let i = 0; i < trainStateSelection.length; i++) {
-    localStorage.setItem("trainStateSelection" + i, trainStateSelection[i]);
-  }
-  // Saving trainGroupSelection
-  for (let i = 0; i < trainGroupSelection.length; i++) {
-    localStorage.setItem("trainGroupSelection" + i, trainGroupSelection[i]);
-  }
+  localStorage.setItem("trainStateSelection", JSON.stringify(trainStateSelection));
+  localStorage.setItem("trainGroupSelection", JSON.stringify(trainGroupSelection));
 
-  // Saving viewSelection
+  // Saving viewSelection (Basic, Basic Back, Advanced, Expert)
   localStorage.setItem("viewSelection", viewSelection);
 
   // Saving left right train selection
   localStorage.setItem("leftSelection", leftSelection);
   localStorage.setItem("rightSelection", rightSelection);
 
-  // Saving AUF selection
+  // Saving other settings
   localStorage.setItem("aufSelection", aufSelection);
-
-  // Saving hint image settings
   localStorage.setItem("hintImageSelection", hintImageSelection);
-  // Saving hint alg settings
-
   localStorage.setItem("hintAlgSelection", hintAlgSelection);
-
-  // Saving timer enable settings
   localStorage.setItem("timerEnabled", timerEnabled);
 
   // Saving that the user just visited the site
   localStorage.setItem("firstVisit", false);
 
-  GROUPS.forEach((GROUP) => {
+  for (const GROUP of GROUPS) {
     // Save Collapse
     localStorage.setItem(GROUP.saveName + "collapse", JSON.stringify(GROUP.collapse));
     // Save Case Selection
@@ -129,7 +117,7 @@ function saveUserData() {
     localStorage.setItem(GROUP.saveName + "algorithmSelectionLeft", JSON.stringify(GROUP.algorithmSelectionLeft));
     // Save Solve Counter
     localStorage.setItem(GROUP.saveName + "solveCounter", JSON.stringify(GROUP.solveCounter));
-  });
+  }
 }
 
 /**
@@ -145,36 +133,51 @@ function loadUserData() {
 
   // Check if user visits site for the first time
   if (localStorage.getItem("firstVisit") != null) firstVisit = false;
-
   // Check if user visits train view for the first time
   if (localStorage.getItem("firstVisitTrain") != null) firstVisitTrain = false;
 
   // Load trainStateSelection
-  for (let i = 0; i < trainStateSelection.length; i++) {
-    trainStateSelection[i] = loadBoolean("trainStateSelection" + i, trainStateSelection[i]);
+  // Switch from old storage solution
+  if (localStorage.getItem("trainStateSelection") == null) {
+    for (let i = 0; i < trainStateSelection.length; i++) {
+      trainStateSelection[i] = loadBoolean("trainStateSelection" + i, trainStateSelection[i]);
+    }
+  } else {
+    trainStateSelection = JSON.parse(localStorage.getItem("trainStateSelection")); // Keep only this
+    localStorage.removeItem("trainStateSelection0");
+    localStorage.removeItem("trainStateSelection1");
+    localStorage.removeItem("trainStateSelection2");
   }
 
   // Load trainGroupSelection
-  for (let i = 0; i < trainGroupSelection.length; i++) {
-    trainGroupSelection[i] = loadBoolean("trainGroupSelection" + i, trainGroupSelection[i]);
+  // Switch from old storage solution
+  if (localStorage.getItem("trainGroupSelection") == null) {
+    for (let i = 0; i < trainGroupSelection.length; i++) {
+      trainGroupSelection[i] = loadBoolean("trainGroupSelection" + i, trainGroupSelection[i]);
+    }
+  } else {
+    trainGroupSelection = JSON.parse(localStorage.getItem("trainGroupSelection")); // Keep only this
+    localStorage.removeItem("trainGroupSelection0");
+    localStorage.removeItem("trainGroupSelection1");
+    localStorage.removeItem("trainGroupSelection2");
+    localStorage.removeItem("trainGroupSelection3");
   }
 
+  // Packing inside own function would not shrink the code here, since default value is defined above
   temp = localStorage.getItem("hintImageSelection");
-  if (temp != null) {
-    hintImageSelection = parseInt(temp);
-  }
+  if (temp != null) hintImageSelection = parseInt(temp);
 
+  // Packing inside own function would not shrink the code here, since default value is defined above
   temp = localStorage.getItem("hintAlgSelection");
-  if (temp != null) {
-    hintAlgSelection = parseInt(temp);
-  }
+  if (temp != null) hintAlgSelection = parseInt(temp);
 
+  // Load other settings
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
-  GROUPS.forEach((GROUP) => {
+  for (const GROUP of GROUPS) {
     // Load collapse state
     GROUP.collapse = loadList(GROUP, "collapse", false);
     // Load Case Selection
@@ -196,14 +199,8 @@ function loadUserData() {
     GROUP.algorithmSelectionLeft = loadList(GROUP, "algorithmSelectionLeft", 0);
 
     // Load Solve Counter
-    temp = localStorage.getItem(GROUP.saveName + "solveCounter");
-    if (temp !== null) {
-      GROUP.solveCounter = JSON.parse(temp);
-    } else {
-      // Populate array with zeroes
-      GROUP.solveCounter = Array(GROUP.numberCases).fill(0);
-    }
-  });
+    GROUP.solveCounter = loadList(GROUP, "solveCounter", 0);
+  }
 
   // Set learning state of some cases on first visit, so that the user can see the options
   if (firstVisit) {
