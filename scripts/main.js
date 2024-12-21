@@ -105,8 +105,6 @@ const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
 const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
-// document.body.append(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
-// console.log("TwistyAlgViewer: " + TwistyAlgViewer);
 
 const ELEM_RADIO_UNLEARNED = document.getElementById("radio-state-unlearned");
 const ELEM_RADIO_LEARNING = document.getElementById("radio-state-learning");
@@ -114,7 +112,6 @@ const ELEM_RADIO_FINISHED = document.getElementById("radio-state-finished");
 let currentTrainGroup = -1;
 let currentTrainCase = -1;
 
-let selectedTrainIndex = 0;
 let hintCounter = 0;
 
 let mode = 0; // 0: select, 1: train
@@ -123,7 +120,7 @@ let mode = 0; // 0: select, 1: train
 let trainCaseList = [];
 let currentTrainCaseNumber = -1;
 
-// Basic, Basic Back, Advanced, Exert
+// Dropdown box (Basic, Basic Back, Advanced, Exert)
 const ELEM_SELECT_GROUP = document.getElementById("select-group-id");
 
 let boolShowDebugInfo = true;
@@ -131,9 +128,6 @@ const ELEM_BTN_SHOW_HIDE_DEBUG_INFO = document.getElementById("btn-show-hide-deb
 const ELEM_DEBUG_INFO = document.getElementById("debug-info");
 
 let generatedScrambles = [];
-
-// Flag is set when data is saved
-let flagSave = false;
 
 let flagdoublepress = false;
 
@@ -163,12 +157,11 @@ const ELEM_BTN_CHANGE_ALG = document.getElementById("btn-change-alg-id");
 const ELEM_FEEDBACK_NAME = document.getElementById("feedback-name-id");
 
 const ELEM_IFRAME_VIDEO = document.getElementById("iframe-video");
-const ELEM_THUMBNAIL_BUTTON = document.getElementById("thumbnail-button");
 //#endregion
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
-  importLocalStorage();
+  importFromURL();
   loadUserData();
   localStorage.clear();
   saveUserData();
@@ -181,7 +174,7 @@ window.addEventListener("load", () => {
   addElementsToDOM();
 
   showPressMeText();
-  hidePressMeTrainText();
+  // hidePressMeTrainText();
 
   highlightAllBulkChangeTrainingStateButtons();
 
@@ -248,16 +241,7 @@ window.addEventListener("load", () => {
   // Run this function to only show basic cases in the beginning
   showSelectedGroup();
 
-  // Hide Loading Screen after some time
-  // setTimeout(() => {
-  //   ELEM_LOADING_SCREEN.style.display = "none";
-  // }, 100);
   ELEM_LOADING_SCREEN.style.display = "none";
-
-  /*ELEM_SELECT_GROUP.classList.add("animation-blink");
-  window.setTimeout(function () {
-    ELEM_SELECT_GROUP.classList.remove("animation-blink");
-  }, 2300);*/
 });
 
 /**
@@ -266,17 +250,16 @@ window.addEventListener("load", () => {
  */
 function addElementsToDOM() {
   // Iterate over all groups (basic, basic back, advanced, expert)
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-    ELEM_GROUP_CONTAINER[indexGroup] = document.createElement("div");
-    ELEM_GROUP_CONTAINER[indexGroup].classList.add("group-container");
+  GROUPS.forEach((GROUP, INDEX_GROUP) => {
+    ELEM_GROUP_CONTAINER[INDEX_GROUP] = document.createElement("div");
+    ELEM_GROUP_CONTAINER[INDEX_GROUP].classList.add("group-container");
 
     // Iterate over all categories (basic inserts, pieces on top/white facing..., ...)
-    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
-      let categoryItems = GROUP.categoryCases[indexCategory];
+    // for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
+    GROUP.categoryCases.forEach((categoryItems, indexCategory) => {
       GROUP.categoryContainer[indexCategory] = document.createElement("div");
       GROUP.categoryContainer[indexCategory].classList.add("category-container");
-      GROUP.categoryContainer[indexCategory].id = "expand-contract-group" + indexGroup + "-category" + indexCategory;
+      GROUP.categoryContainer[indexCategory].id = "expand-contract-group" + INDEX_GROUP + "-category" + indexCategory;
       GROUP.collapseContainer.push(document.createElement("button"));
       GROUP.collapseContainer[indexCategory].type = "button";
       GROUP.collapseContainer[indexCategory].classList.add("collapse-container");
@@ -285,7 +268,7 @@ function addElementsToDOM() {
       GROUP.categoryCollapseImg[indexCategory].classList.add("img-collapse-category");
       GROUP.categoryCollapseImg[indexCategory].alt = "collapse category";
       GROUP.categoryCollapseImg[indexCategory].onclick = function () {
-        collapseCategory(indexGroup, indexCategory);
+        collapseCategory(INDEX_GROUP, indexCategory);
       };
 
       GROUP.categoryCollapseImg[indexCategory].src = IMG_PATH_RIGHT_ARROW;
@@ -299,7 +282,7 @@ function addElementsToDOM() {
       GROUP.headingCategoryName[indexCategory].classList.add("heading-category-name");
       GROUP.headingCategoryName[indexCategory].innerHTML = GROUP.categoryNames[indexCategory];
       GROUP.headingCategoryName[indexCategory].onclick = function () {
-        collapseCategory(indexGroup, indexCategory);
+        collapseCategory(INDEX_GROUP, indexCategory);
       };
 
       GROUP.btnChangeLearningState[0].push(document.createElement("img"));
@@ -308,7 +291,7 @@ function addElementsToDOM() {
       GROUP.btnChangeLearningState[0][indexCategory].classList.add("filter-unlearned");
       GROUP.btnChangeLearningState[0][indexCategory].src = IMG_PATH_CHANGE_LEARNING_STATE_HOLLOW;
       GROUP.btnChangeLearningState[0][indexCategory].onclick = function () {
-        changeLearningStateBulk(indexGroup, indexCategory, 0);
+        changeLearningStateBulk(INDEX_GROUP, indexCategory, 0);
       };
       GROUP.btnChangeLearningState[1].push(document.createElement("img"));
       GROUP.btnChangeLearningState[1][indexCategory].title = "Change state to Learning";
@@ -316,7 +299,7 @@ function addElementsToDOM() {
       GROUP.btnChangeLearningState[1][indexCategory].classList.add("filter-learning");
       GROUP.btnChangeLearningState[1][indexCategory].src = IMG_PATH_CHANGE_LEARNING_STATE;
       GROUP.btnChangeLearningState[1][indexCategory].onclick = function () {
-        changeLearningStateBulk(indexGroup, indexCategory, 1);
+        changeLearningStateBulk(INDEX_GROUP, indexCategory, 1);
       };
       GROUP.btnChangeLearningState[2].push(document.createElement("img"));
       GROUP.btnChangeLearningState[2][indexCategory].title = "Change state to Finished";
@@ -324,7 +307,7 @@ function addElementsToDOM() {
       GROUP.btnChangeLearningState[2][indexCategory].classList.add("filter-finished");
       GROUP.btnChangeLearningState[2][indexCategory].src = IMG_PATH_CHANGE_LEARNING_STATE;
       GROUP.btnChangeLearningState[2][indexCategory].onclick = function () {
-        changeLearningStateBulk(indexGroup, indexCategory, 2);
+        changeLearningStateBulk(INDEX_GROUP, indexCategory, 2);
       };
 
       GROUP.collapseContainer[indexCategory].appendChild(GROUP.categoryCollapseImg[indexCategory]);
@@ -332,14 +315,16 @@ function addElementsToDOM() {
       GROUP.collapseContainer[indexCategory].appendChild(GROUP.btnChangeLearningState[0][indexCategory]);
       GROUP.collapseContainer[indexCategory].appendChild(GROUP.btnChangeLearningState[1][indexCategory]);
       GROUP.collapseContainer[indexCategory].appendChild(GROUP.btnChangeLearningState[2][indexCategory]);
-      ELEM_GROUP_CONTAINER[indexGroup].appendChild(GROUP.collapseContainer[indexCategory]);
+      ELEM_GROUP_CONTAINER[INDEX_GROUP].appendChild(GROUP.collapseContainer[indexCategory]);
 
       // Iterate over every case in category
-      for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
-        let indexCase = categoryItems[indexCategoryItem] - 1;
+      // for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
+      // categoryItems.forEach((categoryItem) => {
+      for (const categoryItem of categoryItems) {
+        let indexCase = categoryItem - 1;
         // Check if selected algorithm is valid
         if (GROUP.algorithms[indexCase + 1] == undefined) {
-          console.warn("Trying to access invalid Case\nindexGroup: " + indexGroup + "\nindexCase: " + indexCase);
+          console.warn("Trying to access invalid Case\nindexGroup: " + INDEX_GROUP + "\nindexCase: " + indexCase);
           continue;
         }
         // Case Selection Page
@@ -357,7 +342,7 @@ function addElementsToDOM() {
         GROUP.imgContainer[indexCase] = document.createElement("button");
         GROUP.imgContainer[indexCase].classList.add("img-case-container");
         GROUP.imgContainer[indexCase].onclick = function () {
-          changeState(indexGroup, indexCategory, indexCase);
+          changeState(INDEX_GROUP, indexCategory, indexCase);
         };
 
         GROUP.imgCase[indexCase] = document.createElement("img");
@@ -379,7 +364,7 @@ function addElementsToDOM() {
         GROUP.imgEdit[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
         GROUP.imgEdit[indexCase].alt = "edit case " + (indexCase + 1);
         GROUP.imgEdit[indexCase].onclick = function () {
-          editAlgs(indexGroup, indexCase, GROUP.flagMirrored[indexCase]);
+          editAlgs(INDEX_GROUP, indexCase, GROUP.flagMirrored[indexCase]);
         };
 
         // Mirror
@@ -392,7 +377,7 @@ function addElementsToDOM() {
         GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
         GROUP.imgMirror[indexCase].alt = "mirror case " + (indexCase + 1);
         GROUP.imgMirror[indexCase].onclick = function () {
-          mirrorCase(indexGroup, indexCase);
+          mirrorCase(INDEX_GROUP, indexCase);
         };
 
         GROUP.divAlgorithm[indexCase] = document.createElement("div");
@@ -430,10 +415,10 @@ function addElementsToDOM() {
 
         GROUP.categoryContainer[indexCategory].appendChild(GROUP.divContainer[indexCase]);
       }
-      ELEM_GROUP_CONTAINER[indexGroup].appendChild(GROUP.categoryContainer[indexCategory]);
-    }
-    ELEM_WINDOW_SELECT.appendChild(ELEM_GROUP_CONTAINER[indexGroup]);
-  }
+      ELEM_GROUP_CONTAINER[INDEX_GROUP].appendChild(GROUP.categoryContainer[indexCategory]);
+    });
+    ELEM_WINDOW_SELECT.appendChild(ELEM_GROUP_CONTAINER[INDEX_GROUP]);
+  });
 }
 
 /**
@@ -650,6 +635,14 @@ function customAlgSelected() {
   }
 }
 
+/**
+ * Called when the switch left/right button is pressed in the algorithm
+ * editing dialog.
+ * Switches the image and algorithm list between the left and right cases,
+ * and also switches the custom algorithm text box to show the saved custom
+ * algorithm for the chosen case. If the identical checkbox is checked,
+ * the same algorithm (mirrored) is shown for both cases.
+ */
 function switchLeftRight() {
   const INDEX_GROUP = editAlgGlobal.indexGroup;
   const INDEX_CASE = editAlgGlobal.indexCase;
@@ -720,6 +713,11 @@ function switchLeftRight() {
   }
 }
 
+/**
+ * Called when the "same alg for left and right" checkbox is changed.
+ * Syncs the selected algorithms for the left and right cases, if the "same alg for left and right" checkbox is checked.
+ * Also syncs the custom algorithms, if a custom algorithm is selected.
+ */
 function syncLeftRightAlgSelection() {
   if (!ELEM_IDENTICAL_ALG.checked) return;
 
@@ -815,8 +813,8 @@ function keyup(e) {
 }
 
 /**
+ * Called when "Confirmed" is pressed in settings popup.
  * Updates the list of cases to be trained based on the current settings.
- * Called when settings are changed.
  *
  * Updates the following variables:
  * - trainStateSelection
@@ -863,7 +861,6 @@ function updateTrainCases() {
   closeOverlays();
   updateHintVisibility();
   generateTrainCaseList();
-  // saveUserData();
   nextScramble(1);
 }
 
@@ -906,17 +903,16 @@ function showHint() {
  * Scrolls to the top of the page and saves the selection to local storage.
  */
 function showSelectedGroup() {
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    if (ELEM_SELECT_GROUP.selectedIndex === indexGroup) {
-      ELEM_GROUP_CONTAINER[indexGroup].style.display = "flex";
+  GROUPS.forEach((GROUP, INDEX_GROUP) => {
+    if (ELEM_SELECT_GROUP.selectedIndex === INDEX_GROUP) {
+      ELEM_GROUP_CONTAINER[INDEX_GROUP].style.display = "flex";
     } else {
-      ELEM_GROUP_CONTAINER[indexGroup].style.display = "none";
+      ELEM_GROUP_CONTAINER[INDEX_GROUP].style.display = "none";
     }
-  }
+  });
   // Scroll to the top
   window.scrollTo(0, 0);
   viewSelection = ELEM_SELECT_GROUP.selectedIndex;
-  saveUserData();
 }
 
 /**
@@ -935,10 +931,9 @@ function generateTrainCaseList() {
     const GROUP = GROUPS[indexGroup];
     // Skip if group is not selected in settings
     if (!trainGroupSelection[indexGroup]) continue;
-    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
-      let categoryItems = GROUP.categoryCases[indexCategory];
-      for (let indexCategoryItem = 0; indexCategoryItem < categoryItems.length; indexCategoryItem++) {
-        let indexCase = categoryItems[indexCategoryItem] - 1;
+    for (const categoryItems of GROUP.categoryCases) {
+      for (const categoryItem of categoryItems) {
+        let indexCase = categoryItem - 1;
         for (let state = 0; state < trainStateSelection.length; state++) {
           // Check if case is in selected state
           if (trainStateSelection[state] && GROUP.caseSelection[indexCase] == state) {
@@ -953,8 +948,8 @@ function generateTrainCaseList() {
               );
 
             // Choose random scramble for current case
-            const iNDEX_SCRAMBLE = parseInt(Math.random() * GROUP.scrambles[indexCase + 1].length);
-            let selectedScramble = GROUP.scrambles[indexCase + 1][iNDEX_SCRAMBLE];
+            const INDEX_SCRAMBLE = parseInt(Math.random() * GROUP.scrambles[indexCase + 1].length);
+            let selectedScramble = GROUP.scrambles[indexCase + 1][INDEX_SCRAMBLE];
 
             let algHint,
               algHintRight,
@@ -997,7 +992,7 @@ function generateTrainCaseList() {
             const CASE_TO_ADD = {
               indexGroup: indexGroup,
               indexCase: indexCase,
-              indexScramble: iNDEX_SCRAMBLE,
+              indexScramble: INDEX_SCRAMBLE,
               mirroring: mirroring,
               selectedScramble: selectedScramble,
               selectedScrambleAUF: selectedScrambleAUF,
@@ -1016,12 +1011,8 @@ function generateTrainCaseList() {
   if (trainCaseList.length == 0) ELEM_SCRAMBLE.innerHTML = "no case selected";
 
   // Randomize Cases
-  for (let i = trainCaseList.length - 1; i > 0; i--) {
-    const J = Math.floor(Math.random() * (i + 1));
-    const TEMP = trainCaseList[i];
-    trainCaseList[i] = trainCaseList[J];
-    trainCaseList[J] = TEMP;
-  }
+  trainCaseList.sort(() => Math.random() - 0.5);
+
   // Add new cases to current list
   generatedScrambles = generatedScrambles.concat(trainCaseList);
 }
@@ -1065,6 +1056,7 @@ function nextScramble(nextPrevious) {
 
   // Reset hint counter
   hintCounter = 0;
+
   // Reset or show full hint based on setting
   document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "visible"));
   if (hintAlgSelection == 0 || hintAlgSelection == 1) {
@@ -1208,7 +1200,7 @@ function changeState(indexGroup, indexCategory, indexCase) {
   highlightBulkChangeTrainingStateButton(indexGroup, indexCategory, indexCase);
   saveUserData();
 
-  // Hide Press me text that is shown when site is visited first time
+  // Hide "Press me" text when user presses the cube in select mode
   if ((indexGroup == 0) & (indexCase == 3) & (divPressMe != undefined)) divPressMe.classList.add("display-none");
 }
 
@@ -1342,21 +1334,22 @@ function changeMode() {
  * Iterates through all cases in each group's categoryCases and logs a warning
  * in the console if any duplicate cases are found.
  */
-function checkForDuplicates() {
-  // Check if there are any duplicate cases in GROUPS
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-    const FLATTENED_LIST = GROUP.categoryCases.flat();
-    for (let i = 0; i < FLATTENED_LIST.length; i++) {
-      const CASE_I = FLATTENED_LIST[i];
-      for (let j = 0; j < FLATTENED_LIST.length; j++) {
-        if (i == j) continue;
-        const CASE_J = FLATTENED_LIST[j];
-        if (CASE_I == CASE_J) console.warn("Duplicate Case in Group " + GROUP.name + ", Case " + CASE_I);
-      }
-    }
-  }
-}
+// function checkForDuplicates() {
+//   // Check if there are any duplicate cases in GROUPS
+//   // for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
+//   // const GROUP = GROUPS[indexGroup];
+//   for (const GROUP of GROUPS) {
+//     const FLATTENED_LIST = GROUP.categoryCases.flat();
+//     for (let i = 0; i < FLATTENED_LIST.length; i++) {
+//       const CASE_I = FLATTENED_LIST[i];
+//       for (let j = 0; j < FLATTENED_LIST.length; j++) {
+//         if (i == j) continue;
+//         const CASE_J = FLATTENED_LIST[j];
+//         if (CASE_I == CASE_J) console.warn("Duplicate Case in Group " + GROUP.name + ", Case " + CASE_I);
+//       }
+//     }
+//   }
+// }
 
 /**
  * Change the learning state of the current case
@@ -1562,8 +1555,6 @@ function highlightBulkChangeTrainingStateButton(indexGroup, indexCategory) {
     GROUP.btnChangeLearningState[1][indexCategory].style.height = SIZE_BTN_CHANGE_LEARNING_STATE_BIG;
   if (numUnlearned + numLearning == 0)
     GROUP.btnChangeLearningState[2][indexCategory].style.height = SIZE_BTN_CHANGE_LEARNING_STATE_BIG;
-
-  // console.log("numUnlearned: " + numUnlearned + ", numLearning: " + numLearning + ", numFinished: " + numFinished);
 }
 
 /**
@@ -1572,12 +1563,11 @@ function highlightBulkChangeTrainingStateButton(indexGroup, indexCategory) {
  * adjusting button size based on the learning state of all cases within the category.
  */
 function highlightAllBulkChangeTrainingStateButtons() {
-  for (let indexGroup = 0; indexGroup < GROUPS.length; indexGroup++) {
-    const GROUP = GROUPS[indexGroup];
-    for (let indexCategory = 0; indexCategory < GROUP.categoryCases.length; indexCategory++) {
-      highlightBulkChangeTrainingStateButton(indexGroup, indexCategory);
-    }
-  }
+  GROUPS.forEach((GROUP, INDEX_GROUP) => {
+    GROUP.categoryCases.forEach((categoryItems, indexCategory) => {
+      highlightBulkChangeTrainingStateButton(INDEX_GROUP, indexCategory);
+    });
+  });
 }
 
 /**
@@ -1629,11 +1619,11 @@ function showPressMeText() {
   }
 }
 
-function hidePressMeTrainText() {
-  if (!firstVisitTrain) {
-    ELEM_PRESS_ME_TRAIN.classList.add("display-none");
-  }
-}
+// function hidePressMeTrainText() {
+//   if (!firstVisitTrain) {
+//     ELEM_PRESS_ME_TRAIN.classList.add("display-none");
+//   }
+// }
 
 function copyUTLtoClipboard() {
   alert("URL copied to clipboard");
@@ -1769,21 +1759,13 @@ function showInfo() {
   // ELEM_INFO_CONTAINER.scrollTo(0, 0);
 }
 
-// This is an attemt to load the YouTube video only if it needs to be shown. Similar to lazy load which would crash Chrome on Android
-// function insertUrltoIframe() {
-//   ELEM_THUMBNAIL_BUTTON.style.display = "none";
-//   ELEM_IFRAME_VIDEO.style.display = "block";
-//   // The following replaces lazy load, which would crash Chrome on Android
-//   ELEM_IFRAME_VIDEO.src = "https://www.youtube.com/embed/EQbZvKssp7s?si=dfSdb3qlFpxnC89c&amp;start=20";
-// }
-
 //function showSettingsSelect() {
 //  exportUserData();
 //  openDialog(ELEM_CONTAINER_SELECT_SETTINGS);
 //}
 
 function showSettingsTrain() {
-  exportLocalStorage();
+  exportToURL();
   updateCheckboxStatus();
   openDialog(ELEM_CONTAINER_TRAIN_SETTINGS);
 }

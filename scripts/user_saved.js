@@ -79,7 +79,6 @@ const BASE = 62;
  */
 function saveUserData() {
   console.log("Saving User Data");
-  flagSave = true;
 
   localStorage.setItem("trainStateSelection", JSON.stringify(trainStateSelection));
   localStorage.setItem("trainGroupSelection", JSON.stringify(trainGroupSelection));
@@ -144,9 +143,6 @@ function loadUserData() {
     }
   } else {
     trainStateSelection = JSON.parse(localStorage.getItem("trainStateSelection")); // Keep only this
-    localStorage.removeItem("trainStateSelection0");
-    localStorage.removeItem("trainStateSelection1");
-    localStorage.removeItem("trainStateSelection2");
   }
 
   // Load trainGroupSelection
@@ -157,10 +153,6 @@ function loadUserData() {
     }
   } else {
     trainGroupSelection = JSON.parse(localStorage.getItem("trainGroupSelection")); // Keep only this
-    localStorage.removeItem("trainGroupSelection0");
-    localStorage.removeItem("trainGroupSelection1");
-    localStorage.removeItem("trainGroupSelection2");
-    localStorage.removeItem("trainGroupSelection3");
   }
 
   // Packing inside own function would not shrink the code here, since default value is defined above
@@ -301,7 +293,7 @@ function setFirstVisitTrain() {
  * The base 62 string is then appended to the URL as a parameter.
  * The URL is then set as the value of the export input field.
  */
-function exportLocalStorage() {
+function exportToURL() {
   // Base URL of your site
   let baseURL = window.location.origin;
 
@@ -327,7 +319,7 @@ function exportLocalStorage() {
  * If no URL parameters are found, the function does nothing.
  * If the user confirms the import, the case selection is imported and the URL is reset.
  */
-function importLocalStorage() {
+function importFromURL() {
   const urlParams = new URLSearchParams(window.location.search);
 
   // If no URL parameters found, return
