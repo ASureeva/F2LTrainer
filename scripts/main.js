@@ -242,7 +242,21 @@ window.addEventListener("load", () => {
   showSelectedGroup();
 
   ELEM_LOADING_SCREEN.style.display = "none";
+
+  loadTwistyAlgViewer();
 });
+
+function loadTwistyAlgViewer() {
+  import("https://cdn.cubing.net/js/cubing/twisty")
+    .then(({ TwistyAlgViewer }) => {
+      const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
+      const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
+      ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
+    })
+    .catch((error) => {
+      console.error("Failed to load TwistyAlgViewer module:", error);
+    });
+}
 
 /**
  * Creates all necessary elements in the DOM for the case selection page.
