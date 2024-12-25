@@ -243,7 +243,8 @@ window.addEventListener("load", () => {
 
   ELEM_LOADING_SCREEN.style.display = "none";
 
-  loadTwistyAlgViewer();
+  // loadTwistyAlgViewer();
+  const autoLoadTimeout = setTimeout(loadTwistyAlgViewer, 1000);
 });
 
 function loadTwistyAlgViewer() {
