@@ -163,13 +163,15 @@ const ELEM_IFRAME_VIDEO = document.getElementById("iframe-video");
 window.addEventListener("load", () => {
   importFromURL();
   loadUserData();
+
+  showWelcomePopup();
+
   localStorage.clear();
   saveUserData();
 
   // Set Group to show
   ELEM_SELECT_GROUP.selectedIndex = viewSelection;
 
-  showWelcomePopup();
   // Create all Entries
   addElementsToDOM();
 
