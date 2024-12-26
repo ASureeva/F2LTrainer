@@ -913,6 +913,11 @@ function showHint() {
 
     hintCounter++;
   }
+
+  if (hintImageSelection == 0) {
+    ELEM_DIV_HINT_IMG.classList.remove("display-none");
+    ELEM_HINT_IMG.style.visibility = "visible";
+  }
 }
 
 /**
@@ -1125,6 +1130,9 @@ function nextScramble(nextPrevious) {
   currentTrainGroup = INDEX_GROUP;
   currentTrainCase = INDEX_CASE;
 
+  // If no hint image is selected and user clicks on hint alg, the hint image will appear.
+  // This hides the hint image
+  updateHintVisibility();
   saveUserData();
 }
 
