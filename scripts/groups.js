@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const BASIC_COLLECTION = {
   // renamed!!!!! from basicCollection
   saveName: "basic_",

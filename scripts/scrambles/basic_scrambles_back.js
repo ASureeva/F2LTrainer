@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const basicScramblesBack = {
   1: [
     "R' F' U F R U'",

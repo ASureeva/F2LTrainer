@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const advancedScrambles = {
   1: [
     "F R2 F' R2 U",

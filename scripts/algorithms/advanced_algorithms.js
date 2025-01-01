@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const advancedAlgorithms = {
   1: ["U' R' U R2 U' R'"],
   2: ["U2 (R' U R) U' (S R S')", "y R' F R2 U' R' U2 F'", "y2 U2 (L F' L' F) (L U L')"],

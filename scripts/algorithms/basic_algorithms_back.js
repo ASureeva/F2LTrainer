@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const basicAlgorithmsBack = {
   1: ["r' U' R U M'", "U f R' f'", "y' U (L U' L')", "y U (R U' R')"],
   2: ["U' (R' U R)"],

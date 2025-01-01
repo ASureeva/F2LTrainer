@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 const expertScrambles = {
   1: [
     "R D' F2 U F2 D R'",

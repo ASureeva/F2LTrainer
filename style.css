@@ -1,3 +1,5 @@
+/* Source https://github.com/Dave2ooo/F2LTrainer */
+
 :root {
   --color-background: #1f3d52;
   --color-text: #ffffff;
@@ -758,8 +760,8 @@ twisty-alg-viewer {
   justify-content: center;
 }
 
-twisty-alg-wrapper-elem{
-  width: 100%
+twisty-alg-wrapper-elem {
+  width: 100%;
 }
 
 twisty-alg-viewer .wrapper {

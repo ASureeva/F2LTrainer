@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 //#region Variables
 // Basic
 let basicTrash = [];

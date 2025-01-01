@@ -1,3 +1,5 @@
+// Source https://github.com/Dave2ooo/F2LTrainer
+
 let __moves = [
   ["R", "L'"],
   ["R2", "L2'"],
