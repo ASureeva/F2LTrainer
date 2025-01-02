@@ -894,14 +894,18 @@ function updateTrainCases() {
 function showHint() {
   if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
 
-  document.querySelector("twisty-alg-viewer").style.display = "flex";
+  const viewer = document.querySelector("twisty-alg-viewer");
+  if (viewer) viewer.style.display = "flex";
+
   ELEM_HINT_PLACEHOLDER.style.display = "none";
 
   if (hintAlgSelection == 0) {
     if (hintCounter == 0)
       document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "hidden"));
 
-    document.querySelector("twisty-alg-viewer").style.display = "flex";
+    const viewer = document.querySelector("twisty-alg-viewer");
+    if (viewer) viewer.style.display = "flex";
+
     ELEM_HINT_PLACEHOLDER.style.display = "none";
 
     ELEM_HINT_IMG.style.opacity = "1";
@@ -1085,11 +1089,15 @@ function nextScramble(nextPrevious) {
   document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "visible"));
   if (hintAlgSelection == 0 || hintAlgSelection == 1) {
     // Reveal step-by-step or Reveal all at once
-    document.querySelector("twisty-alg-viewer").style.display = "none";
+    const viewer = document.querySelector("twisty-alg-viewer");
+    if (viewer) viewer.style.display = "none";
+
     ELEM_HINT_PLACEHOLDER.style.display = "flex";
     // ELEM_HINT_CONTAINER.style.cursor = "pointer";
   } else if (hintAlgSelection == 2) {
-    document.querySelector("twisty-alg-viewer").style.display = "flex";
+    const viewer = document.querySelector("twisty-alg-viewer");
+    if (viewer) viewer.style.display = "flex";
+
     ELEM_HINT_PLACEHOLDER.style.display = "none";
   }
 
