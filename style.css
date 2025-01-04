@@ -24,7 +24,6 @@
 }
 
 body {
-  height: 100dvh;
   margin: 0;
   color: var(--color-text);
   /* background-color: white; */
@@ -140,7 +139,7 @@ a {
   display: flex;
   margin-top: 5px;
   padding-top: 10px;
-  border-top: dotted;
+  /* border-top: dotted; */
   /* cursor: pointer; */
   /* background-color: var(--color-background);
   opacity: 100%;
@@ -164,6 +163,7 @@ a {
   flex-grow: 0;
   justify-content: start;
   flex-wrap: wrap;
+  border-bottom: dotted;
   /* transition: transform 300ms; */
 }
 
@@ -263,20 +263,12 @@ a {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
-  /* position: sticky; */
+  position: sticky;
   top: 0;
   background-color: var(--color-background);
   /* background-color: #2bff88; */
   padding: 5px;
-  /* position: fixed;
-  top: 0; */
-
-  /* padding-bottom: 5px;
-  border-bottom: solid; */
-  /* display: none; */
-  /* position: fixed;
-  top: 0;
-  left: 0; */
+  border-bottom: dotted;
 }
 
 .side-button {
@@ -325,8 +317,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5px;
-  border-top: dotted;
+  /* margin-top: 5px; */
+  /* border-top: dotted; */
 }
 
 #overlay {
