@@ -255,7 +255,6 @@ function loadTwistyAlgViewer() {
   import("https://cdn.cubing.net/js/cubing/twisty")
     .then(({ TwistyAlgViewer }) => {
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
-      const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
     })
     .catch((error) => {
@@ -1116,9 +1115,13 @@ function nextScramble(nextPrevious) {
   ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
   ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
   resetTwistyPlayerView();
-  ELEM_TWISTY_PLAYER.jumpToStart();
-  ELEM_TWISTY_PLAYER.flash();
-  ELEM_TWISTY_PLAYER.blur();
+  try {
+    ELEM_TWISTY_PLAYER.jumpToStart();
+    ELEM_TWISTY_PLAYER.flash();
+    ELEM_TWISTY_PLAYER.blur();
+  } catch (error) {
+    console.error(error);
+  }
 
   hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
 
