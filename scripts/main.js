@@ -1115,13 +1115,10 @@ function nextScramble(nextPrevious) {
   ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
   ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
   resetTwistyPlayerView();
-  try {
-    ELEM_TWISTY_PLAYER.jumpToStart();
-    ELEM_TWISTY_PLAYER.flash();
-    ELEM_TWISTY_PLAYER.blur();
-  } catch (error) {
-    console.error(error);
-  }
+
+  ELEM_TWISTY_PLAYER.jumpToStart?.();
+  ELEM_TWISTY_PLAYER.flash?.();
+  ELEM_TWISTY_PLAYER.blur?.();
 
   hidePieces(GROUP.piecesToHide, INDEX_CASE, MIRRORING);
 
