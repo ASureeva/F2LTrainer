@@ -106,6 +106,8 @@ const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
 
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
+let clickCoordinatesStart = { x: 0, y: 0 };
+const TWISTY_PLAYER_CAMERA = { LATITUDE: 25, LONGITUDE: 25 };
 const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
 
 const ELEM_RADIO_UNLEARNED = document.getElementById("radio-state-unlearned");
@@ -147,6 +149,7 @@ let count = 0;
 
 let spacePressFlag = false;
 const ELEM_PRESS_ME_TRAIN = document.getElementById("div-press-me-tain-id");
+const ELEM_PRESS_ME_TWISTY = document.getElementById("div-press-me-twisty-id");
 
 let divPressMe;
 
@@ -252,10 +255,25 @@ window.addEventListener("load", () => {
 });
 
 function loadTwistyAlgViewer() {
-  import("https://cdn.cubing.net/js/cubing/twisty")
+  import("https://cdn.cubing.net/v0/js/cubing/twistyy")
     .then(({ TwistyAlgViewer }) => {
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
+
+      const ELEM_TWISTY_PLAYER_BODY = ELEM_TWISTY_PLAYER.contentWrapper.firstChild;
+      ELEM_TWISTY_PLAYER_BODY.addEventListener("mousedown", (event) => twistyPlayerMouseDown(event));
+      ELEM_TWISTY_PLAYER_BODY.addEventListener("mouseup", (event) => twistyPlayerMouseUp(event));
+      ELEM_TWISTY_PLAYER_BODY.addEventListener("touchstart", (event) => twistyPlayerTouchStart(event));
+      ELEM_TWISTY_PLAYER_BODY.addEventListener("touchend", (event) => twistyPlayerTouchEnd(event));
+
+      // Called when cube is rotated. Hide reset button if camera latitude is default
+      ELEM_TWISTY_PLAYER.experimentalModel.twistySceneModel.orbitCoordinatesRequest.addFreshListener((v) => {
+        if (v.latitude == TWISTY_PLAYER_CAMERA.LATITUDE) {
+          hideResetButton();
+        } else {
+          showResetButton();
+        }
+      });
     })
     .catch((error) => {
       // If Twisty Player cannot be loaded, default to 2D image
@@ -264,6 +282,39 @@ function loadTwistyAlgViewer() {
       ELEM_SELECT_HINT_IMAGE.removeChild(ELEM_SELECT_HINT_IMAGE[2]);
       console.error("Failed to load TwistyAlgViewer module:", error);
     });
+}
+
+function twistyPlayerMouseDown(event) {
+  // Save the mousedown point.
+  clickCoordinatesStart = { x: event.clientX, y: event.clientY };
+}
+
+function twistyPlayerMouseUp(event) {
+  // Check if mousedown & mouseup are on the same point.
+  if (isSamePoint(clickCoordinatesStart, { x: event.clientX, y: event.clientY })) {
+    hidePressMeTextTwisty;
+    nextScramble(1);
+  }
+}
+
+function twistyPlayerTouchStart(event) {
+  // Save the touch point.
+  const touch = event.touches[0];
+  clickCoordinatesStart = { x: touch.clientX, y: touch.clientY };
+}
+
+function twistyPlayerTouchEnd(event) {
+  // Check if touchstart & touchend are on the same point.
+  const touch = event.changedTouches[0];
+  if (isSamePoint(clickCoordinatesStart, { x: touch.clientX, y: touch.clientY })) {
+    // Hide Press me text
+    hidePressMeTextTwisty;
+    nextScramble(1);
+  }
+}
+
+function isSamePoint(point1, point2) {
+  return point1.x === point2.x && point1.y === point2.y;
 }
 
 /**
@@ -895,21 +946,21 @@ function updateTrainCases() {
  * @returns {void}
  */
 function showHint() {
+  // Return if no scrambles available or hint is visible by default
   if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
 
+  // Make hint visible
   const viewer = document.querySelector("twisty-alg-viewer");
   if (viewer) viewer.style.display = "flex";
 
+  // Hide hint placeholder
   ELEM_HINT_PLACEHOLDER.style.display = "none";
 
+  // If "reveal step-by-step" is selected
   if (hintAlgSelection == 0) {
     if (hintCounter == 0)
+      // Hide all moves if hint counter is 0
       document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "hidden"));
-
-    const viewer = document.querySelector("twisty-alg-viewer");
-    if (viewer) viewer.style.display = "flex";
-
-    ELEM_HINT_PLACEHOLDER.style.display = "none";
 
     ELEM_HINT_IMG.style.opacity = "1";
 
@@ -923,6 +974,7 @@ function showHint() {
     hintCounter++;
   }
 
+  // Show hint image if no hint image is selected but hint alg button is pressed
   if (hintImageSelection == 0) {
     ELEM_DIV_HINT_IMG.classList.remove("display-none");
     ELEM_HINT_IMG.style.visibility = "visible";
@@ -1098,7 +1150,6 @@ function nextScramble(nextPrevious) {
     ELEM_HINT_PLACEHOLDER.style.display = "flex";
     // ELEM_HINT_CONTAINER.style.cursor = "pointer";
   } else if (hintAlgSelection == 2) {
-    const viewer = document.querySelector("twisty-alg-viewer");
     if (viewer) viewer.style.display = "flex";
 
     ELEM_HINT_PLACEHOLDER.style.display = "none";
@@ -1664,6 +1715,10 @@ function showPressMeText() {
 //   }
 // }
 
+function hidePressMeTextTwisty() {
+  ELEM_PRESS_ME_TWISTY.classList.add("display-none");
+}
+
 function copyUTLtoClipboard() {
   alert("URL copied to clipboard");
   navigator.clipboard.writeText(ELEM_INPUT_EXPORT.value);
@@ -1672,6 +1727,10 @@ function copyUTLtoClipboard() {
 function showResetButton() {
   // Show reset button in twisty player (3D cube in train mode)
   ELEM_BTN_RESET_PLAYER_VIEW.classList.remove("display-none");
+}
+
+function hideResetButton() {
+  ELEM_BTN_RESET_PLAYER_VIEW.classList.add("display-none");
 }
 
 /**
@@ -1683,13 +1742,13 @@ function resetTwistyPlayerView() {
   const MIRRORING = generatedScrambles[currentTrainCaseNumber].mirroring;
 
   if (!MIRRORING) {
-    ELEM_TWISTY_PLAYER.cameraLongitude = 25;
+    ELEM_TWISTY_PLAYER.cameraLongitude = TWISTY_PLAYER_CAMERA.LONGITUDE;
   } else {
-    ELEM_TWISTY_PLAYER.cameraLongitude = -25;
+    ELEM_TWISTY_PLAYER.cameraLongitude = -TWISTY_PLAYER_CAMERA.LONGITUDE;
   }
-  ELEM_TWISTY_PLAYER.cameraLatitude = 25;
+  ELEM_TWISTY_PLAYER.cameraLatitude = TWISTY_PLAYER_CAMERA.LATITUDE;
 
-  ELEM_BTN_RESET_PLAYER_VIEW.classList.add("display-none");
+  // hideResetButton();
 }
 
 /**

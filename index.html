@@ -529,7 +529,6 @@
       <!-- Example parameters can be found here: https://experiments.cubing.net/cubing.js/twisty/twisty-player-config.html -->
       <div class="div-twisty-player">
         <twisty-player
-          onpointerdown="showResetButton()"
           puzzle="3x3x3"
           experimental-setup-anchor="start"
           hint-facelets="none"
@@ -549,6 +548,13 @@
           class="btn-reset-player-view display-none"
           loading="lazy"
         />
+        <div
+          id="div-press-me-twisty-id"
+          class="div-press-me-train"
+          onclick="(function() {hidePressMeTextTwisty(); nextScramble(1)})()"
+        >
+          Press<br />me
+        </div>
       </div>
 
       <div id="timer">00:00</div>
