@@ -100,12 +100,14 @@ const ELEM_CONTAINER_TRAIN_SETTINGS = document.getElementById("train-settings-co
 
 const ELEM_SCRAMBLE = document.getElementById("scramble");
 const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
+const ELEM_HINT_ALG = document.getElementById("hint-alg");
 const ELEM_HINT_PLACEHOLDER = document.getElementById("hint-placeholder");
 const ELEM_HINT_IMG = document.getElementById("hint-img");
 const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
 
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
+let twistyLoadFlag = false;
 let clickCoordinatesStart = { x: 0, y: 0 };
 const TWISTY_PLAYER_CAMERA = { LATITUDE: 25, LONGITUDE: 25 };
 const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
@@ -166,6 +168,10 @@ const ELEM_IFRAME_VIDEO = document.getElementById("iframe-video");
 
 // ----------------------------------------- LOADING -------------------------------------------------------
 window.addEventListener("load", () => {
+  window.onerror = function (msg, url, linenumber) {
+    alert("Error message: " + msg + "\nURL: " + url + "\nLine Number: " + linenumber);
+    return true;
+  };
   importFromURL();
   loadUserData();
 
@@ -255,7 +261,7 @@ window.addEventListener("load", () => {
 });
 
 function loadTwistyAlgViewer() {
-  import("https://cdn.cubing.net/v0/js/cubing/twistyy")
+  import("https://cdn.cubing.net/v0/js/cubing/twisty")
     .then(({ TwistyAlgViewer }) => {
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
@@ -274,6 +280,8 @@ function loadTwistyAlgViewer() {
           showResetButton();
         }
       });
+      // Twisty Player loaded correctly
+      twistyLoadFlag = true;
     })
     .catch((error) => {
       // If Twisty Player cannot be loaded, default to 2D image
@@ -824,13 +832,13 @@ function syncLeftRightAlgSelection() {
  * - 'C' (KeyCode: 67): Clears user data on double press.
  * - 'G' (KeyCode: 71): Logs the local storage.
  * - Space (KeyCode: 32): Triggers spaceDown() if not in case select mode.
- * - Right Arrow (KeyCode: 39): Calls showHint() if not in case select mode.
+ * - Right Arrow (KeyCode: 39): Calls showHintAlg() if not in case select mode.
  * - Left Arrow (KeyCode: 37): Reserved for future actions.
  * - 'S' (KeyCode: 83): Reserved for saving user data.
  * - 'L' (KeyCode: 76): Reserved for loading user data.
  *
  * The function respects the current mode and does not perform certain actions
- * (like spaceDown or showHint) if the mode is case select (mode === 0).
+ * (like spaceDown or showHintAlg) if the mode is case select (mode === 0).
  *
  * @param {Event} e - The event object containing information about the key pressed.
  */
@@ -866,7 +874,7 @@ function keydown(e) {
     spaceDown();
   } else if (e.keyCode === 39) {
     // rechte Pfeiltaste
-    showHint();
+    showHintAlg();
   } else if (e.keyCode === 37) {
     // linke Pfeiltaste
   } else if (e.keyCode === 83) {
@@ -932,53 +940,103 @@ function updateTrainCases() {
   currentTrainCaseNumber = -1;
   generatedScrambles = [];
   closeOverlays();
-  updateHintVisibility();
+  // updateHintImgVisibility();
   generateTrainCaseList();
   nextScramble(1);
 }
 
 /**
- * Called when the Show Hint button is pressed.
+ * Called when the Show Hint button is pressed when nextCase is executed.
  * Shows the hint for the current scramble.
  * If the hint setting is set to "Reveal step-by-step", it shows one move at a time.
  * If the hint setting is set to "Reveal all at once", it shows the full algorithm.
  * If the hint setting is set to "Show all time", it does nothing.
  * @returns {void}
  */
-function showHint() {
-  // Return if no scrambles available or hint is visible by default
-  if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
+function showHintAlg() {
+  const ELEM_TWISTY_ALG_VIEWER = document.querySelector("twisty-alg-viewer");
+  const ELEMS_TWISTY_ALG_MOVE = document.querySelectorAll(".twisty-alg-move");
 
-  // Make hint visible
-  const viewer = document.querySelector("twisty-alg-viewer");
-  if (viewer) viewer.style.display = "flex";
+  if (hintCounter == -1) {
+    if (twistyLoadFlag) {
+      if (hintAlgSelection == 2) {
+        // "Show all time"
+        ELEMS_TWISTY_ALG_MOVE.forEach((element) => (element.style.visibility = "visible"));
+        ELEM_HINT_PLACEHOLDER.style.display = "none";
+        ELEM_HINT_ALG.style.display = "none";
+        ELEM_TWISTY_ALG_VIEWER.style.display = "block";
+      } else if (hintAlgSelection == 0 || hintAlgSelection == 1) {
+        // "Reveal step-by-step" or "Reveal all at once"
+        ELEMS_TWISTY_ALG_MOVE.forEach((element) => (element.style.visibility = "hidden"));
+        ELEM_HINT_PLACEHOLDER.style.display = "flex";
+        ELEM_HINT_ALG.style.display = "none";
+        ELEM_TWISTY_ALG_VIEWER.style.display = "none";
+      }
+    } else {
+      // twistyLoadFlag: false
+      if (hintAlgSelection == 2) {
+        // "Show all time"
+        ELEM_HINT_PLACEHOLDER.style.display = "none";
+        ELEM_HINT_ALG.innerText = generatedScrambles[currentTrainCaseNumber].algHint;
+        ELEM_HINT_ALG.style.display = "flex";
+      } else if (hintAlgSelection == 0 || hintAlgSelection == 1) {
+        // "Reveal step-by-step" or "Reveal all at once"
+        ELEM_HINT_PLACEHOLDER.style.display = "flex";
+        ELEM_HINT_ALG.style.display = "none";
+      }
+    }
+  } else {
+    // hintCounter >= 0
+    // Return if no scrambles available or hint is visible by default
+    if (generatedScrambles.length == 0 || hintAlgSelection == 2) return;
 
-  // Hide hint placeholder
-  ELEM_HINT_PLACEHOLDER.style.display = "none";
-
-  // If "reveal step-by-step" is selected
-  if (hintAlgSelection == 0) {
-    if (hintCounter == 0)
-      // Hide all moves if hint counter is 0
-      document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "hidden"));
-
-    ELEM_HINT_IMG.style.opacity = "1";
+    // Show hint image if no hint image is selected but hint alg button is pressed
+    if (hintImageSelection == 0) {
+      ELEM_DIV_HINT_IMG.classList.remove("display-none");
+      ELEM_HINT_IMG.style.visibility = "visible";
+    }
 
     // Get algorithm and convert to list
     const ALG_LIST = generatedScrambles[currentTrainCaseNumber].algHint.split(" ");
-    // Show one move at a time
-    if (hintCounter < ALG_LIST.length) {
-      document.querySelectorAll(".twisty-alg-move")[hintCounter].style.visibility = "visible";
+
+    if (twistyLoadFlag) {
+      // Hide hint placeholder
+      ELEM_HINT_PLACEHOLDER.style.display = "none";
+      // Make hint visible
+      ELEM_TWISTY_ALG_VIEWER.style.display = "flex";
+
+      if (hintAlgSelection == 0) {
+        // "reveal step-by-step"
+        // ELEM_HINT_IMG.style.opacity = "1";
+
+        // Hide all moves if hintCounter is 0
+        if (hintCounter == 0) ELEMS_TWISTY_ALG_MOVE.forEach((element) => (element.style.visibility = "hidden"));
+
+        // Show one move at a time
+        if (hintCounter < ALG_LIST.length) {
+          ELEMS_TWISTY_ALG_MOVE[hintCounter].style.visibility = "visible";
+        }
+      } else if (hintAlgSelection == 1) {
+        // "Reveal at once"
+        ELEMS_TWISTY_ALG_MOVE.forEach((element) => (element.style.visibility = "visible"));
+      }
+    } else {
+      // Hide hint placeholder
+      ELEM_HINT_PLACEHOLDER.style.display = "none";
+      ELEM_HINT_ALG.style.display = "flex";
+      // twistyLoadFlag: false
+      if (hintAlgSelection == 0) {
+        // "reveal step-by-step"
+        if (hintCounter < ALG_LIST.length) {
+          ELEM_HINT_ALG.innerText = ALG_LIST.slice(0, hintCounter + 1).join(" ");
+        }
+      } else if (hintAlgSelection == 1) {
+        // "Reveal at once"
+        ELEM_HINT_ALG.innerText = ALG_LIST.join(" ");
+      }
     }
-
-    hintCounter++;
   }
-
-  // Show hint image if no hint image is selected but hint alg button is pressed
-  if (hintImageSelection == 0) {
-    ELEM_DIV_HINT_IMG.classList.remove("display-none");
-    ELEM_HINT_IMG.style.visibility = "visible";
-  }
+  hintCounter++;
 }
 
 /**
@@ -1138,22 +1196,8 @@ function nextScramble(nextPrevious) {
   ELEM_SCRAMBLE.innerHTML = generatedScrambles[currentTrainCaseNumber].selectedScrambleAUF;
 
   // Reset hint counter
-  hintCounter = 0;
-
-  // Reset or show full hint based on setting
-  document.querySelectorAll(".twisty-alg-move").forEach((element) => (element.style.visibility = "visible"));
-  if (hintAlgSelection == 0 || hintAlgSelection == 1) {
-    // Reveal step-by-step or Reveal all at once
-    const viewer = document.querySelector("twisty-alg-viewer");
-    if (viewer) viewer.style.display = "none";
-
-    ELEM_HINT_PLACEHOLDER.style.display = "flex";
-    // ELEM_HINT_CONTAINER.style.cursor = "pointer";
-  } else if (hintAlgSelection == 2) {
-    if (viewer) viewer.style.display = "flex";
-
-    ELEM_HINT_PLACEHOLDER.style.display = "none";
-  }
+  hintCounter = -1;
+  showHintAlg();
 
   // Update hint image
   const INDEX_GROUP = generatedScrambles[currentTrainCaseNumber].indexGroup;
@@ -1197,7 +1241,7 @@ function nextScramble(nextPrevious) {
 
   // If no hint image is selected and user clicks on hint alg, the hint image will appear.
   // This hides the hint image
-  updateHintVisibility();
+  updateHintImgVisibility();
   saveUserData();
 }
 
@@ -1225,7 +1269,7 @@ function updateCheckboxStatus() {
  * Updates the visibility of the hint image and the Twisty Player based on the value of the "Hint image" select element.
  * Called when settings are changed.
  */
-function updateHintVisibility() {
+function updateHintImgVisibility() {
   switch (ELEM_SELECT_HINT_IMAGE.selectedIndex) {
     case 0:
       // No hint
@@ -1238,11 +1282,6 @@ function updateHintVisibility() {
       ELEM_DIV_HINT_IMG.classList.remove("display-none");
       ELEM_HINT_IMG.style.visibility = "visible";
       ELEM_DIV_TWISTY_PLAYER.classList.add("display-none");
-      break;
-    case 2:
-      // 3D cube as hint
-      ELEM_DIV_HINT_IMG.classList.add("display-none");
-      ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
       break;
     default:
       // 3D cube as hint

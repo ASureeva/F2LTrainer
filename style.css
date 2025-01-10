@@ -745,9 +745,10 @@ twisty-player {
 }
 
 twisty-alg-viewer {
-  color-scheme: dark;
+  /* Display none by default because loading of twisty player may fail
+  So the element may not be accessable later */
   display: none;
-  /* display: none; */
+  color-scheme: dark;
   width: 100%;
   justify-content: center;
 }

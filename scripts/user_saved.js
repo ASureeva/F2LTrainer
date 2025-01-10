@@ -204,7 +204,7 @@ function loadUserData() {
   }
 
   updateCheckboxStatus();
-  updateHintVisibility();
+  // updateHintVisibility();
 }
 
 /**
