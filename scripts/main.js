@@ -574,10 +574,12 @@ function updateAlg() {
   if (currentTrainCaseNumber >= 0 && mode == 1) {
     const CURRENT_TRAIN_CASE = generatedScrambles[currentTrainCaseNumber];
     if (!CURRENT_TRAIN_CASE.mirroring) {
-      generatedScrambles[currentTrainCaseNumber].algHint = tempAlgRight;
+      if (considerAUFinAlg) tempAlgRight = addAUFtoHint(tempAlgRight, CURRENT_TRAIN_CASE.AUFNum);
+      CURRENT_TRAIN_CASE.algHint = tempAlgRight;
       ELEM_TWISTY_PLAYER.alg = tempAlgRight;
     } else {
-      generatedScrambles[currentTrainCaseNumber].algHint = tempAlgLeft;
+      if (considerAUFinAlg) tempAlgLeft = addAUFtoHint(tempAlgLeft, CURRENT_TRAIN_CASE.AUFNum);
+      CURRENT_TRAIN_CASE.algHint = tempAlgLeft;
       ELEM_TWISTY_PLAYER.alg = tempAlgLeft;
     }
   }
@@ -1133,7 +1135,7 @@ function generateTrainCaseList() {
             // let selectedScrambleAUF;
             // if (aufSelection) AUF = Math.floor(Math.random() * 4);
 
-            let [selectedScrambleAUF, selectedScrambleTwisty, algHintAUF, AUF] = addAUF(
+            let [selectedScrambleAUF, selectedScrambleTwisty, algHintAUF, AUFNum] = addAUF(
               selectedScramble,
               aufSelection,
               considerAUFinAlg,
@@ -1151,7 +1153,7 @@ function generateTrainCaseList() {
               selectedScrambleTwisty: selectedScrambleTwisty,
               algHint: algHint,
               algHintAUF: algHintAUF,
-              AUF: AUF,
+              AUFNum: AUFNum,
             };
 
             trainCaseList.push(CASE_TO_ADD);
@@ -1244,7 +1246,7 @@ function nextScramble(nextPrevious) {
     ", Scramble " +
     +generatedScrambles[currentTrainCaseNumber].indexScramble +
     ", AUF " +
-    generatedScrambles[currentTrainCaseNumber].AUF +
+    U_MOVES[generatedScrambles[currentTrainCaseNumber].AUFNum] +
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
     ", Algorithm " +
