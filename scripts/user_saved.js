@@ -62,6 +62,7 @@ let trainGroupSelection = [true, true, true, true];
 let leftSelection = true;
 let rightSelection = true;
 let aufSelection = true;
+let considerAUFinAlg = false;
 let hintImageSelection = 2;
 let hintAlgSelection = 0;
 let timerEnabled = false;
@@ -94,6 +95,7 @@ function saveUserData() {
 
   // Saving other settings
   localStorage.setItem("aufSelection", aufSelection);
+  localStorage.setItem("considerAUFinAlg", considerAUFinAlg);
   localStorage.setItem("hintImageSelection", hintImageSelection);
   localStorage.setItem("hintAlgSelection", hintAlgSelection);
   localStorage.setItem("timerEnabled", timerEnabled);
@@ -169,6 +171,7 @@ function loadUserData() {
   leftSelection = loadBoolean("leftSelection", leftSelection);
   rightSelection = loadBoolean("rightSelection", rightSelection);
   aufSelection = loadBoolean("aufSelection", aufSelection);
+  considerAUFinAlg = loadBoolean("considerAUFinAlg", considerAUFinAlg);
   timerEnabled = loadBoolean("timerEnabled", timerEnabled);
 
   for (const GROUP of GROUPS) {

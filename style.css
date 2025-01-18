@@ -645,6 +645,10 @@ a {
   transform: scale(1);
 }
 
+.checkbox:has(.checkbox__input:disabled) {
+  opacity: 30%;
+}
+
 /* Train cases */
 /* #train-cases-container {
   display: block;

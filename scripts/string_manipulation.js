@@ -1,6 +1,6 @@
 // Source https://github.com/Dave2ooo/F2LTrainer
 
-let __moves = [
+const __moves = [
   ["R", "L'"],
   ["R2", "L2'"],
   ["L", "R'"],
@@ -30,6 +30,8 @@ let __moves = [
   ["S2", "S2'"],
 ];
 
+const U_MOVES = ["", "U", "U2", "U'"];
+
 function mirrorAlg(alg) {
   alg = alg.replace(/\(/g, "( "); // Add space after "("
   alg = alg.replace(/\)/g, " )"); // Add space before ")"
@@ -53,22 +55,80 @@ function mirrorAlg(alg) {
   return myMirroredAlg;
 }
 
-function addRandomUMove(alg) {
-  const AUF = Math.floor(Math.random() * 4);
-  const algList = alg.split(" ");
-  const lastMove = algList[algList.length - 1];
+/**
+ * Adds a random AUF move to the given scramble and hint if AUF is selected.
+ * If AUF is not selected, returns the original scramble and hint.
+ * If AUF is selected but not considered in TwistyPlayer,
+ * returns scramble with AUF (for scramble text), scramble without AUF for TwistyPlayer and hint.
+ * If AUF is selected and considered in TwistyPlayer,
+ * returns scramble with AUF (for scramble text and TwistyPlayer) and hint with AUF.
+ * @param {string} scramble Scramble to add AUF move to.
+ * @param {boolean} aufSelection Whether to add AUF move or not.
+ * @param {boolean} considerAUF Whether to add AUF move to TwistyPlayer and hint or not.
+ * @param {string} hint Hint algorithm to add AUF move to.
+ * @return {array} Array containing [selectedScrambleAUF, selectedScrambleTwisty, algHintAUF, AUF]
+ */
+function addAUF(scramble, aufSelection, considerAUF, hint) {
+  // If no AUF selected, return original scramble and hint
+  if (!aufSelection) return [scramble, scramble, hint, U_MOVES[0]];
 
-  if (lastMove.includes("U")) {
-    algList.pop();
+  // Get random number 0-3 (1:U, 2:U2, 3:U')
+  const AUFNum = Math.floor(Math.random() * 4);
+  const scrambleList = scramble.split(" ");
+  const lastMove = scrambleList[scrambleList.length - 1];
+
+  // Remove last move if it is a U move
+  if (lastMove.includes("U")) scrambleList.pop();
+
+  let lastMoveNum = 0;
+
+  if (lastMove.includes("U2")) {
+    lastMoveNum = 2;
+  } else if (lastMove.includes("U'")) {
+    lastMoveNum = 3;
+  } else if (lastMove.includes("U")) {
+    lastMoveNum = 1;
   }
 
-  if (AUF === 1) {
-    algList.push("U");
-  } else if (AUF === 2) {
-    algList.push("U2");
-  } else if (AUF === 3) {
-    algList.push("U'");
-  }
+  // Combine U move from original scramble with U move from AUF
+  let AUFcombinedNum = lastMoveNum + AUFNum;
+  AUFcombinedNum = AUFcombinedNum % 4;
 
-  return algList.join(" ");
+  // Add the resulting U move to the scramble
+  scrambleList.push(U_MOVES[AUFcombinedNum]);
+
+  const scrambleAUF = scrambleList.join(" ");
+
+  // If AUF is selected but not considered in TwistyPlayer:
+  // Return scramble with AUF (for scramble text), scramble without AUF for TwistyPlayer and hint
+  if (!considerAUF) return [scrambleAUF, scramble, hint, U_MOVES[AUFNum]];
+
+  const hintList = hint.split(" ");
+  const firstHintMove = hintList[0];
+
+  let firstHintMoveNum = 0;
+
+  if (!firstHintMove.includes("(")) {
+    // Remove first move if it is a U move
+    if (firstHintMove.includes("U")) hintList.shift();
+    if (firstHintMove.includes("U2")) {
+      firstHintMoveNum = 2;
+    } else if (firstHintMove.includes("U'")) {
+      firstHintMoveNum = 3;
+    } else if (firstHintMove.includes("U")) {
+      firstHintMoveNum = 1;
+    }
+  }
+  // Combine U move from original hint with U move from AUF
+  let sum = firstHintMoveNum - AUFNum;
+  sum = ((sum % 4) + 4) % 4;
+
+  // Add AUF to front of hint
+  if (sum != 0) hintList.unshift(U_MOVES[sum]);
+
+  const hintAUF = hintList.join(" ");
+
+  // If AUF is selected and considered in TwistyPlayer:
+  // Return scramble with AUF (for scramble text and TwistyPlayer) and hint with AUF
+  return [scrambleAUF, scrambleAUF, hintAUF, U_MOVES[AUFNum]];
 }

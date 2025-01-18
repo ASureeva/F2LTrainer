@@ -89,6 +89,7 @@ const ELEM_CHECKBOX_LEFT = document.getElementById("checkboxLeftId");
 const ELEM_CHECKBOX_RIGHT = document.getElementById("checkboxRightId");
 
 const ELEM_CHECKBOX_AUF = document.getElementById("checkboxAUFId");
+const ELEM_CHECKBOX_CONSIDER_AUF = document.getElementById("checkboxConsiderAUFId");
 
 const ELEM_SELECT_HINT_IMAGE = document.getElementById("select-hint-image");
 const ELEM_SELECT_HINT_ALG = document.getElementById("select-hint-alg");
@@ -258,6 +259,8 @@ window.addEventListener("load", () => {
 
   loadTwistyAlgViewer();
   // const autoLoadTimeout = setTimeout(loadTwistyAlgViewer, 1000);
+
+  showHideDebugInfo();
 });
 
 function loadTwistyAlgViewer() {
@@ -903,6 +906,7 @@ function keyup(e) {
  * - leftSelection
  * - rightSelection
  * - aufSelection
+ * - considerAUFinAlg
  * - hintImageSelection
  * - hintAlgSelection
  * - timerEnabled
@@ -927,6 +931,7 @@ function updateTrainCases() {
   leftSelection = ELEM_CHECKBOX_LEFT.checked;
   rightSelection = ELEM_CHECKBOX_RIGHT.checked;
   aufSelection = ELEM_CHECKBOX_AUF.checked;
+  considerAUFinAlg = ELEM_CHECKBOX_CONSIDER_AUF.checked;
   hintImageSelection = ELEM_SELECT_HINT_IMAGE.selectedIndex;
   hintAlgSelection = ELEM_SELECT_HINT_ALG.selectedIndex;
   timerEnabled = ELEM_CHECKBOX_TIMER_ENABLE.checked;
@@ -1095,13 +1100,13 @@ function generateTrainCaseList() {
             let algHint,
               algHintRight,
               algHintLeft = "";
-            // Get hint algorithm for current case
+
+            // Get hint algorithm for current case (left and right, select later)
             if (GROUP.algorithmSelectionRight[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
               algHintRight = GROUP.customAlgorithmsRight[indexCase];
             } else {
               algHintRight = GROUP.algorithms[indexCase + 1][GROUP.algorithmSelectionRight[indexCase]];
             }
-
             if (GROUP.algorithmSelectionLeft[indexCase] >= GROUP.algorithms[indexCase + 1].length) {
               algHintLeft = GROUP.customAlgorithmsLeft[indexCase];
             } else {
@@ -1125,19 +1130,28 @@ function generateTrainCaseList() {
             }
 
             // Add random U move to selected scramble
-            let selectedScrambleAUF;
-            if (aufSelection) {
-              selectedScrambleAUF = addRandomUMove(selectedScramble);
-            } else selectedScrambleAUF = selectedScramble;
+            // let selectedScrambleAUF;
+            // if (aufSelection) AUF = Math.floor(Math.random() * 4);
+
+            let [selectedScrambleAUF, selectedScrambleTwisty, algHintAUF, AUF] = addAUF(
+              selectedScramble,
+              aufSelection,
+              considerAUFinAlg,
+              algHint
+            );
+
+            // console.log("---" + selectedScrambleAUF + "----" + algHintAUF);
 
             const CASE_TO_ADD = {
               indexGroup: indexGroup,
               indexCase: indexCase,
               indexScramble: INDEX_SCRAMBLE,
               mirroring: mirroring,
-              selectedScramble: selectedScramble,
               selectedScrambleAUF: selectedScrambleAUF,
+              selectedScrambleTwisty: selectedScrambleTwisty,
               algHint: algHint,
+              algHintAUF: algHintAUF,
+              AUF: AUF,
             };
 
             trainCaseList.push(CASE_TO_ADD);
@@ -1211,8 +1225,10 @@ function nextScramble(nextPrevious) {
     ELEM_HINT_IMG.src = GROUP.imgPath + "left/F2L" + (INDEX_CASE + 1) + ".svg";
   }
 
-  ELEM_TWISTY_PLAYER.experimentalSetupAlg = "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScramble;
-  ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHint;
+  ELEM_TWISTY_PLAYER.experimentalSetupAlg =
+    "z2 y' " + generatedScrambles[currentTrainCaseNumber].selectedScrambleTwisty;
+
+  ELEM_TWISTY_PLAYER.alg = generatedScrambles[currentTrainCaseNumber].algHintAUF;
   resetTwistyPlayerView();
 
   ELEM_TWISTY_PLAYER.jumpToStart?.();
@@ -1227,6 +1243,8 @@ function nextScramble(nextPrevious) {
     (INDEX_CASE + 1) +
     ", Scramble " +
     +generatedScrambles[currentTrainCaseNumber].indexScramble +
+    ", AUF " +
+    generatedScrambles[currentTrainCaseNumber].AUF +
     ", " +
     CATEGORY_NAMES[GROUPS[INDEX_GROUP].caseSelection[INDEX_CASE]] +
     ", Algorithm " +
@@ -1260,9 +1278,16 @@ function updateCheckboxStatus() {
   ELEM_CHECKBOX_LEFT.checked = leftSelection;
   ELEM_CHECKBOX_RIGHT.checked = rightSelection;
   ELEM_CHECKBOX_AUF.checked = aufSelection;
+  ELEM_CHECKBOX_CONSIDER_AUF.checked = considerAUFinAlg;
+  enableDisableCheckboxConsiderAUF();
+
   ELEM_SELECT_HINT_IMAGE.selectedIndex = hintImageSelection;
   ELEM_SELECT_HINT_ALG.selectedIndex = hintAlgSelection;
   ELEM_CHECKBOX_TIMER_ENABLE.checked = timerEnabled;
+}
+
+function enableDisableCheckboxConsiderAUF() {
+  ELEM_CHECKBOX_CONSIDER_AUF.disabled = !ELEM_CHECKBOX_AUF.checked;
 }
 
 /**

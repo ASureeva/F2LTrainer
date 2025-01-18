@@ -289,9 +289,20 @@
         <div class="checkbox-container">
           <h3>AUF</h3>
           <label class="checkbox" for="checkboxAUFId">
-            <input type="checkbox" class="checkbox__input" name="checkboxAUF" id="checkboxAUFId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxAUF"
+              id="checkboxAUFId"
+              onchange="enableDisableCheckboxConsiderAUF()"
+            />
             <div class="checkbox__box"></div>
             Add AUF
+          </label>
+          <label class="checkbox" for="checkboxConsiderAUFId">
+            <input type="checkbox" class="checkbox__input" name="checkboxConsiderAUF" id="checkboxConsiderAUFId" />
+            <div class="checkbox__box"></div>
+            Consider AUF<br />in hint
           </label>
         </div>
       </div>
