@@ -109,6 +109,7 @@ const ELEM_DIV_HINT_IMG = document.querySelector(".div-hint-img");
 const ELEM_DIV_TWISTY_PLAYER = document.querySelector(".div-twisty-player");
 const ELEM_TWISTY_PLAYER = document.querySelector("twisty-player");
 let twistyLoadFlag = false;
+let twistyEventListenerFlag = false;
 let clickCoordinatesStart = { x: 0, y: 0 };
 const TWISTY_PLAYER_CAMERA = { LATITUDE: 25, LONGITUDE: 25 };
 const ELEM_BTN_RESET_PLAYER_VIEW = document.querySelector(".btn-reset-player-view");
@@ -269,20 +270,6 @@ function loadTwistyAlgViewer() {
       const ELEM_HINT_CONTAINER = document.getElementById("hint-container");
       ELEM_HINT_CONTAINER.appendChild(new TwistyAlgViewer({ twistyPlayer: ELEM_TWISTY_PLAYER }));
 
-      const ELEM_TWISTY_PLAYER_BODY = ELEM_TWISTY_PLAYER.contentWrapper.firstChild;
-      ELEM_TWISTY_PLAYER_BODY.addEventListener("mousedown", (event) => twistyPlayerMouseDown(event));
-      ELEM_TWISTY_PLAYER_BODY.addEventListener("mouseup", (event) => twistyPlayerMouseUp(event));
-      ELEM_TWISTY_PLAYER_BODY.addEventListener("touchstart", (event) => twistyPlayerTouchStart(event));
-      ELEM_TWISTY_PLAYER_BODY.addEventListener("touchend", (event) => twistyPlayerTouchEnd(event));
-
-      // Called when cube is rotated. Hide reset button if camera latitude is default
-      ELEM_TWISTY_PLAYER.experimentalModel.twistySceneModel.orbitCoordinatesRequest.addFreshListener((v) => {
-        if (v.latitude == TWISTY_PLAYER_CAMERA.LATITUDE) {
-          hideResetButton();
-        } else {
-          showResetButton();
-        }
-      });
       // Twisty Player loaded correctly
       twistyLoadFlag = true;
     })
@@ -293,6 +280,27 @@ function loadTwistyAlgViewer() {
       ELEM_SELECT_HINT_IMAGE.options[2].disabled = true;
       console.error("Failed to load TwistyAlgViewer module:", error);
     });
+}
+function addTwistyPlayerEventListeners() {
+  try {
+    const ELEM_TWISTY_PLAYER_BODY = ELEM_TWISTY_PLAYER.contentWrapper.firstChild;
+    ELEM_TWISTY_PLAYER_BODY.addEventListener("mousedown", (event) => twistyPlayerMouseDown(event));
+    ELEM_TWISTY_PLAYER_BODY.addEventListener("mouseup", (event) => twistyPlayerMouseUp(event));
+    ELEM_TWISTY_PLAYER_BODY.addEventListener("touchstart", (event) => twistyPlayerTouchStart(event));
+    ELEM_TWISTY_PLAYER_BODY.addEventListener("touchend", (event) => twistyPlayerTouchEnd(event));
+
+    // Called when cube is rotated. Hide reset button if camera latitude is default
+    ELEM_TWISTY_PLAYER.experimentalModel.twistySceneModel.orbitCoordinatesRequest.addFreshListener((v) => {
+      if (v.latitude == TWISTY_PLAYER_CAMERA.LATITUDE) {
+        hideResetButton();
+      } else {
+        showResetButton();
+      }
+    });
+    twistyEventListenerFlag = true;
+  } catch (e) {
+    console.warn(e);
+  }
 }
 
 function twistyPlayerMouseDown(event) {
@@ -1314,6 +1322,7 @@ function updateHintImgVisibility() {
       // 3D cube as hint
       ELEM_DIV_HINT_IMG.classList.add("display-none");
       ELEM_DIV_TWISTY_PLAYER.classList.remove("display-none");
+      if (!twistyEventListenerFlag) addTwistyPlayerEventListeners();
   }
 }
 
