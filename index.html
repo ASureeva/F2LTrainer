@@ -46,6 +46,9 @@
     <link rel="icon" href="images/full_cube.svg" />
     <link rel="stylesheet" href="style.css" />
 
+    <!-- for Progressive Web App (PWA) -->
+    <link rel="manifest" href="manifest.json" />
+
     <!-- Structured Data -->
     <script type="application/ld+json">
       {
@@ -59,6 +62,13 @@
   </head>
 
   <body>
+    <!-- Service Worker for Progressive Web App (PWA)-->
+    <script>
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("scripts/service-worker.js");
+      }
+    </script>
+
     <!-- POPUP-CONTAINER START -->
     <!-- Info -->
 
