@@ -6,7 +6,7 @@ importScripts("https://storage.googleapis.com/workbox-cdn/releases/6.4.1/workbox
 
 // Precaching all files in a folder (e.g., `/images/`)
 workbox.routing.registerRoute(
-  ({ url }) => url.pathname.startsWith("/images/"),
+  ({ url }) => url.pathname.startsWith("images/"),
   new workbox.strategies.CacheFirst({
     cacheName: "images-cache",
     plugins: [
