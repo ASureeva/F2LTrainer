@@ -16,7 +16,7 @@ const basicAlgorithmsBack = {
   13: ["U (R' U R U') (R' U' R)"],
   14: ["d' (R U' R' U) (R U R')", "y U' (R U' R' U) (R U R')"],
   15: ["(R2' F R F' R) U2' (R' U R)", "(R' U R) U2' y (R U R')"],
-  16: ["R D R' U R D' R' (U' R' U R)", "M' U' (L' B L) U M", "y (R U' R' U2) y' (R' U' R)"],
+  16: ["R D R' U R D' R' (U' R' U R)", "M' U' (L' B L) U M", "y (R U' R' U2) y' (R' U' R)", "R' U' (F R' F' R) U2 R"],
   17: ["y' (L U2 L') U' (L U L')", "y (R U2 R') U' (R U R')"],
   18: ["(R' U2' R) U (R' U' R)"],
   19: ["d (L U2 L') U (L U' L')", "y U (R U2' R') U (R U' R')"],
