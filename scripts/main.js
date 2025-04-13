@@ -1328,17 +1328,17 @@ function updateHintImgVisibility() {
 
 /**
  * Toggles the visibility of the debug information section in train mode.
- * Updates the button text to indicate the current state as "Show info" or "Hide info".
+ * Updates the button text to indicate the current state as "Show details" or "Hide details".
  */
 function showHideDebugInfo() {
   // Show/hide debug info on the bottom of train mode
   if (boolShowDebugInfo) {
     boolShowDebugInfo = false;
-    ELEM_BTN_SHOW_HIDE_DEBUG_INFO.innerHTML = "> Show info";
+    ELEM_BTN_SHOW_HIDE_DEBUG_INFO.innerHTML = "> Show details";
     ELEM_DEBUG_INFO.style.display = "none";
   } else {
     boolShowDebugInfo = true;
-    ELEM_BTN_SHOW_HIDE_DEBUG_INFO.innerHTML = "> Hide info";
+    ELEM_BTN_SHOW_HIDE_DEBUG_INFO.innerHTML = "> Hide details";
     ELEM_DEBUG_INFO.style.display = "block";
   }
 }
