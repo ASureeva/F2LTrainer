@@ -1966,12 +1966,9 @@ function resetForm(){
   setTimeout(() => {
     ELEM_FEEDBACK_FORM.reset();
   }, 1000);
-  
 }
-
 
 function openDialog(ELEM) {
   ELEM.showModal();
   ELEM_BODY.style.overflow = "hidden";
 }
-
