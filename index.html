@@ -19,7 +19,10 @@
     <!-- End Google Tag Manager -->
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ENTD55V4SX"></script>
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-ENTD55V4SX"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -38,7 +41,10 @@
       name="description"
       content="Learn and practice all F2L cases you need to know. Improve your solving times by finding better and faster algirithms."
     />
-    <meta name="keywords" content="cubing,rubiks,cfop,f2l,learning,practicing,training" />
+    <meta
+      name="keywords"
+      content="cubing,rubiks,cfop,f2l,learning,practicing,training"
+    />
     <meta name="author" content="Dave2ooo" />
     <!-- Cache for 12 hours -->
     <meta http-equiv="Cache-control" content="public, max-age=43200" />
@@ -82,10 +88,19 @@
         algirithms. Use this trainer to practice and reduce your Rubiks Cube solving times. -->
       </p>
       <div class="div-centering">
-        <img src="./images/instructions_select_page.png" alt="Select Page Instructions" class="img-instructions" />
+        <img
+          src="./images/instructions_select_page.png"
+          alt="Select Page Instructions"
+          class="img-instructions"
+        />
       </div>
       <div class="update-cancel-buttons">
-        <input type="button" class="btn-overlay" onclick="closeOverlays()" value="To the Trainer" />
+        <input
+          type="button"
+          class="btn-overlay"
+          onclick="closeOverlays()"
+          value="To the Trainer"
+        />
       </div>
     </dialog>
 
@@ -101,11 +116,22 @@
       </ul>
       <p>
         2. Press
-        <img src="./images/edit.svg" alt="Edit" class="img-inline" loading="lazy" />
+        <img
+          src="./images/edit.svg"
+          alt="Edit"
+          class="img-inline"
+          loading="lazy"
+        />
         to select your preferred algorithm.<br />
-        3. Press <span class="border-inline">Train</span> to switch to train mode.<br />
+        3. Press <span class="border-inline">Train</span> to switch to train
+        mode.<br />
         4. Press
-        <img src="./images/settings.svg" alt="Setings" class="img-inline" loading="lazy" />
+        <img
+          src="./images/settings.svg"
+          alt="Setings"
+          class="img-inline"
+          loading="lazy"
+        />
         to set your preferences.<br />
         5. <b>Scramble</b> your cube according to the displayed scramble.<br />
         6. <b>Solve</b> the first two layers fully.
@@ -138,22 +164,44 @@
       <h2>Further Help</h2>
       <p>
         Feel free to create an issue on
-        <a href="https://github.com/Dave2ooo/F2LTrainer" target="_blank" rel="noopener noreferrer">Github</a>
-        if you need <b>help</b>, have ideas for <b>improvement</b> or find any <b>bugs</b>.
+        <a
+          href="https://github.com/Dave2ooo/F2LTrainer"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Github</a
+        >
+        if you need <b>help</b>, have ideas for <b>improvement</b> or find any
+        <b>bugs</b>.
       </p>
 
       <h2>Acknowledgment</h2>
       <p>
         Thanks to
-        <a href="https://github.com/cubing/cubing.js" target="_blank" rel="noopener noreferrer">cubing.js</a> for the
-        interactive Rubiks cube.
+        <a
+          href="https://github.com/cubing/cubing.js"
+          target="_blank"
+          rel="noopener noreferrer"
+          >cubing.js</a
+        >
+        for the interactive Rubiks cube.
       </p>
 
       <div class="update-cancel-buttons">
         <form method="dialog">
-          <button type="button" class="btn-overlay" id="btn-close-info" onclick="closeOverlays()">
+          <button
+            type="button"
+            class="btn-overlay"
+            id="btn-close-info"
+            onclick="closeOverlays()"
+          >
             Close
-            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
+            <img
+              src="./images/cancel.svg"
+              alt="Close"
+              class="side-img"
+              title="Close"
+              loading="lazy"
+            />
           </button>
         </form>
       </div>
@@ -162,7 +210,12 @@
     <!-- Edit Algorithm -->
     <dialog id="editalg-container" class="popup-container">
       <div id="editalg-img-container">
-        <img id="editalg-img" src="./images/basic_cases/right/F2L1.svg" alt="Image of Case" loading="lazy" />
+        <img
+          id="editalg-img"
+          src="./images/basic_cases/right/F2L1.svg"
+          alt="Image of Case"
+          loading="lazy"
+        />
       </div>
       <label class="checkbox" for="checkboxIdenticalAlgId">
         <input
@@ -179,9 +232,20 @@
 
       <div class="switch-container">
         <div class="switch">
-          <input type="radio" id="switch-left-id" name="switch" onchange="switchLeftRight()" />
+          <input
+            type="radio"
+            id="switch-left-id"
+            name="switch"
+            onchange="switchLeftRight()"
+          />
           <label for="switch-left-id">Left</label>
-          <input type="radio" id="switch-right-id" name="switch" onchange="switchLeftRight()" checked />
+          <input
+            type="radio"
+            id="switch-right-id"
+            name="switch"
+            onchange="switchLeftRight()"
+            checked
+          />
           <label for="switch-right-id">Right</label>
           <div class="indicator"></div>
         </div>
@@ -194,15 +258,32 @@
         <!-- <div class="editalg-listentry">y' U f R' f'</div> -->
       </div>
       <div class="editalg-listentry" onclick="customAlgSelected()">
-        <input type="text" placeholder="Enter Custom Algorithm" id="editalg-customalg" />
+        <input
+          type="text"
+          placeholder="Enter Custom Algorithm"
+          id="editalg-customalg"
+        />
       </div>
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="updateAlg()">
           Confirm
-          <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy" />
+          <img
+            src="./images/confirm.svg"
+            alt="Confirm"
+            class="side-img"
+            title="Confirm"
+            loading="lazy"
+          />
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
+          Cancel
+          <img
+            src="./images/cancel.svg"
+            alt="Close"
+            class="side-img"
+            title="Close"
+            loading="lazy"
+          />
         </button>
       </div>
     </dialog>
@@ -218,10 +299,22 @@
       <h2>Export</h2>
       <!-- <p>Use this URL to transfer your selected cases to other devices.</p> -->
 
-      <input type="text" id="input-export" value="https://f2l-trainer.top" readonly disabled />
+      <input
+        type="text"
+        id="input-export"
+        value="https://f2l-trainer.top"
+        readonly
+        disabled
+      />
 
       <div class="update-cancel-buttons">
-        <button type="button" class="btn-overlay" onclick="copyUTLtoClipboard()">Copy to clipboard</button>
+        <button
+          type="button"
+          class="btn-overlay"
+          onclick="copyUTLtoClipboard()"
+        >
+          Copy to clipboard
+        </button>
       </div>
       <h2>Train settings</h2>
       <div id="div-algs-to-learn" class="div-checkbox-container-container">
@@ -229,19 +322,34 @@
         <div class="checkbox-container">
           <h3>Status</h3>
           <label class="checkbox" for="checkboxUnlearnedId">
-            <input type="checkbox" class="checkbox__input" name="checkboxUnlearned" id="checkboxUnlearnedId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxUnlearned"
+              id="checkboxUnlearnedId"
+            />
             <div class="checkbox__box"></div>
             Unlearned
           </label>
 
           <label class="checkbox checkbox-learning" for="checkboxLearningId">
-            <input type="checkbox" class="checkbox__input" name="checkboxLearning" id="checkboxLearningId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxLearning"
+              id="checkboxLearningId"
+            />
             <div class="checkbox__box checkbox__box_learning"></div>
             Learning
           </label>
 
           <label class="checkbox checkbox-finished" for="checkboxFinishedId">
-            <input type="checkbox" class="checkbox__input" name="checkboxFinished" id="checkboxFinishedId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxFinished"
+              id="checkboxFinishedId"
+            />
             <div class="checkbox__box checkbox__box_finished"></div>
             Finished
           </label>
@@ -251,7 +359,12 @@
         <div class="checkbox-container">
           <h3>Group</h3>
           <label class="checkbox" for="checkboxGroupBasicId">
-            <input type="checkbox" class="checkbox__input" name="checkboxGroupBasic" id="checkboxGroupBasicId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxGroupBasic"
+              id="checkboxGroupBasicId"
+            />
             <div class="checkbox__box"></div>
             Basic
           </label>
@@ -268,13 +381,23 @@
           </label>
 
           <label class="checkbox" for="checkboxGroupAdvancedId">
-            <input type="checkbox" class="checkbox__input" name="checkboxGroupAdvanced" id="checkboxGroupAdvancedId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxGroupAdvanced"
+              id="checkboxGroupAdvancedId"
+            />
             <div class="checkbox__box"></div>
             Advanced
           </label>
 
           <label class="checkbox" for="checkboxGroupExpertId">
-            <input type="checkbox" class="checkbox__input" name="checkboxExpertAdvanced" id="checkboxGroupExpertId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxExpertAdvanced"
+              id="checkboxGroupExpertId"
+            />
             <div class="checkbox__box"></div>
             Expert
           </label>
@@ -285,13 +408,23 @@
         <div class="checkbox-container">
           <h3>Left / Right Slot</h3>
           <label class="checkbox" for="checkboxLeftId">
-            <input type="checkbox" class="checkbox__input" name="checkboxLeft" id="checkboxLeftId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxLeft"
+              id="checkboxLeftId"
+            />
             <div class="checkbox__box"></div>
             Left
           </label>
 
           <label class="checkbox" for="checkboxRightId">
-            <input type="checkbox" class="checkbox__input" name="checkboxRight" id="checkboxRightId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxRight"
+              id="checkboxRightId"
+            />
             <div class="checkbox__box"></div>
             Right
           </label>
@@ -310,7 +443,12 @@
             Add AUF
           </label>
           <label class="checkbox" for="checkboxConsiderAUFId">
-            <input type="checkbox" class="checkbox__input" name="checkboxConsiderAUF" id="checkboxConsiderAUFId" />
+            <input
+              type="checkbox"
+              class="checkbox__input"
+              name="checkboxConsiderAUF"
+              id="checkboxConsiderAUFId"
+            />
             <div class="checkbox__box"></div>
             Consider AUF<br />in hint
           </label>
@@ -340,12 +478,23 @@
       <h2>Additional</h2>
       <div class="checkbox-container">
         <label class="checkbox" for="checkboxEnableTimerId">
-          <input type="checkbox" class="checkbox__input" name="checkboxEnableTimer" id="checkboxEnableTimerId" />
+          <input
+            type="checkbox"
+            class="checkbox__input"
+            name="checkboxEnableTimer"
+            id="checkboxEnableTimerId"
+          />
           <div class="checkbox__box"></div>
           Enable Timer (experimental)
         </label>
 
-        <button type="button" class="btn-delete btn-overlay" onclick="clearUserData()">Delete saved data</button>
+        <button
+          type="button"
+          class="btn-delete btn-overlay"
+          onclick="clearUserData()"
+        >
+          Delete saved data
+        </button>
       </div>
 
       <!-- Buttons: Update, Cancel Settings -->
@@ -361,10 +510,24 @@
       <!-- </div> -->
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="updateTrainCases()">
-          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy" />
+          Confirm
+          <img
+            src="./images/confirm.svg"
+            alt="Confirm"
+            class="side-img"
+            title="Confirm"
+            loading="lazy"
+          />
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
+          Cancel
+          <img
+            src="./images/cancel.svg"
+            alt="Close"
+            class="side-img"
+            title="Close"
+            loading="lazy"
+          />
         </button>
       </div>
     </dialog>
@@ -390,24 +553,62 @@
       <h1>Change learning state to</h1>
 
       <div>
-        <input class="radio-state" type="radio" id="radio-state-unlearned" name="state" value="unlearned" />
-        <label class="color-transparent label-state" for="radio-state-unlearned">Unlearned</label>
+        <input
+          class="radio-state"
+          type="radio"
+          id="radio-state-unlearned"
+          name="state"
+          value="unlearned"
+        />
+        <label class="color-transparent label-state" for="radio-state-unlearned"
+          >Unlearned</label
+        >
       </div>
       <div>
-        <input class="radio-state" type="radio" id="radio-state-learning" name="state" value="learning" />
-        <label class="color-yellow label-state" for="radio-state-learning">Learning</label>
+        <input
+          class="radio-state"
+          type="radio"
+          id="radio-state-learning"
+          name="state"
+          value="learning"
+        />
+        <label class="color-yellow label-state" for="radio-state-learning"
+          >Learning</label
+        >
       </div>
       <div>
-        <input class="radio-state" type="radio" id="radio-state-finished" name="state" value="finished" />
-        <label class="color-green label-state" for="radio-state-finished">Finished</label>
+        <input
+          class="radio-state"
+          type="radio"
+          id="radio-state-finished"
+          name="state"
+          value="finished"
+        />
+        <label class="color-green label-state" for="radio-state-finished"
+          >Finished</label
+        >
       </div>
 
       <div class="update-cancel-buttons">
         <button type="button" class="btn-overlay" onclick="changeStateRadio()">
-          Confirm <img src="./images/confirm.svg" alt="Confirm" class="side-img" title="Confirm" loading="lazy" />
+          Confirm
+          <img
+            src="./images/confirm.svg"
+            alt="Confirm"
+            class="side-img"
+            title="Confirm"
+            loading="lazy"
+          />
         </button>
         <button type="button" class="btn-overlay" onclick="closeOverlays()">
-          Cancel <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
+          Cancel
+          <img
+            src="./images/cancel.svg"
+            alt="Close"
+            class="side-img"
+            title="Close"
+            loading="lazy"
+          />
         </button>
       </div>
     </dialog>
@@ -441,30 +642,74 @@
       <h2>Feedback</h2>
       <p>
         Send your feedback via this form or create an issue on
-        <a href="https://github.com/Dave2ooo/F2LTrainer/issues" target="_blank" rel="noopener noreferrer">Github.</a>
+        <a
+          href="https://github.com/Dave2ooo/F2LTrainer/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Github.</a
+        >
       </p>
-      <form action="https://api.web3forms.com/submit" method="POST">
+      <form action="https://api.web3forms.com/submit" method="POST" id="feedback-form" onsubmit="resetForm()">
         <!-- Custom Access Key -->
-        <input type="hidden" name="access_key" value="70f60afc-3ab0-4491-80be-e854832fddb9" />
+        <input
+          type="hidden"
+          name="access_key"
+          value="70f60afc-3ab0-4491-80be-e854832fddb9"
+        />
         <!-- Subject of the email -->
         <input type="hidden" name="subject" value="F2L Trainer feedback" />
 
-        <input type="checkbox" name="botcheck" class="hidden" style="display: none" />
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="hidden"
+          style="display: none"
+        />
         <!-- Captcha check (needs script to be uncommented at bottom of index.html) -->
         <!-- <div class="h-captcha" data-captcha="true"></div> -->
 
-        <input id="feedback-name-id" class="feedback-text" type="text" name="name" required placeholder="Your Name" />
-        <input class="feedback-text" type="email" name="email" required placeholder="Your Email" />
-        <textarea class="feedback-text" name="message" required placeholder="Your Feedback"></textarea>
+        <input
+          id="feedback-name-id"
+          class="feedback-text"
+          type="text"
+          name="name"
+          required
+          placeholder="Your Name"
+        />
+        <input
+          class="feedback-text"
+          type="email"
+          name="email"
+          required
+          placeholder="Your Email"
+        />
+        <textarea
+          class="feedback-text"
+          name="message"
+          required
+          placeholder="Your Feedback"
+        ></textarea>
 
         <div class="update-cancel-buttons">
           <button type="submit" class="btn-overlay">
             Submit
-            <img src="./images/submit.svg" alt="Send" class="side-img" title="Submit" loading="lazy" />
+            <img
+              src="./images/submit.svg"
+              alt="Send"
+              class="side-img"
+              title="Submit"
+              loading="lazy"
+            />
           </button>
           <button type="button" class="btn-overlay" onclick="closeOverlays()">
             Close
-            <img src="./images/cancel.svg" alt="Close" class="side-img" title="Close" loading="lazy" />
+            <img
+              src="./images/cancel.svg"
+              alt="Close"
+              class="side-img"
+              title="Close"
+              loading="lazy"
+            />
           </button>
         </div>
       </form>
@@ -475,25 +720,53 @@
     <div id="side-container">
       <div>
         <!-- Button Info -->
-        <button type="button" class="side-button" id="btn-info" onclick="showInfo()">
-          <img src="./images/info.svg" alt="Info" class="side-img" title="Info" />
+        <button
+          type="button"
+          class="side-button"
+          id="btn-info"
+          onclick="showInfo()"
+        >
+          <img
+            src="./images/info.svg"
+            alt="Info"
+            class="side-img"
+            title="Info"
+          />
         </button>
 
         <!-- Button Settings Select -->
-        <div class="side-button btn-settings-select" , onclick="showSettingsTrain()">
-          <img src="./images/settings.svg" alt="Settings" class="side-img" title="Settings" />
+        <div
+          class="side-button btn-settings-select"
+          ,
+          onclick="showSettingsTrain()"
+        >
+          <img
+            src="./images/settings.svg"
+            alt="Settings"
+            class="side-img"
+            title="Settings"
+          />
         </div>
 
         <!-- Button Feedback -->
         <div class="side-button btn-settings-select" , onclick="showFeedback()">
-          <img src="./images/feedback.svg" alt="Feedback" class="side-img" title="Feedback" />
+          <img
+            src="./images/feedback.svg"
+            alt="Feedback"
+            class="side-img"
+            title="Feedback"
+          />
         </div>
       </div>
 
       <div class="container-select-group">
         <!-- <label for="select-group-id" class="acessibility-label">Choose a Group:</label> -->
         <!-- for accesibility -->
-        <select id="select-group-id" class="select-group" onchange="showSelectedGroup()">
+        <select
+          id="select-group-id"
+          class="select-group"
+          onchange="showSelectedGroup()"
+        >
           <option value="basic" selected>Basic Cases</option>
           <option value="basicBack">Basic Backslot</option>
           <option value="advanced">Advanced Cases</option>
@@ -502,11 +775,22 @@
       </div>
 
       <!-- Button Settings Train -->
-      <div class="side-button display-none btn-settings-train" , onclick="showSettingsTrain()">
-        <img src="./images/settings.svg" alt="Settings" class="side-img" title="Settings" />
+      <div
+        class="side-button display-none btn-settings-train"
+        ,
+        onclick="showSettingsTrain()"
+      >
+        <img
+          src="./images/settings.svg"
+          alt="Settings"
+          class="side-img"
+          title="Settings"
+        />
       </div>
 
-      <button type="button" id="change-mode" onclick="changeMode()">Train</button>
+      <button type="button" id="change-mode" onclick="changeMode()">
+        Train
+      </button>
     </div>
 
     <!-- All the Cases will be listed here -->
@@ -541,9 +825,16 @@
       </div>
 
       <div class="div-hint-img" onmousedown="spaceDown()" onmouseup="spaceUp()">
-        <img id="hint-img" src="./images/basic_cases/right/F2L1.svg" alt="Image of F2L Case" loading="lazy" />
+        <img
+          id="hint-img"
+          src="./images/basic_cases/right/F2L1.svg"
+          alt="Image of F2L Case"
+          loading="lazy"
+        />
         <div id="loading-case" class="loader display-none"></div>
-        <div id="div-press-me-tain-id" class="div-press-me-train">Press<br />me</div>
+        <div id="div-press-me-tain-id" class="div-press-me-train">
+          Press<br />me
+        </div>
       </div>
 
       <!-- All atributes and methods can be found here: https://js.cubing.net/cubing/api/classes/twisty.TwistyPlayer.html#timestamp -->
@@ -586,13 +877,26 @@
       </div>
 
       <div class="div-btn-change-state-alg">
-        <button type="button" class="btn-change-state-alg" onclick="showSetStateMenu()">Change State</button>
-        <button type="button" class="btn-change-state-alg" id="btn-change-alg-id" onclick="editCurrentAlg()">
+        <button
+          type="button"
+          class="btn-change-state-alg"
+          onclick="showSetStateMenu()"
+        >
+          Change State
+        </button>
+        <button
+          type="button"
+          class="btn-change-state-alg"
+          id="btn-change-alg-id"
+          onclick="editCurrentAlg()"
+        >
           Change Alg
         </button>
       </div>
 
-      <button id="btn-show-hide-debug-info" onclick="showHideDebugInfo()">> Hide details</button>
+      <button id="btn-show-hide-debug-info" onclick="showHideDebugInfo()">
+        > Hide details
+      </button>
       <div id="debug-info"></div>
     </div>
 
