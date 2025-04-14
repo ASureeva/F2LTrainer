@@ -1963,9 +1963,7 @@ function showFeedback() {
 }
 
 function resetForm(){
-  setTimeout(() => {
-    ELEM_FEEDBACK_FORM.reset();
-  }, 1000);
+  ELEM_FEEDBACK_FORM.reset();
 }
 
 function openDialog(ELEM) {
