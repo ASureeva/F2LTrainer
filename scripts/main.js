@@ -1962,9 +1962,9 @@ function showFeedback() {
   ELEM_FEEDBACK_NAME.focus();
 }
 
-function resetForm(){
+window.onload = function() {
   ELEM_FEEDBACK_FORM.reset();
-}
+};
 
 function openDialog(ELEM) {
   ELEM.showModal();
