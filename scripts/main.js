@@ -424,7 +424,8 @@ function addElementsToDOM() {
           continue;
         }
         // Case Selection Page
-        const IMG_CASE_PATH = GROUP.imgPath + "right/F2L" + (indexCase + 1) + ".svg";
+        const IMG_CASE_PATH_RIGHT = GROUP.imgPath + "right/F2L" + (indexCase + 1) + ".svg";
+        const IMG_CASE_PATH_LEFT = GROUP.imgPath + "left/F2L" + (indexCase + 1) + ".svg";
 
         GROUP.divContainer[indexCase] = document.createElement("div");
         GROUP.divContainer[indexCase].classList.add("case-container");
@@ -441,8 +442,13 @@ function addElementsToDOM() {
           changeState(INDEX_GROUP, indexCategory, indexCase);
         };
 
-        GROUP.imgCase[indexCase] = document.createElement("img");
-        GROUP.imgCase[indexCase].classList.add("img-case");
+        GROUP.imgCaseLeft[indexCase] = document.createElement("img");
+        GROUP.imgCaseLeft[indexCase].classList.add("img-case");
+        GROUP.imgCaseLeft[indexCase].classList.add("back");
+
+        GROUP.imgCaseRight[indexCase] = document.createElement("img");
+        GROUP.imgCaseRight[indexCase].classList.add("img-case");
+        GROUP.imgCaseRight[indexCase].classList.add("front");
 
         GROUP.algorithm[indexCase] = document.createElement("div");
         GROUP.algorithm[indexCase].classList.add("algorithm");
@@ -474,9 +480,14 @@ function addElementsToDOM() {
         GROUP.divAlgorithm[indexCase].classList.add("div-algorithm");
 
         GROUP.caseNumber[indexCase].innerHTML = indexCase + 1;
-        GROUP.imgCase[indexCase].src = IMG_CASE_PATH;
-        GROUP.imgCase[indexCase].alt = GROUP.name + ", Case " + (indexCase + 1);
-        GROUP.imgCase[indexCase].loading = "lazy";
+        GROUP.imgCaseRight[indexCase].src = IMG_CASE_PATH_RIGHT;
+        GROUP.imgCaseRight[indexCase].alt = GROUP.name + ", Case " + (indexCase + 1);
+        GROUP.imgCaseRight[indexCase].loading = "lazy";
+
+        GROUP.imgCaseLeft[indexCase].src = IMG_CASE_PATH_LEFT;
+        GROUP.imgCaseLeft[indexCase].alt = GROUP.name + ", Case " + (indexCase + 1);
+        GROUP.imgCaseLeft[indexCase].loading = "lazy";
+
 
         // Set shown alg
         if (GROUP.algorithmSelectionRight[indexCase] < GROUP.algorithms[indexCase + 1].length) {
@@ -513,6 +524,7 @@ function addElementsToDOM() {
 
         GROUP.btnMirror[indexCase].addEventListener("click", () => {
           flipped = !flipped;
+          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(-180deg)" : "rotateY(0deg)";
         });
 
         GROUP.imgEdit[indexCase].src = "./images/edit.svg";
@@ -522,7 +534,8 @@ function addElementsToDOM() {
         GROUP.divContainer[indexCase].appendChild(GROUP.caseNumber[indexCase]); // Don't show case number
 
         GROUP.divContainer[indexCase].appendChild(GROUP.imgContainer[indexCase]);
-        GROUP.imgContainer[indexCase].appendChild(GROUP.imgCase[indexCase]);
+        GROUP.imgContainer[indexCase].appendChild(GROUP.imgCaseRight[indexCase]);
+        GROUP.imgContainer[indexCase].appendChild(GROUP.imgCaseLeft[indexCase]);
         GROUP.divContainer[indexCase].appendChild(GROUP.algorithm[indexCase]);
         GROUP.algorithm[indexCase].appendChild(GROUP.divAlgorithm[indexCase]);
         GROUP.algorithm[indexCase].appendChild(GROUP.btnContainer[indexCase]);
@@ -1784,15 +1797,10 @@ function mirrorCase(indexGroup, indexCase) {
     tempAlgLeft = GROUP.customAlgorithmsLeft[indexCase];
   }
 
-  if (GROUP.flagMirrored[indexCase]) {
-    GROUP.imgCase[indexCase].src = GROUP.imgPath + "right/F2L" + (indexCase + 1) + ".svg";
-    GROUP.flagMirrored[indexCase] = false;
-    GROUP.divAlgorithm[indexCase].innerHTML = tempAlgRight;
-  } else {
-    GROUP.imgCase[indexCase].src = GROUP.imgPath + "left/F2L" + (indexCase + 1) + ".svg";
-    GROUP.flagMirrored[indexCase] = true;
-    GROUP.divAlgorithm[indexCase].innerHTML = tempAlgLeft;
-  }
+  const mirrored = GROUP.flagMirrored[indexCase]
+  GROUP.flagMirrored[indexCase] = !GROUP.flagMirrored[indexCase]
+  GROUP.imgContainer[indexCase].style.transform = mirrored ? "rotateY(0deg)" : "rotateY(180deg)";
+  GROUP.divAlgorithm[indexCase].innerHTML = mirrored ? tempAlgRight : tempAlgLeft;
 }
 
 /**

@@ -201,6 +201,9 @@ a {
 }
 
 .img-case-container {
+  transition: transform 0.8s ease-in-out;
+  transform-style: preserve-3d;
+  position: relative;
   display: flex;
   flex-shrink: 1;
   height: 100px;
@@ -210,7 +213,17 @@ a {
 .img-case {
   height: 100%;
   width: 100%;
+  backface-visibility: hidden;
   /* height: 98px; */
+}
+
+.img-case.front {
+  transform: rotateY(0deg);
+}
+
+.img-case.back {
+  position: absolute;
+  transform: rotateY(180deg) translateX(+10%);
 }
 
 .algorithm {
