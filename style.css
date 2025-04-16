@@ -193,10 +193,10 @@ a {
 
 .case-number {
   /* align-items: center; */
-  /* width: 40px; */
-  width: auto;
+  width: 20px;
+  /* width: auto; */
   font-size: 1rem;
-  text-align: center;
+  text-align: start;
   margin-right: 0.5rem;
 }
 
