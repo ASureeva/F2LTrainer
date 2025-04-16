@@ -415,6 +415,9 @@ function addElementsToDOM() {
       // categoryItems.forEach((categoryItem) => {
       for (const categoryItem of categoryItems) {
         let indexCase = categoryItem - 1;
+        let flipped = false;
+        let locked = false;
+
         // Check if selected algorithm is valid
         if (GROUP.algorithms[indexCase + 1] == undefined) {
           console.warn("Trying to access invalid Case\nindexGroup: " + INDEX_GROUP + "\nindexCase: " + indexCase);
@@ -466,12 +469,6 @@ function addElementsToDOM() {
         GROUP.btnMirror[indexCase].title = "Mirror";
 
         GROUP.imgMirror[indexCase] = document.createElement("img");
-        GROUP.imgMirror[indexCase].classList.add("img-edit-trash");
-        GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
-        GROUP.imgMirror[indexCase].alt = "mirror case " + (indexCase + 1);
-        GROUP.imgMirror[indexCase].onclick = function () {
-          mirrorCase(INDEX_GROUP, indexCase);
-        };
 
         GROUP.divAlgorithm[indexCase] = document.createElement("div");
         GROUP.divAlgorithm[indexCase].classList.add("div-algorithm");
@@ -490,6 +487,34 @@ function addElementsToDOM() {
         }
 
         GROUP.imgMirror[indexCase].src = "./images/mirror1.svg";
+
+        GROUP.flipInner[indexCase] = document.createElement("div");
+        GROUP.flipInner[indexCase].classList.add("img-flip-inner");
+        GROUP.flipInner[indexCase].classList.add("img-edit-trash");
+        GROUP.flipInner[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
+        GROUP.flipInner[indexCase].alt = "mirror case " + (indexCase + 1);
+        GROUP.flipInner[indexCase].onclick = function () {
+          mirrorCase(INDEX_GROUP, indexCase);
+        };
+
+        GROUP.flipFront[indexCase] = document.createElement("div");
+        GROUP.flipFront[indexCase].classList.add("flip-front");
+        GROUP.flipFront[indexCase].appendChild(GROUP.imgMirror[indexCase]);
+        GROUP.flipInner[indexCase].appendChild(GROUP.flipFront[indexCase]);
+
+        GROUP.btnMirror[indexCase].addEventListener("mouseenter", () => {
+          if (locked) return;
+          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(0deg)" : "rotateY(-180deg)";
+        });
+        GROUP.btnMirror[indexCase].addEventListener("mouseleave", () => {
+          if (locked) return;
+          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(-180deg)" : "rotateY(0deg)";
+        });
+
+        GROUP.btnMirror[indexCase].addEventListener("click", () => {
+          flipped = !flipped;
+        });
+
         GROUP.imgEdit[indexCase].src = "./images/edit.svg";
 
         GROUP.divContainer[indexCase].style.background = CATEGORY_COLORS[GROUP.caseSelection[indexCase]];
@@ -504,7 +529,7 @@ function addElementsToDOM() {
         GROUP.btnContainer[indexCase].appendChild(GROUP.btnEdit[indexCase]);
         GROUP.btnContainer[indexCase].appendChild(GROUP.btnMirror[indexCase]);
         GROUP.btnEdit[indexCase].appendChild(GROUP.imgEdit[indexCase]);
-        GROUP.btnMirror[indexCase].appendChild(GROUP.imgMirror[indexCase]);
+        GROUP.btnMirror[indexCase].appendChild(GROUP.flipInner[indexCase]);
 
         GROUP.categoryContainer[indexCategory].appendChild(GROUP.divContainer[indexCase]);
       }
