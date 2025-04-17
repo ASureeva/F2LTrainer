@@ -415,8 +415,6 @@ function addElementsToDOM() {
       // categoryItems.forEach((categoryItem) => {
       for (const categoryItem of categoryItems) {
         let indexCase = categoryItem - 1;
-        let flipped = false;
-        let locked = false;
 
         // Check if selected algorithm is valid
         if (GROUP.algorithms[indexCase + 1] == undefined) {
@@ -501,7 +499,7 @@ function addElementsToDOM() {
 
         GROUP.flipInner[indexCase] = document.createElement("div");
         GROUP.flipInner[indexCase].classList.add("img-flip-inner");
-        GROUP.flipInner[indexCase].classList.add("img-edit-trash");
+        GROUP.flipInner[indexCase].classList.add("img-mirror-trash");
         GROUP.flipInner[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
         GROUP.flipInner[indexCase].alt = "mirror case " + (indexCase + 1);
         GROUP.flipInner[indexCase].onclick = function () {
@@ -512,20 +510,6 @@ function addElementsToDOM() {
         GROUP.flipFront[indexCase].classList.add("flip-front");
         GROUP.flipFront[indexCase].appendChild(GROUP.imgMirror[indexCase]);
         GROUP.flipInner[indexCase].appendChild(GROUP.flipFront[indexCase]);
-
-        GROUP.btnMirror[indexCase].addEventListener("mouseenter", () => {
-          if (locked) return;
-          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(0deg)" : "rotateY(-180deg)";
-        });
-        GROUP.btnMirror[indexCase].addEventListener("mouseleave", () => {
-          if (locked) return;
-          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(-180deg)" : "rotateY(0deg)";
-        });
-
-        GROUP.btnMirror[indexCase].addEventListener("click", () => {
-          flipped = !flipped;
-          GROUP.flipInner[indexCase].style.transform = flipped ? "rotateY(-180deg)" : "rotateY(0deg)";
-        });
 
         GROUP.imgEdit[indexCase].src = "./images/edit.svg";
 
