@@ -192,12 +192,11 @@ a {
 }
 
 .case-number {
-  /* align-items: center; */
-  width: 20px;
-  /* width: auto; */
   font-size: 1rem;
-  text-align: start;
-  margin-right: 0.5rem;
+  width: 2ch;
+  text-align: center;
+  margin-right: 0.1rem;
+  margin-left: 0.1rem;
 }
 
 .img-case-container {
