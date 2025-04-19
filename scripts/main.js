@@ -466,7 +466,7 @@ function addElementsToDOM() {
         GROUP.btnMirror[indexCase].title = "Mirror";
 
         GROUP.imgMirror[indexCase] = document.createElement("img");
-        GROUP.imgMirror[indexCase].classList.add("img-edit-trash");
+        GROUP.imgMirror[indexCase].classList.add("flip-image");
         GROUP.imgMirror[indexCase].style.filter = COLORS_BTN_EDIT[GROUP.caseSelection[indexCase]];
         GROUP.imgMirror[indexCase].alt = "mirror case " + (indexCase + 1);
         GROUP.imgMirror[indexCase].onclick = function () {
