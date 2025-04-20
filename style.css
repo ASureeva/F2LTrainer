@@ -112,7 +112,8 @@ iframe {
 .btn-next-prev {
   filter: var(--filter-img);
 }
-.img-mirror-trash,
+
+.flip-image,
 .img-edit-trash {
   filter: var(--filter-white);
 }
@@ -213,8 +214,8 @@ a {
 .img-case {
   height: 100%;
   width: 100%;
-  backface-visibility: hidden;
   /* height: 98px; */
+  backface-visibility: hidden;
 }
 
 .img-case.front {
@@ -239,15 +240,13 @@ a {
   /* margin: auto; */
 }
 
-.case-container:hover .img-edit-trash{
+.case-container:hover .img-edit-trash {
+  visibility: visible;
+}
+.case-container:hover .flip-image {
   visibility: visible;
 }
 
-.case-container:hover .img-mirror-trash{
-  visibility: visible;
-}
-
-.img-mirror-trash,
 .img-edit-trash {
   /* width: 100%; */
   height: 24px;
@@ -257,14 +256,13 @@ a {
   margin-bottom: auto;
 }
 
-.img-flip-inner {
-  transform: rotateY(0deg);
-  transition: transform 0.6s ease;
-  transform-style: preserve-3d;
-}
-
-.btn-edit:hover  .img-flip-inner {
-  transform: rotateY(180deg);
+.flip-image {
+  transition: transform 0.5s ease-in-out;
+  height: 24px;
+  visibility: hidden;
+  cursor: pointer;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .div-algorithm {
@@ -933,6 +931,10 @@ twisty-alg-viewer .wrapper {
   transition: 0.3s ease;
 }
 
+.flip-image:hover {
+  transform: scaleX(-1);
+}
+
 .rotate-arrow {
   transform: rotate(90deg);
 }
@@ -1210,7 +1212,7 @@ textarea {
     height: 25px;
     width: 25px;
   }
-  .img-mirror-trash,
+  .flip-image,
   .img-edit-trash {
     /* height: 18px; */
     height: 20px;
@@ -1296,7 +1298,7 @@ textarea {
 }
 
 @media (pointer: coarse) {
-  .img-mirror-trash,
+  .flip-image,
   .img-edit-trash {
     visibility: visible;
   }
